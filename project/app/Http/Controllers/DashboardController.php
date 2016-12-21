@@ -10,6 +10,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Session;
 use Auth;
 use DB;
+use File;
 
 
 class DashboardController extends Controller {
@@ -51,4 +52,22 @@ class DashboardController extends Controller {
             return view('errors.error', $result);
         }
     }
+
+    /**
+      * Shows the File content
+      * @param         
+      * @return Response
+      * Created on: 21/12/2016
+      * Updated on: 21/12/2016
+    **/
+    public function getFile()
+    {
+      //Redirect to dashboard according to roles
+      $filename="http://localhost/eqho/defaultPoup.html";
+      $contents = File::get("defaultPoup.html");
+      $number_of_words=count(explode(' ', $contents));
+      echo 'Number of Words in File "defaultPoup.html" are : '.$number_of_words;
+      exit;
+    }
+
 }
