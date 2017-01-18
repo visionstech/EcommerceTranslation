@@ -1,4 +1,4 @@
-  <!-- Left side column. contains the logo and sidebar -->
+ <!-- Left side column. contains the logo and sidebar -->
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
@@ -12,31 +12,27 @@
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
-      <!-- search form -->
-      <form action="#" method="get" class="sidebar-form">
-        <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search...">
-              <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                </button>
-              </span>
-        </div>
-      </form>
-      <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
        
-        <li>
+        <li class="<?php echo e((strpos($_SERVER['REQUEST_URI'],'dashboard') != false)?'active':''); ?>">
           <a href="<?php echo e(url('/dashboard')); ?>">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
           </a>
         </li>
-        <li>
-          <a href="<?php echo e(url('/dashboard')); ?>">
-            <i class="fa fa-th"></i> <span>Widgets</span>
-          </a>
-        </li>
+        <?php if(Auth::user()->role_id==1){ ?>
+                <li class="<?php echo e((strpos($_SERVER['REQUEST_URI'],'user') != false)?'active':''); ?>">
+                  <a href="<?php echo e(url('/user')); ?>">
+                    <i class="fa fa-users"></i> <span>Manage Users</span>
+                  </a>
+                </li>
+                <li class="<?php echo e((strpos($_SERVER['REQUEST_URI'],'role') != false)?'active':''); ?>">
+                  <a href="<?php echo e(url('/role')); ?>">
+                    <i class="fa fa-user"></i> <span>Manage User Roles</span>
+                  </a>
+                </li>
+        <?php } ?>
       </ul>
     </section>
     <!-- /.sidebar -->

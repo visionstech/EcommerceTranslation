@@ -1,4 +1,4 @@
-<?php  if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2)) { ?>
+<?php  if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2 || (strpos($_SERVER['REQUEST_URI'],'reset-password') != false))) { ?>
 
 <header class="main-header">
     <!-- Logo -->

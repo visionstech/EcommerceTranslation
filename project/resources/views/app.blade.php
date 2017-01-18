@@ -6,11 +6,12 @@
   $register_url = url('/').'/auth/register'; 
   $register_url2 = url('/').'/register'; 
   $login_url2 = url('/'); 
+  $reset_password_url = url('/').'/auth/reset-password'; 
 ?>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>EQHO</title>
+  <title>Eqho</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
@@ -21,7 +22,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('/css/AdminLTE.min.css') }}">
-  <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2)) {
+  <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2 || (strpos($_SERVER['REQUEST_URI'],'reset-password') != false))) {
     $bodyClass='skin-blue sidebar-mini';
    ?>
 
@@ -49,33 +50,19 @@
 <div class="wrapper">
     @include('header')		
     
-    <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2)) { ?>
+    <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2 || (strpos($_SERVER['REQUEST_URI'],'reset-password') != false))) { ?>
 	    @include('aside')
             
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <section class="content-header">
-                <h1>
-                    Dashboard
-                    <small>Control panel</small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">Dashboard</li>
-                </ol>
-            </section>
-        <!-- page content -->
-        <section class="content">
-              
-            <?php if (Session::has('message')) { $message = Session::get('message'); ?>
+          <?php if (Session::has('message')) { $message = Session::get('message'); ?>
                 <label class=""> <?php echo $message; ?> </label>
             <?php Session::pull('message', 'User Registered Successfully!'); } ?>
         
     <?php } ?>
     @yield('content')
     
-    <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2)) { ?>
-         </section>
+    <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2 || (strpos($_SERVER['REQUEST_URI'],'reset-password') != false))) { ?>
         </div>
     <?php } ?>
     
@@ -85,7 +72,8 @@
     <!-- Jquery -->
 
 <!-- jQuery 2.2.3 -->
-<?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2)) { ?>
+<?php 
+if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2 || (strpos($_SERVER['REQUEST_URI'],'reset-password') != false))) { ?>
     <script src="{{ asset('/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
     <!-- jQuery UI 1.11.4 -->
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
@@ -111,15 +99,13 @@
     <!-- datepicker -->
     <script src="{{ asset('/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
     <!-- Bootstrap WYSIHTML5 -->
-    <script src="{{ asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
+    <script src="{{ asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>    
     <!-- Slimscroll -->
     <script src="{{ asset('/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
     <!-- FastClick -->
     <script src="{{ asset('/plugins/fastclick/fastclick.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('/js/app.min.js') }}"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="{{ asset('/js/pages/dashboard.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('/js/demo.js') }}"></script>
 <?php } else { ?>
@@ -129,6 +115,7 @@
   <script src="{{ asset('/bootstrap/js/bootstrap.min.js') }}"></script>
   <!-- iCheck -->
   <script src="{{ asset('/plugins/iCheck/icheck.min.js') }}"></script>
+ 
   <script>
     $(function () {
       $('input').iCheck({

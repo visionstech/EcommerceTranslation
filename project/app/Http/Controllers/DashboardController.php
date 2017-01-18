@@ -11,7 +11,7 @@ use Session;
 use Auth;
 use DB;
 use File;
-
+use Socialite;
 
 class DashboardController extends Controller {
     /*
@@ -29,7 +29,8 @@ class DashboardController extends Controller {
      */
     public function __construct(Guard $auth)
     {
-        $this->middleware('auth', ['except' => 'getRegister, postRegister']);
+      //echo url('/');exit;
+        $this->middleware('auth', ['except' => 'getSocialRedirect','getSocialCallback']);
         $this->auth = $auth;
     } 
 
@@ -37,14 +38,31 @@ class DashboardController extends Controller {
       * Shows the User dashboard.
       * @param         
       * @return Response
-      * Created on: 21/12/2016
-      * Updated on: 21/12/2016
+      * Created on: 17/01/2017
+      * Updated on: 17/01/2017
     **/
     public function getIndex()
     {
         try { 
             //Redirect to dashboard according to roles
-            return view('dashboard/dashboard');
+            switch(Auth::user()->role_id){
+              case 1:
+                $usertype='superadmin';
+              break;
+              case 2:
+                $usertype='management';
+              break;
+              case 3:
+                $usertype='customer';
+              break;
+              case 4:
+                $usertype='translator';
+              break;
+              default:
+                $usertype='customer';
+              break;
+            }
+            return view('dashboard/'.$usertype.'/dashboard');
         }
         catch (\Exception $e) 
         {   
@@ -54,7 +72,33 @@ class DashboardController extends Controller {
     }
 
     /**
-      * Shows the File content
+      * Redirect to social login page
+      * @param         
+      * @return Response
+      * Created on: 21/12/2016
+      * Updated on: 21/12/2016
+    **/
+    public function getSocialRedirect()
+    {
+        return Socialite::driver('facebook')->redirect();
+    }
+
+    /**
+      * Response from social login site
+      * @param         
+      * @return Response
+      * Created on: 21/12/2016
+      * Updated on: 21/12/2016
+    **/
+
+    public function getSocialCallback()
+    {
+      $providerUser = \Socialite::driver('facebook')->user();
+      echo "<pre>";print_r($providerUser);exit;
+    }
+
+    /**
+      * test function Shows the File content and counting of words
       * @param         
       * @return Response
       * Created on: 21/12/2016
@@ -69,5 +113,4 @@ class DashboardController extends Controller {
       echo 'Number of Words in File "defaultPoup.html" are : '.$number_of_words;
       exit;
     }
-
 }
