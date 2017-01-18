@@ -30,7 +30,6 @@ class ManageHowItWorks extends Request {
 			}else{
 				$rules['title']  = trim('required|unique:sections,title,'.decrypt($this->request->get('ourPromisesId')));
 			}
-			
 		}else{
 			if(!count($GetData)){
 				$rules['title']  = trim('required');
