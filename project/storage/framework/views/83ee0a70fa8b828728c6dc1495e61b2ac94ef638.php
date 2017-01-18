@@ -6,7 +6,6 @@
   $register_url = url('/').'/auth/register'; 
   $register_url2 = url('/').'/register'; 
   $login_url2 = url('/'); 
-  $reset_password_url = url('/').'/auth/reset-password'; 
 ?>
 <head>
   <meta charset="utf-8">
@@ -22,7 +21,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?php echo e(asset('/css/AdminLTE.min.css')); ?>">
-  <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2 || (strpos($_SERVER['REQUEST_URI'],'reset-password') != false))) {
+  <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2)) {
     $bodyClass='skin-blue sidebar-mini';
    ?>
 
@@ -50,7 +49,7 @@
 <div class="wrapper">
     <?php echo $__env->make('header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>		
     
-    <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2 || (strpos($_SERVER['REQUEST_URI'],'reset-password') != false))) { ?>
+    <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2)) { ?>
 	    <?php echo $__env->make('aside', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
             
         <!-- Content Wrapper. Contains page content -->
@@ -62,7 +61,7 @@
     <?php } ?>
     <?php echo $__env->yieldContent('content'); ?>
     
-    <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2 || (strpos($_SERVER['REQUEST_URI'],'reset-password') != false))) { ?>
+    <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2)) { ?>
         </div>
     <?php } ?>
     
@@ -72,8 +71,7 @@
     <!-- Jquery -->
 
 <!-- jQuery 2.2.3 -->
-<?php 
-if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2 || (strpos($_SERVER['REQUEST_URI'],'reset-password') != false))) { ?>
+<?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2)) { ?>
     <script src="<?php echo e(asset('/plugins/jQuery/jquery-2.2.3.min.js')); ?>"></script>
     <!-- jQuery UI 1.11.4 -->
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>

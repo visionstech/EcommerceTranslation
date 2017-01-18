@@ -27,16 +27,15 @@ class HomeController extends Controller {
       * By default controller calls this method.
       * @param int $id            
       * @return Response
-      * Created on: 21/12/2016
-      * Updated on: 21/12/2016
+      * Created on: 17/01/2016
+      * Updated on: 17/01/2016
     **/
     public function index()
-    {   
-        //return view('theme');
+    {
       try {
             if(Auth::user())
             {  
-                return redirect('/dashboard');
+                return redirect('/index.php/dashboard');
             }
             else 
             {  
@@ -50,6 +49,5 @@ class HomeController extends Controller {
              ];
             return view('errors.error', $result);
         }
-    }
-	
+    }	
 }

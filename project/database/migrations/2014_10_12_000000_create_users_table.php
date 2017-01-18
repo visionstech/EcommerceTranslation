@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('password');
-            $table->smallInteger('role');            
+            $table->smallInteger('role_id');            
 			$table->enum('status', ['Live', 'Suspended','Paused','Deleted']);
             $table->integer('updated_by');
             $table->string('updated_ip',100);

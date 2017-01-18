@@ -1,4 +1,4 @@
-<?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2 || (strpos($_SERVER['REQUEST_URI'],'reset-password') != false))) { ?>
+<?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2)) { ?>
     <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">

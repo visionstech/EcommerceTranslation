@@ -14,7 +14,7 @@ use View;
 use Auth;
 use Hash;
 use App\User;
-
+use Excel;
 class AuthController extends Controller
 {
     /*
@@ -159,26 +159,25 @@ class AuthController extends Controller
             'password' => $request->password
             );
             $checkStatus=User::where('email',$request->email)->get();
-            if(count($checkStatus)){
-            if($checkStatus[0]->status=='Active'){
-              
-                if($this->auth->attempt($credentials))
-                { 
-                    return redirect('/dashboard');
-                }
-                else
-                {   echo "sssssssss1";exit;
-                    return redirect()->back()->withErrors('These credentials do not match our records.');
-                }
-            }else{
-                return redirect()->back()->withErrors('These credentials do not match our records.');
-            }
-            
+
+            if(count($checkStatus)){ 
+              if($checkStatus[0]->status=='Active'){
+                 
+                  if($this->auth->attempt($credentials))
+                  { 
+                      return redirect('/dashboard');
+                  }
+                  else
+                  {
+                      return redirect()->back()->withErrors('These credentials do not match our records.');
+                  }
+              }else{
+                  return redirect()->back()->withErrors('Sorry!! Your account is not Activated.');
+              }
             }else{
 
                 return redirect()->back()->withErrors('These credentials do not match our records.');
             }
-
         }
         catch (\Exception $e) 
         {   
@@ -200,9 +199,9 @@ class AuthController extends Controller
     public function getLogout()
     {   
         try {
-                $this->auth->logout();
-                Session::flush();
-                return redirect('/auth/login');
+            $this->auth->logout();
+            Session::flush();
+            return redirect('/auth/login');
         }
         catch (\Exception $e) 
         { 
@@ -214,4 +213,91 @@ class AuthController extends Controller
         }
 
     }
+
+    /**
+      * Get Form for Reset Password for user.
+      * @param null          
+      * @return Response
+      * Created on: 17/01/2017
+      * Updated on: 17/01/2017
+    **/
+
+    public function getResetPassword($resetToken=null)
+    {   
+        try {
+          $resetToken=array('resetToken'=>$resetToken);
+          return view('auth.reset-password',$resetToken);
+        }
+        catch (\Exception $e) 
+        { 
+            $result = [
+                'exception_message' => $e->getMessage()
+            ];
+            print_r($e->getMessage());
+            return view('errors.error', $result);
+        }
+
+    }
+
+    /**
+      * Post Form for Reset Password for user.
+      * @param null      
+      * @return Response
+      * Created on: 17/01/2017
+      * Updated on: 17/01/2017
+    **/
+
+    public function postResetPassword(Requests\ResetPassword $request)
+    {   
+        try {
+            $inputData=$request->all();
+            if($inputData['reset_token']){
+              //here Token will be matched in database and change password of user if token exists
+               $checkToken=User::where('reset_password_token',$inputData['reset_token'])->first();
+               if(count($checkToken)){                  
+                  $newPassword=bcrypt($inputData['password']);
+                  $updatePassword=User::where('reset_password_token',$inputData['reset_token'])->update(['password'=>$newPassword,'reset_password_token'=>$inputData['reset_token']]);
+                  return redirect()->back()->with('success','Password changed successfully.');
+               }else{
+                  //Invalid Token
+                  return redirect()->back()->withErrors('Sorry!! Your token is invalid.');
+                }             
+
+            }else{
+              $checkStatus=User::where('email',$request->email)->first();
+              if((count($checkStatus)) && ($checkStatus->status=='Active')){
+                $resetToken=$checkStatus->id.''.$this->getRandomNumber(50);
+                //Send email link here of reset password with token
+                $updateToken=User::where('id',$checkStatus->id)->update(['reset_password_token'=>$resetToken]);
+                return redirect()->back()->with('success','Reset password link sent successfully on your email, kindly check email and reset your password.');
+              }else{
+                return redirect()->back()->withErrors('Sorry!! Your account is not Activated Or Valid.');
+              }
+            }
+        }
+        catch (\Exception $e) 
+        { 
+            $result = [
+                'exception_message' => $e->getMessage()
+            ];
+            print_r($e->getMessage());
+            return view('errors.error', $result);
+        }
+    }
+
+
+    public function getRandomNumber($qtd){ 
+      //Under the string $Caracteres you write all the characters you want to be used to randomly generate the code. 
+      $Caracteres = 'ABCDEFGHIJKLMOPQRSTUVXWYZabcdefghijklmnopqrstuvwxyz0123456789'; 
+      $QuantidadeCaracteres = strlen($Caracteres); 
+      $QuantidadeCaracteres--; 
+
+      $Hash=NULL; 
+          for($x=1;$x<=$qtd;$x++){ 
+              $Posicao = rand(0,$QuantidadeCaracteres); 
+              $Hash .= substr($Caracteres,$Posicao,1); 
+          } 
+
+      return $Hash; 
+    } 
 }

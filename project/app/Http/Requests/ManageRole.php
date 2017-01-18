@@ -20,23 +20,25 @@ class ManageRole extends Request {
 	 *
 	 * @return array
 	 */
+	
+
+
 	public function rules()
-	{	
+	{
 		$rules=array();
 		if($this->request->get('method')=="update"){
-			$rules['email']  = trim('required|email|unique:users,email,'.decrypt($this->request->get('userId')));
+			$rules['role']  = trim('required|unique:roles,role,'.decrypt($this->request->get('roleId')));
 		}else{
-			$rules['email']=trim('required|email|unique:users');
+			$rules['role']=trim('required|unique:roles');
 		}
-		$rules['role']=trim('required');
         return $rules;
 	}
 	
 	public function messages()
 	{	
         return [
-                'role.required' => 'The user role field is required.',
-            ];
+            'role.required' => 'The role field is required.',
+        ];
 		
 	}	
 }
