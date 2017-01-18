@@ -1,5 +1,5 @@
 
-@extends('app')
+@extends('backend.app')
 @section('title')
 	Login
 @endsection

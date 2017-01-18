@@ -45,7 +45,7 @@ class RoleController extends Controller {
     {
       try {
         $roles=Role::get();
-        return view('role.roles', compact('roles'));
+        return view('backend.role.roles', compact('roles'));
       }catch (\Exception $e){   
         $result = ['exception_message' => $e->getMessage()];
         return view('errors.error', $result);
@@ -67,7 +67,7 @@ class RoleController extends Controller {
             $roleDetail=Role::where('id',decrypt($roleId))->get()->toArray(); 
         }
         $roles=Role::all();
-        return view('role/add_role',compact('roles','roleDetail','roleId'));
+        return view('backend/role/add_role',compact('roles','roleDetail','roleId'));
       }catch (\Exception $e) 
       {
         $result = ['exception_message' => $e->getMessage()];

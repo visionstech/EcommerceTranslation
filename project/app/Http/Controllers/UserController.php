@@ -49,7 +49,7 @@ class UserController extends Controller {
     {     
       try {
         $users=User::where('role_id','!=',1)->get();
-        return view('user.users', compact('users'));
+        return view('backend.user.users', compact('users'));
       }catch (\Exception $e){   
         $result = ['exception_message' => $e->getMessage()];
         return view('errors.error', $result);
@@ -67,12 +67,11 @@ class UserController extends Controller {
     {
       try {
         $userDetail=array();
-        $publisherDetail=array();
         if($userId !=''){
             $userDetail=User::where('id',decrypt($userId))->get()->toArray(); 
         }
         $roles=Role::all();
-        return view('user/add_user',compact('roles','userDetail','userId'));
+        return view('backend/user/add_user',compact('roles','userDetail','userId'));
       }catch (\Exception $e) 
       {
         $result = ['exception_message' => $e->getMessage()];

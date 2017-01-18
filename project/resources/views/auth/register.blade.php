@@ -1,4 +1,4 @@
-@extends('app')
+@extends('backend.app')
 @section('title')
 	Registeration
 @endsection

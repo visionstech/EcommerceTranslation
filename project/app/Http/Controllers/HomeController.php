@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Contracts\Auth\Guard;
 use Auth;
+use App\Section;
 
 class HomeController extends Controller {
 	
@@ -33,14 +34,8 @@ class HomeController extends Controller {
     public function index()
     {
       try {
-            if(Auth::user())
-            {  
-                return redirect('/index.php/dashboard');
-            }
-            else 
-            {  
-                return redirect('/index.php/auth/login');
-            }
+          $sections=Section::get();
+          return view('customer.home',compact('sections'));
         }
         catch (\Exception $e) 
         {   

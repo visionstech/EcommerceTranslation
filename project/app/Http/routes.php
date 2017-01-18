@@ -16,6 +16,7 @@ Route::group(['middleware' => ['web']], function () {
    	Route::controller('dashboard', 'DashboardController');
    	Route::controller('user','UserController');
    	Route::controller('role', 'RoleController');
+   	Route::controller('homepage-section','HomepageSectionController');
 	Route::controllers([
 		'auth' => 'Auth\AuthController',
 		'password' => 'Auth\PasswordController',
