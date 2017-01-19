@@ -1,5 +1,5 @@
 <?php $__env->startSection('title'); ?>
-	Users
+	Our Promises
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
 
@@ -10,7 +10,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="<?php echo e(url('/dashboard')); ?>"><i class="fa fa-home"></i> Dashboard</a></li>
-        <li class="active"><a href="<?php echo e(url('/homepage-section/our-promises')); ?>">Manage Our Promises</a></li>
+        <li class="active"><a href="<?php echo e(url('/homepage-section/view-sections/our-promises')); ?>">Manage Our Promises</a></li>
       </ol>
     </section>
 
@@ -30,7 +30,7 @@
                     <?php endif; ?>
                       <div class="box">
             <div class="box-header">
-              <h3 class="box-title"><a href="<?php echo e(url('/homepage-section/add-our-promise')); ?>">Add Our Promises</a></h3>
+              <h3 class="box-title"><a href="<?php echo e(url('/homepage-section/add-section/our-promises')); ?>">Add Our Promises</a></h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -44,18 +44,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($ourPromises as $ourPromise): ?>
+                            <?php foreach($sections as $section): ?>
                                 <tr>
-                                    <td><?php echo e($ourPromise->title); ?></td>
-                                    <td><?php echo e($ourPromise->description); ?></td>
-                                    <td><?php echo e($ourPromise->created_at); ?></td>
+                                    <td><?php echo e($section->title); ?></td>
+                                    <td><?php echo e($section->description); ?></td>
+                                    <td><?php echo e($section->created_at); ?></td>
                                    <td>
-                                    <?php if($ourPromise->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($ourPromise->id)); ?>" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                    <?php if($section->status != 'Deleted'){ ?>
+                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($section->id)); ?>" data-status="Deleted" data-statusDiv="Delete">Delete</a>
                                     <?php }else{ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($ourPromise->id)); ?>" data-status="Active" data-statusDiv="Active">Active</a>
+                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($section->id)); ?>" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>
-                                    <a class="btn btn-primary actionedit" href="<?php echo e(url('/homepage-section/add-our-promise/'.encrypt($ourPromise->id))); ?>">Edit</a>
+                                    <a class="btn btn-primary actionedit" href="<?php echo e(url('/homepage-section/add-section/our-promises/'.encrypt($section->id))); ?>">Edit</a>
                                    </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -78,11 +78,12 @@
             </div>
             <div class="modal-body">
                 <h4></h4>
-                <p>Are you sure you want to <span class="statusDiv"></span> this user ? </p>
+                <p>Are you sure you want to <span class="statusDiv"></span> this section ? </p>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="UserId" class="UserId" />
+                <input type="hidden" name="Id" class="Id" />
                 <input type="hidden" name="status" class="status" />
+                <input type="hidden" name="type" class="type" value='how-it-works'/>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary delete_confirm"><span class="statusDiv"></span></button>
             </div>
@@ -107,18 +108,19 @@
         });
         var baseUrl='<?php echo URL::to('/'); ?>';
         $('.actionAnchor').click(function(){
-            var UserId=$(this).attr('data-did');
+            var Id=$(this).attr('data-did');
             var status=$(this).attr('data-status');
             var statusDiv=$(this).attr('data-statusDiv');
             $('.status').val(status);
             $('.statusDiv').html(statusDiv);
-            $('.UserId').val(UserId);
+            $('.Id').val(Id);
         });
         
         $('.delete_confirm').click(function(){
-            var UserId=$('.UserId').val();
+            var Id=$('.Id').val();
             var Status=$('.status').val();
-            window.location.href=baseUrl+'/user/delete-user/'+UserId+'/'+Status;
+            var Type=$('.type').val();
+            window.location.href=baseUrl+'/homepage-section/delete-section/'+Id+'/'+Status+'/'+Type;
         });        
     });
 </script>

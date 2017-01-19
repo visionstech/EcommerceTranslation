@@ -1,6 +1,6 @@
 @extends('backend.app')
 @section('title')
-	Users
+	Our Promises
 @endsection
 @section('content')
 
@@ -11,7 +11,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ url('/dashboard') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-        <li class="active"><a href="{{ url('/homepage-section/our-promises') }}">Manage Our Promises</a></li>
+        <li class="active"><a href="{{ url('/homepage-section/view-sections/our-promises') }}">Manage Our Promises</a></li>
       </ol>
     </section>
 
@@ -31,7 +31,7 @@
                     @endif
                       <div class="box">
             <div class="box-header">
-              <h3 class="box-title"><a href="{{ url('/homepage-section/add-our-promise') }}">Add Our Promises</a></h3>
+              <h3 class="box-title"><a href="{{ url('/homepage-section/add-section/our-promises') }}">Add Our Promises</a></h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -45,18 +45,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($ourPromises as $ourPromise)
+                            @foreach($sections as $section)
                                 <tr>
-                                    <td>{{ $ourPromise->title }}</td>
-                                    <td>{{ $ourPromise->description }}</td>
-                                    <td>{{ $ourPromise->created_at }}</td>
+                                    <td>{{ $section->title }}</td>
+                                    <td>{{ $section->description }}</td>
+                                    <td>{{ $section->created_at }}</td>
                                    <td>
-                                    <?php if($ourPromise->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($ourPromise->id) }}" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                    <?php if($section->status != 'Deleted'){ ?>
+                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Deleted" data-statusDiv="Delete">Delete</a>
                                     <?php }else{ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($ourPromise->id) }}" data-status="Active" data-statusDiv="Active">Active</a>
+                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>
-                                    <a class="btn btn-primary actionedit" href="{{ url('/homepage-section/add-our-promise/'.encrypt($ourPromise->id)) }}">Edit</a>
+                                    <a class="btn btn-primary actionedit" href="{{ url('/homepage-section/add-section/our-promises/'.encrypt($section->id)) }}">Edit</a>
                                    </td>
                                 </tr>
                             @endforeach
@@ -109,19 +109,19 @@
         });
         var baseUrl='<?php echo URL::to('/'); ?>';
         $('.actionAnchor').click(function(){
-            var UserId=$(this).attr('data-did');
+            var Id=$(this).attr('data-did');
             var status=$(this).attr('data-status');
             var statusDiv=$(this).attr('data-statusDiv');
             $('.status').val(status);
             $('.statusDiv').html(statusDiv);
-            $('.UserId').val(UserId);
+            $('.Id').val(Id);
         });
         
         $('.delete_confirm').click(function(){
-            var UserId=$('.UserId').val();
+            var Id=$('.Id').val();
             var Status=$('.status').val();
             var Type=$('.type').val();
-            window.location.href=baseUrl+'/homepage-section/delete-section/'+UserId+'/'+Status+'/'+Type;
+            window.location.href=baseUrl+'/homepage-section/delete-section/'+Id+'/'+Status+'/'+Type;
         });        
     });
 </script>

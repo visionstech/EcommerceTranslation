@@ -10,7 +10,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="<?php echo e(url('/dashboard')); ?>"><i class="fa fa-home"></i> Dashboard</a></li>
-        <li class="active"><a href="<?php echo e(url('/homepage-section/how-it-works')); ?>">Manage How It Works</a></li>
+        <li class="active"><a href="<?php echo e(url('/homepage-section/view-sections/how-it-works')); ?>">Manage How It Works</a></li>
       </ol>
     </section>
 
@@ -30,7 +30,7 @@
                     <?php endif; ?>
                       <div class="box">
             <div class="box-header">
-              <h3 class="box-title"><a href="<?php echo e(url('/homepage-section/add-how-it-works')); ?>">Add How It Works</a></h3>
+              <h3 class="box-title"><a href="<?php echo e(url('/homepage-section/add-section/how-it-works')); ?>">Add How It Works</a></h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -44,18 +44,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($howItWorks as $howItWork): ?>
+                            <?php foreach($sections as $section): ?>
                                 <tr>
-                                    <td><?php echo e($howItWork->title); ?></td>
-                                    <td><?php echo e($howItWork->description); ?></td>
-                                    <td><?php echo e($howItWork->created_at); ?></td>
+                                    <td><?php echo e($section->title); ?></td>
+                                    <td><?php echo e($section->description); ?></td>
+                                    <td><?php echo e($section->created_at); ?></td>
                                    <td>
-                                    <?php if($howItWork->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($howItWork->id)); ?>" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                    <?php if($section->status != 'Deleted'){ ?>
+                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($section->id)); ?>" data-status="Deleted" data-statusDiv="Delete">Delete</a>
                                     <?php }else{ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($howItWork->id)); ?>" data-status="Active" data-statusDiv="Active">Active</a>
+                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($section->id)); ?>" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>
-                                    <a class="btn btn-primary actionedit" href="<?php echo e(url('/homepage-section/add-how-it-works/'.encrypt($howItWork->id))); ?>">Edit</a>
+                                    <a class="btn btn-primary actionedit" href="<?php echo e(url('/homepage-section/add-section/how-it-works/'.encrypt($section->id))); ?>">Edit</a>
                                    </td>
                                 </tr>
                             <?php endforeach; ?>

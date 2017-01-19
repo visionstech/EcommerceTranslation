@@ -9,12 +9,18 @@
                         <div class="how-it-work">
                           <div class="circlebox">
                             <div class="circleboximg">
+                              
                               <?php if($i==1): ?>
-                              <img src="<?php echo e(asset('/customer/img/estimate.png')); ?>" alt="estimate" title="Estimate" />
+                                <?php $default='estimate.png'; $alt='estimate';?>                              
                               <?php elseif($i==2): ?>
-                              <img src="<?php echo e(asset('/customer/img/uplode.png')); ?>" alt="uplode" title="Upload" />
+                                <?php $default='uplode.png'; $alt='uplode';?>  
                               <?php else: ?>
-                              <img src="<?php echo e(asset('/customer/img/approved.png')); ?>" alt="approved" title="Approved" />
+                                <?php $default='approved.png'; $alt='approved';?>
+                              <?php endif; ?>
+                              <?php if($section->image): ?>
+                                  <img src="<?php echo e(asset('/uploads/'.$section->image)); ?>" alt="<?php echo e($alt); ?>" title="Estimate" />
+                              <?php else: ?>
+                                  <img src="<?php echo e(asset('/customer/img/'.$default)); ?>" alt="<?php echo e($alt); ?>" title="Estimate" />
                               <?php endif; ?>
                             </div>
                           </div>

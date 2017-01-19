@@ -11,7 +11,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ url('/dashboard') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-        <li class="active"><a href="{{ url('/homepage-section/how-it-works') }}">Manage How It Works</a></li>
+        <li class="active"><a href="{{ url('/homepage-section/view-sections/how-it-works') }}">Manage How It Works</a></li>
       </ol>
     </section>
 
@@ -31,7 +31,7 @@
                     @endif
                       <div class="box">
             <div class="box-header">
-              <h3 class="box-title"><a href="{{ url('/homepage-section/add-how-it-works') }}">Add How It Works</a></h3>
+              <h3 class="box-title"><a href="{{ url('/homepage-section/add-section/how-it-works') }}">Add How It Works</a></h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -45,18 +45,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($howItWorks as $howItWork)
+                            @foreach($sections as $section)
                                 <tr>
-                                    <td>{{ $howItWork->title }}</td>
-                                    <td>{{ $howItWork->description }}</td>
-                                    <td>{{ $howItWork->created_at }}</td>
+                                    <td>{{ $section->title }}</td>
+                                    <td>{{ $section->description }}</td>
+                                    <td>{{ $section->created_at }}</td>
                                    <td>
-                                    <?php if($howItWork->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($howItWork->id) }}" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                    <?php if($section->status != 'Deleted'){ ?>
+                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Deleted" data-statusDiv="Delete">Delete</a>
                                     <?php }else{ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($howItWork->id) }}" data-status="Active" data-statusDiv="Active">Active</a>
+                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>
-                                    <a class="btn btn-primary actionedit" href="{{ url('/homepage-section/add-how-it-works/'.encrypt($howItWork->id)) }}">Edit</a>
+                                    <a class="btn btn-primary actionedit" href="{{ url('/homepage-section/add-section/how-it-works/'.encrypt($section->id)) }}">Edit</a>
                                    </td>
                                 </tr>
                             @endforeach

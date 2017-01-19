@@ -9,12 +9,18 @@
                         <div class="how-it-work">
                           <div class="circlebox">
                             <div class="circleboximg">
+                              
                               @if($i==1)
-                              <img src="{{ asset('/customer/img/estimate.png') }}" alt="estimate" title="Estimate" />
+                                <?php $default='estimate.png'; $alt='estimate';?>                              
                               @elseif($i==2)
-                              <img src="{{ asset('/customer/img/uplode.png') }}" alt="uplode" title="Upload" />
+                                <?php $default='uplode.png'; $alt='uplode';?>  
                               @else
-                              <img src="{{ asset('/customer/img/approved.png') }}" alt="approved" title="Approved" />
+                                <?php $default='approved.png'; $alt='approved';?>
+                              @endif
+                              @if($section->image)
+                                  <img src="{{ asset('/uploads/'.$section->image) }}" alt="{{ $alt }}" title="Estimate" />
+                              @else
+                                  <img src="{{ asset('/customer/img/'.$default) }}" alt="{{ $alt }}" title="Estimate" />
                               @endif
                             </div>
                           </div>

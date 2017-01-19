@@ -40,8 +40,12 @@
                     </span>
                   </a>
                   <ul class="treeview-menu">
-                    <li class="active"><a href="<?php echo e(url('/homepage-section/our-promises')); ?>"><i class="fa fa-circle-o"></i> Manage Our Promises</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Manage Features</a></li>
+                    <li class="<?php echo e((strpos($_SERVER['REQUEST_URI'],'our-promises') != false)?'active':''); ?>"><a href="<?php echo e(url('/homepage-section/view-sections/our-promises')); ?>"><i class="fa fa-circle-o"></i> Manage Our Promises</a></li>
+                    <li class="<?php echo e((strpos($_SERVER['REQUEST_URI'],'how-it-works') != false)?'active':''); ?>"><a href="<?php echo e(url('/homepage-section/view-sections/how-it-works')); ?>"><i class="fa fa-circle-o"></i> Manage How It Works</a></li>
+                    <li class="<?php echo e((strpos($_SERVER['REQUEST_URI'],'faqs') != false)?'active':''); ?>"><a href="<?php echo e(url('/homepage-section/view-sections/faqs')); ?>"><i class="fa fa-circle-o"></i> Manage Faqs</a></li>
+                    <li class="<?php echo e((strpos($_SERVER['REQUEST_URI'],'features') != false)?'active':''); ?>"><a href="<?php echo e(url('/homepage-section/view-sections/features')); ?>"><i class="fa fa-circle-o"></i> Manage Features</a></li>
+                    <li class="<?php echo e((strpos($_SERVER['REQUEST_URI'],'eqho-by-numbers') != false)?'active':''); ?>"><a href="<?php echo e(url('/homepage-section/view-sections/eqho-by-numbers')); ?>"><i class="fa fa-circle-o"></i> Manage Eqho By Numbers</a></li>
+                    <li class="<?php echo e((strpos($_SERVER['REQUEST_URI'],'clients') != false)?'active':''); ?>"><a href="<?php echo e(url('/homepage-section/view-sections/clients')); ?>"><i class="fa fa-circle-o"></i> Manage Clients</a></li>
                   </ul>
                 </li>
         <?php } ?>

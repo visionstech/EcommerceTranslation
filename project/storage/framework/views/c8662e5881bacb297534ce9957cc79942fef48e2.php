@@ -1,5 +1,5 @@
 <?php $__env->startSection('title'); ?>
-    <?php echo e(($howItWorksId)?'Edit':'Add'); ?> How It Works
+    <?php echo e(($sectionId)?'Edit':'Add'); ?> How It Works
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>    
     <!-- top tiles -->
@@ -11,7 +11,7 @@
                 <ol class="breadcrumb">
                     <li><a href="<?php echo e(url('/dashboard')); ?>"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li><a href="<?php echo e(url('/homepage-section/our-promises')); ?>">Manage How It Works</a></li>
-                    <li class="active"><?php echo e(($howItWorksId)?'Edit':'Add'); ?> How It Works</li>
+                    <li class="active"><?php echo e(($sectionId)?'Edit':'Add'); ?> How It Works</li>
                 </ol>
             </section>
      <!-- Main content -->
@@ -22,30 +22,49 @@
             <!-- general form elements -->
           <div class="box box-primary">
                 <div class="box-header with-border">
-                  <h3 class="box-title"><?php echo e(($howItWorksId)?'Edit':'Add'); ?> How It Works</h3>
+                  <h3 class="box-title"><?php echo e(($sectionId)?'Edit':'Add'); ?> How It Works</h3>
                 </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form action="<?php echo e(url('/homepage-section/add-how-it-works')); ?>" method="post" class="form-horizontal form-label-left">
+            <form action="<?php echo e(url('/homepage-section/add-section/how-it-works')); ?>" method="post" class="form-horizontal form-label-left" enctype='multipart/form-data'>
                 <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
-                <input type="hidden" name="howItWorksId" value="<?php echo e($howItWorksId); ?>">
-                <input type="hidden" name="method" value="<?php echo e(($howItWorksId)?'update':'create'); ?>">
+                <input type="hidden" name="sectionType" value="how-it-works">
+                <input type="hidden" name="sectionId" value="<?php echo e($sectionId); ?>">
+                <input type="hidden" name="method" value="<?php echo e(($sectionId)?'update':'create'); ?>">
                 <?php echo $__env->make('errors.user_error', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
               <div class="box-body">
-               <?php $title = (old('title')) ? old('title') : ((!empty($howItWorks)) ? $howItWorks->title : '');  
+               <?php $title = (old('title')) ? old('title') : ((!empty($section)) ? $section->title : '');  
                     ?>
                 <div class="form-group">
                     <label for="title">Title<span class="required">*</span></label>
                     <input type="text" placeholder="Title" class="form-control" name="title" value="<?php echo e($title); ?>">
                 </div>
-                <?php $description = (old('description')) ? old('description') : ((!empty($howItWorks)) ? $howItWorks->description : '');  
+                <?php $image = ((!empty($section)) ? $section->image : ''); 
+                    if($image){
+                        $dataUrl=url('/');                
+                        $url=explode('index.php',$dataUrl);
+                        echo "<input type='hidden' name='image' value='".$section->image."'>";
+                    } 
+                ?>
+                <div class="form-group">
+                    <label for="image">Image<span class="required">*</span></label>
+                    <input type="file" placeholder="image" class="form-control" name="image">
+                </div>
+                <?php $image = ((!empty($section)) ? $section->image : ''); 
+                        if($image){
+                            echo "<img src='".$url[0].'uploads/'.$section->image."' alt='".$section->image_title."'>";
+                        } 
+                ?>
+                
+                <?php $description = (old('description')) ? old('description') : ((!empty($section)) ? $section->description : '');  
                     ?>
+
                 <div class="form-group">
                     <label for="title">Description<span class="required">*</span></label>
                     <textarea placeholder="Description" class="form-control" name="description"><?php echo e($description); ?></textarea>
                 </div>
                 <div class="box-footer">
-                    <button type="submit" class="btn btn-primary"><?php echo e(($howItWorksId)?'Update':'Save'); ?></button>
+                    <button type="submit" class="btn btn-primary"><?php echo e(($sectionId)?'Update':'Save'); ?></button>
                 </div>
             </form>
           </div>

@@ -3,85 +3,22 @@
         <h3>Our <span>Clients</span></h3>
         <div class="client-inner">
           <ul>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/amazon.png')); ?>" alt="amazon" title="Amazon" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/bizzard.png')); ?>" alt="bizzard" title="Bizzard" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/ea.png')); ?>" alt="ea" title="EA" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/avg.png')); ?>" alt="avg" title="AVG" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/google.png')); ?>" alt="google" title="Google" />
-              </div>
-            </li>
+            <?php
+                $dataUrl=url('/');                
+                $url=explode('index.php',$dataUrl);
+            ?>
+            <?php if(count($sections)): ?>
+                  <?php foreach($sections as $section): ?>
+                    <?php if($section->section_type=='clients'): ?>
 
-
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/uber.png')); ?>" alt="uber" title="Uber" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/oracle.png')); ?>" alt="oracle" title="Oracle" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/micro.png')); ?>" alt="micro" title="Microsoft" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/apple.png')); ?>" alt="apple" title="Apple" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/garena.png')); ?>" alt="garena" title="Garena" />
-              </div>
-            </li>
-
-
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/lazada.png')); ?>" alt="lazada" title="Lazada" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/true.png')); ?>" alt="true" title="True" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/bpp.png')); ?>" alt="bpp" title="BP" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/mcd.png')); ?>" alt="mcd" title="MacDonalds" />
-              </div>
-            </li>
-            <li>
-              <div class="clients-images">
-                <img src="<?php echo e(asset('/customer/img/samsung.png')); ?>" alt="samsung" title="Samsung" />
-              </div>
-            </li>
+                    <li>
+                      <div class="clients-images">
+                        <?php echo "<img src='".$url[0].'/uploads/'.$section->image."' alt='".$section->image_title."' title='".$section->image_title."'>"; ?>
+                      </div>
+                    </li>
+                    <?php endif; ?>
+                  <?php endforeach; ?>
+                <?php endif; ?>
           </ul>
         </div> <!-- client-inner -->
       </div>
