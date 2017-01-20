@@ -28,14 +28,14 @@ class HomeController extends Controller {
       * By default controller calls this method.
       * @param int $id            
       * @return Response
-      * Created on: 17/01/2016
-      * Updated on: 17/01/2016
+      * Created on: 17/01/2017
+      * Updated on: 17/01/2017
     **/
-    public function index()
+    public function getindex()
     {
       try {
           $sections=Section::get();
-          return view('customer.home',compact('sections'));
+          return view('customer.homepage',compact('sections'));
         }
         catch (\Exception $e) 
         {   

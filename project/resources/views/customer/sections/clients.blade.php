@@ -13,7 +13,9 @@
 
                     <li>
                       <div class="clients-images">
-                        <?php echo "<img src='".$url[0].'/uploads/'.$section->image."' alt='".$section->image_title."' title='".$section->image_title."'>"; ?>
+                        <?php
+                          echo "<img src='".$url[0].'/uploads/'.$section->image."' alt='".$section->image_title."' title='".$section->image_title."'>"; 
+                        ?>
                       </div>
                     </li>
                     @endif

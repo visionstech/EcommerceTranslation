@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?php echo e(asset('/css/AdminLTE.min.css')); ?>">
+  <link rel="stylesheet" href="<?php echo e(asset('/css/backend_custom.css')); ?>">
   <?php if(!($current_url == $login_url || $current_url == $login_url2 || $current_url == $register_url || $current_url == $register_url2 || (strpos($_SERVER['REQUEST_URI'],'reset-password') != false))) {
     $bodyClass='skin-blue sidebar-mini';
    ?>
@@ -39,12 +40,14 @@
           <link rel="stylesheet" href="<?php echo e(asset('/plugins/daterangepicker/daterangepicker.css')); ?>">
           <!-- bootstrap wysihtml5 - text editor -->
           <link rel="stylesheet" href="<?php echo e(asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')); ?>">
-  
+            
   <?php }else{ $bodyClass='login-page';  ?>
           <!-- iCheck -->
           <link rel="stylesheet" href="<?php echo e(asset('/plugins/iCheck/square/blue.css')); ?>" />
+
   <?php } ?>
-    <?php echo $__env->yieldContent('css'); ?>
+
+  <?php echo $__env->yieldContent('css'); ?>
 </head>
 <body class="hold-transition <?php echo $bodyClass; ?>">
 <div class="wrapper">

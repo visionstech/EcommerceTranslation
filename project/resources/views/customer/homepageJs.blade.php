@@ -121,16 +121,22 @@ $(document).ready(function(){
   // ....... Accordian-function End .........
 
   // ....... Add class-function to header.........
-    $(window).scroll(function() {    
-    var scroll = $(window).scrollTop();
-
-    if (scroll >= 100) {
-        $(".main-header").addClass("fix-header");
-    }
-    else{
-      $(".main-header").removeClass("fix-header");
-    }
-  });
+      var url      = window.location.href; 
+      var Homepage='<?php echo url('/');?>';
+      if((url==Homepage)){
+        $(window).scroll(function() {   
+         
+            var scroll = $(window).scrollTop();
+            if (scroll >= 100) {
+                $(".main-header").addClass("fix-header");
+            }
+            else{
+              $(".main-header").removeClass("fix-header");
+            }
+        });
+      }else{
+          $(".main-header").addClass("fix-header");
+      }
   // ....... END.........
 
   // ........ stop touch zoom script ............

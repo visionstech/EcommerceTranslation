@@ -25,14 +25,24 @@ class ManageSection extends Request {
 		$rules=array();	
 
 		$GetData = Section::where('title',$this->request->get('title'))->where('section_type',$this->request->get('sectionType'))->get();		
-		if($this->request->get('sectionType')=='clients'){
-			$rules['image']=trim('required');
+		
+		if((($this->request->get('sectionType')=='clients') || ($this->request->get('sectionType')=='banner-image') || ($this->request->get('sectionType')=='banner-bottom-logos') || ($this->request->get('sectionType')=='what-we-translate') || ($this->request->get('sectionType')=='header-image')) && ($this->request->get('method')=="create")){
+
+			$rules['image']=trim('required|mimes:jpeg,bmp,png,jpg');
+			return $rules;
+		}
+		if($this->request->get('sectionType')=='banner-info'){
+			// /$rules['image']=trim('required|mimes:jpeg,bmp,png,jpg');
+			$rules['description']=trim('required');
+			return $rules;
+		}
+
+		if((($this->request->get('sectionType')=='clients') || ($this->request->get('sectionType')=='banner-image') || ($this->request->get('sectionType')=='banner-bottom-logos') || ($this->request->get('sectionType')=='what-we-translate') || ($this->request->get('sectionType')=='header-image')) && ($this->request->get('method')=="update")){
+			
 			return $rules;
 		}
 		
-		if(($this->request->get('sectionType')=='how-it-works') || ($this->request->get('sectionType')=='features')){
-			$rules['image']=trim('required');
-		}
+		
 
 		if($this->request->get('method')=="update"){
 			
@@ -45,12 +55,25 @@ class ManageSection extends Request {
 				$rules['title']=trim('required|unique:sections');
 			}
 		}
+		if(($this->request->get('sectionType')=='how-it-works') || ($this->request->get('sectionType')=='features') || ($this->request->get('sectionType')=='what-we-translate')){
+			$rules['image']=trim('required|mimes:jpeg,bmp,png,jpg');
+		}
 		$rules['description']=trim('required');
         return $rules;
 	}
 	
 	public function messages()
 	{	
-        return [];
+		if($this->request->get('sectionType')=='banner-info'){
+			return [
+					'description.required'=>'Banner content cannot be empty.'
+       		 ];
+		}else{
+
+			return [
+
+        	];
+		}
+        
 	}	
 }

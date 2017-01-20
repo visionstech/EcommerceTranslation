@@ -297,27 +297,27 @@ section.we-translate h3{
     position: relative;
     z-index: 8;
 }
-.cloud-inner .documents {
+.cloud-inner .what_we_translate_1 {
   left: 65px;
   position: absolute;
   top: 210px;
 }
-.cloud-inner .website {
+.cloud-inner .what_we_translate_2 {
   left: 400px;
   position: absolute;
   top: 90px;
 }
-.cloud-inner .software {
+.cloud-inner .what_we_translate_3 {
   bottom: 60px;
   position: absolute;
   right: 300px;
 }
-.mobile {
+.what_we_translate_4 {
   bottom: -70px;
   left: 240px;
   position: absolute;
 }
-.multimedia {
+.what_we_translate_5 {
   bottom: -70px;
   position: absolute;
   right: 410px;
@@ -351,8 +351,8 @@ section.we-translate h3{
   width: 0;
   z-index: 99;
 }
-.documents:hover .cloud-tool-tip, .website:hover .cloud-tool-tip, .software:hover .cloud-tool-tip, 
-.mobile:hover .cloud-tool-tip, .multimedia:hover .cloud-tool-tip {
+.what_we_translate_1:hover .cloud-tool-tip, .what_we_translate_2:hover .cloud-tool-tip, .what_we_translate_3:hover .cloud-tool-tip, 
+.what_we_translate_4:hover .cloud-tool-tip, .what_we_translate_5:hover .cloud-tool-tip {
   display: inline-block;
 }
 .cloud-tool-tip > h4 {

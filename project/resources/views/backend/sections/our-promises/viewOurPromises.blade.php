@@ -84,7 +84,7 @@
             <div class="modal-footer">
                 <input type="hidden" name="Id" class="Id" />
                 <input type="hidden" name="status" class="status" />
-                <input type="hidden" name="type" class="type" value='how-it-works'/>
+                <input type="hidden" name="type" class="type" value='our-promises'/>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary delete_confirm"><span class="statusDiv"></span></button>
             </div>

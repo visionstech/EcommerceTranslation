@@ -3,7 +3,7 @@
         <div class="features-content">
           <h3>Features</h3>
           <ul>
-               <?php
+              <?php
                   $dataUrl=url('/');                
                   $url=explode('index.php',$dataUrl);
               ?>

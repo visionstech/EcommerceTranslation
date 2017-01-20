@@ -47,7 +47,7 @@ class HomepageSectionController extends Controller {
     public function getViewSections($sectionType=null)
     {
       try {
-        if(($sectionType !='how-it-works') && ($sectionType !='our-promises') && ($sectionType !='faqs') && ($sectionType !='features') && ($sectionType !='eqho-by-numbers') && ($sectionType !='clients')){
+        if(($sectionType !='how-it-works') && ($sectionType !='our-promises') && ($sectionType !='faqs') && ($sectionType !='features') && ($sectionType !='eqho-by-numbers') && ($sectionType !='clients') && ($sectionType !='banner-image') && ($sectionType !='banner-bottom-logos') && ($sectionType !='banner-info') && ($sectionType !='header-menus') && ($sectionType !='what-we-translate') && ($sectionType !='header-image')){
           return view('errors.404');
         }
         switch($sectionType){
@@ -69,6 +69,24 @@ class HomepageSectionController extends Controller {
           case 'clients';
             $view='clients.viewClients';
           break;
+          case 'banner-image';
+            $view='banner-image.viewBannerImage';
+          break;
+          case 'banner-bottom-logos';
+            $view='banner-bottom-logos.viewBannerBottomLogo';
+          break;
+          case 'banner-info';
+            $view='banner-info.viewBannerInfo';
+          break;
+          case 'header-menus';
+            $view='header-menus.viewHeaderMenus';
+          break;
+          case 'what-we-translate';
+            $view='what-we-translate.viewWhatWeTranslate';
+          break;
+          case 'header-image';
+            $view='header-image.viewHeaderImage';
+          break;     
           default:
             $view='our-promises.viewOurPromises';
           break;
@@ -91,7 +109,7 @@ class HomepageSectionController extends Controller {
     public function getAddSection($sectionType=null,$sectionId=null)
     {     
       try {
-        if(($sectionType !='how-it-works') && ($sectionType !='our-promises') && ($sectionType !='faqs') && ($sectionType !='features') && ($sectionType !='eqho-by-numbers') && ($sectionType !='clients')){
+        if(($sectionType !='how-it-works') && ($sectionType !='our-promises') && ($sectionType !='faqs') && ($sectionType !='features') && ($sectionType !='eqho-by-numbers') && ($sectionType !='clients') && ($sectionType !='banner-image') && ($sectionType !='banner-bottom-logos') && ($sectionType !='banner-info') && ($sectionType !='header-menus') && ($sectionType !='what-we-translate') && ($sectionType !='header-image')){
           return view('errors.404');
         }
         switch($sectionType){
@@ -112,6 +130,24 @@ class HomepageSectionController extends Controller {
           break;
           case 'clients';
             $view='clients.add_Clients';
+          break;
+          case 'banner-image';
+            $view='banner-image.add_BannerImage';
+          break;
+          case 'banner-bottom-logos';
+            $view='banner-bottom-logos.add_BannerBottomLogo';
+          break;
+          case 'banner-info';
+            $view='banner-info.add_BannerInfo';
+          break;
+          case 'header-menus';
+            $view='header-menus.add_HeaderMenu';
+          break;
+          case 'what-we-translate';
+            $view='what-we-translate.add_WhatWeTranslate';
+          break;
+          case 'header-image';
+            $view='header-image.add_HeaderImage';
           break;
           default:
             $view='our-promises.add_OurPromises';
@@ -139,7 +175,7 @@ class HomepageSectionController extends Controller {
     public function postAddSection(Requests\ManageSection $request,$sectionType=null)
     {
         try {
-            if(($sectionType !='how-it-works') && ($sectionType !='our-promises') && ($sectionType !='faqs') && ($sectionType !='features') && ($sectionType !='eqho-by-numbers') && ($sectionType !='clients')){
+            if(($sectionType !='how-it-works') && ($sectionType !='our-promises') && ($sectionType !='faqs') && ($sectionType !='features') && ($sectionType !='eqho-by-numbers') && ($sectionType !='clients') && ($sectionType !='banner-image')  && ($sectionType !='banner-bottom-logos') && ($sectionType !='banner-info') && ($sectionType !='header-menus') && ($sectionType !='what-we-translate') && ($sectionType !='header-image')){
               return view('errors.404');
             }
             
@@ -148,27 +184,55 @@ class HomepageSectionController extends Controller {
                 $redirect='homepage-section/view-sections/our-promises';
               break;
               case 'how-it-works';
-                $width=70;
-                $height=70;
+                $validWidth=70;
+                $validHeight=70;
                 $redirect='homepage-section/view-sections/how-it-works';
               break;
               case 'faqs';
                 $redirect='homepage-section/view-sections/faqs';
               break;
               case 'features';
-                $width=102;
-                $height=142;
+                $validWidth=102;
+                $validHeight=142;
                 $redirect='homepage-section/view-sections/features';
               break;
               case 'eqho-by-numbers';
-                $width=190;
-                $height=190;
+                $validWidth=190;
+                $validHeight=190;
                 $redirect='homepage-section/view-sections/eqho-by-numbers';
               break;
               case 'clients';
-                $width=250;
-                $height=250;
+                $validWidth=250;
+                $validHeight=250;
                 $redirect='homepage-section/view-sections/clients';
+              break;
+              case 'banner-image';
+                $validWidth=1950;
+                $validHeight=800;
+                $redirect='homepage-section/view-sections/banner-image';
+              break;
+              case 'banner-bottom-logos';
+                $validWidth=170;
+                $validHeight=100;
+                $redirect='homepage-section/view-sections/banner-bottom-logos';
+              break;
+              case 'banner-info';
+                $validWidth=170;
+                $validHeight=100;
+                $redirect='homepage-section/view-sections/banner-info';
+              break;
+              case 'header-menus';
+                $redirect='homepage-section/view-sections/header-menus';
+              break;
+              case 'what-we-translate';
+                $validWidth=150;
+                $validHeight=150;
+                $redirect='homepage-section/view-sections/what-we-translate';
+              break;
+              case 'header-image';
+                $validWidth=230;
+                $validHeight=70;
+                $redirect='homepage-section/view-sections/header-image';
               break;
               default:
                 $redirect='homepage-section/view-sections/our-promises';
@@ -176,8 +240,7 @@ class HomepageSectionController extends Controller {
             }
             $imgName='';
             $imageTitle='';
-            if(($sectionType =='how-it-works') || ($sectionType =='clients') || ($sectionType =='features') || ($sectionType == 'eqho-by-numbers')){
-
+            if(($sectionType =='how-it-works') || ($sectionType =='clients') || ($sectionType =='features') || ($sectionType == 'eqho-by-numbers')  || ($sectionType == 'banner-image') || ($sectionType == 'banner-bottom-logos') || ($sectionType == 'header-image') || ($sectionType !='what-we-translate')){
                 $file  =  $request->file('image');
                 if($file){
                   $imageType=explode('image/',$file->getMimeType());
@@ -193,10 +256,9 @@ class HomepageSectionController extends Controller {
                   $dimentions=list($width, $height) = getimagesize($url[0].'uploads/'.$imgName);
                   $actualWidth=$dimentions[0];
                   $actualHeight=$dimentions[1];
-                   
-                  if(($actualWidth>$width) || ($actualHeight>$height)){
+                  if(($actualWidth>$validWidth) || ($actualHeight>$validHeight)){
                     //Invalid Size For How It Works Section
-                    return redirect('homepage-section/add-section/'.$sectionType)->withErrors('Image width and height should be less then '.$width.' pixels.');
+                    return redirect('homepage-section/add-section/'.$sectionType)->withErrors('Image width and height should be less then '.$validWidth.' pixels.');
                   }
                 }
             }
@@ -221,6 +283,7 @@ class HomepageSectionController extends Controller {
                   $imgName=$GetData[0]->image;
                   $imageTitle=$GetData[0]->image_title;
                 }
+                $imagePath='/uploads';
                 $section = Section::find(decrypt($data['sectionId']));
                 $section->title = (isset($data['title']))?$data['title']:'';
                 $section->description = (isset($data['description']))?$data['description']:'';
@@ -228,7 +291,7 @@ class HomepageSectionController extends Controller {
                 $section->updated_by = Auth::user()->id;
                 $section->image = $imgName;
                 $section->image_title = $imageTitle;
-                $section->image_path = '/uploads';
+                $section->image_path = $imagePath;
                 $section->updated_ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
                 $section->save();
                 $action='Updated';
@@ -255,7 +318,7 @@ class HomepageSectionController extends Controller {
         if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
             return redirect('user')->with('error', 'You are not autorize to delete this user.');
         }
-        if(($sectionType !='how-it-works') && ($sectionType !='our-promises') && ($sectionType !='faqs') && ($sectionType !='features') && ($sectionType !='eqho-by-numbers') && ($sectionType !='clients')){
+        if(($sectionType !='how-it-works') && ($sectionType !='our-promises') && ($sectionType !='faqs') && ($sectionType !='features') && ($sectionType !='eqho-by-numbers') && ($sectionType !='clients') && ($sectionType !='banner-image') && ($sectionType !='banner-bottom-logos') && ($sectionType !='banner-info') && ($sectionType !='header-menus') && ($sectionType !='what-we-translate') && ($sectionType !='header-image')){
             return view('errors.404');
         }
         //Soft Delete Sections
