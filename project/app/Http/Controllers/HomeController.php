@@ -31,7 +31,7 @@ class HomeController extends Controller {
       * Created on: 17/01/2017
       * Updated on: 17/01/2017
     **/
-    public function getindex()
+    public function index()
     {
       try {
           $sections=Section::get();

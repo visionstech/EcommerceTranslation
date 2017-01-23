@@ -32,9 +32,24 @@
                     <i class="fa fa-user"></i> <span>Manage User Roles</span>
                   </a>
                 </li>
+                <li class="{{ (strpos($_SERVER['REQUEST_URI'],'language-management') != false)?'active':'' }}">
+                  <a href="{{ url('/language-management') }}">
+                    <i class="fa fa-language" aria-hidden="true"></i> <span>Manage Languages</span>
+                  </a>
+                </li>
+                <li class="{{ (strpos($_SERVER['REQUEST_URI'],'language-price') != false)?'active':'' }}">
+                  <a href="{{ url('/language-price') }}">
+                    <i class="fa fa-money" aria-hidden="true"></i> <span>Manage Language Price</span>
+                  </a>
+                </li>
+                <li class="{{ (strpos($_SERVER['REQUEST_URI'],'language-package') != false)?'active':'' }}">
+                  <a href="{{ url('/language-package') }}">
+                    <i class="fa fa-product-hunt" aria-hidden="true"></i> <span>Manage Language Package</span>
+                  </a>
+                </li>                
                 <li class="{{ (strpos($_SERVER['REQUEST_URI'],'homepage-section') != false)?'active':'' }} treeview">
                   <a href="#">
-                    <i class="fa fa-dashboard"></i> <span>Homepage Sections</span>
+                    <i class="fa fa-home" aria-hidden="true"></i> <span>Homepage Sections</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>

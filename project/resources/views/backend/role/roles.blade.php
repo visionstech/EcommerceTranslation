@@ -1,6 +1,6 @@
 @extends('backend.app')
 @section('title')
-	Users
+	User Roles
 @endsection
 @section('content')
     <section class="content-header">

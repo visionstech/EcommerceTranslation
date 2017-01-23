@@ -27,13 +27,14 @@
                   @if(count($sections))
                     @foreach($sections as $section)
                       @if($section->section_type=='header-menus')
-                        <li><a href="#" title="HOME">{{ $section->title }}</a></li>
+                        <li><a href="#" title="{{ $section->title }}">{{ $section->title }}</a></li>
                       @endif
                     @endforeach
                   @endif
+                @else
+                  <li><a href="#" title="Order Translation">Order Translation</a></li>
+                  <li><a href="#" title="HOME">Contact Sales</a></li>
                 @endif
-                <li><a href="#" title="Order Translation">Order Translation</a></li>
-                <li><a href="#" title="HOME">Contact Sales</a></li>
                 <li><a href="{{ url('/auth/login') }}" title="SIGN IN">SIGN IN</a></li>
               </ul>
             </nav>

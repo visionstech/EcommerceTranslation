@@ -12,14 +12,17 @@
 */
 
 Route::group(['middleware' => ['web']], function () {
-	Route::get('/', 'HomeController@index');
+	   Route::get('/', 'HomeController@index');
    	Route::controller('dashboard', 'DashboardController');
    	Route::controller('user','UserController');
    	Route::controller('role', 'RoleController');
    	Route::controller('homepage-section','HomepageSectionController');
+   	Route::controller('language-management','LanguageManagementController');
+      Route::controller('language-price','LanguagePriceController');
+      Route::controller('language-package','LanguagePackageController');
    	Route::controller('translation-application','TranslationApplicationController');
-	Route::controllers([
-		'auth' => 'Auth\AuthController',
-		'password' => 'Auth\PasswordController',
-	]);	
+   	Route::controllers([
+   		'auth' => 'Auth\AuthController',
+   		'password' => 'Auth\PasswordController',
+   	]);	
 });

@@ -27,13 +27,14 @@
                   <?php if(count($sections)): ?>
                     <?php foreach($sections as $section): ?>
                       <?php if($section->section_type=='header-menus'): ?>
-                        <li><a href="#" title="HOME"><?php echo e($section->title); ?></a></li>
+                        <li><a href="#" title="<?php echo e($section->title); ?>"><?php echo e($section->title); ?></a></li>
                       <?php endif; ?>
                     <?php endforeach; ?>
                   <?php endif; ?>
+                <?php else: ?>
+                  <li><a href="#" title="Order Translation">Order Translation</a></li>
+                  <li><a href="#" title="HOME">Contact Sales</a></li>
                 <?php endif; ?>
-                <li><a href="#" title="Order Translation">Order Translation</a></li>
-                <li><a href="#" title="HOME">Contact Sales</a></li>
                 <li><a href="<?php echo e(url('/auth/login')); ?>" title="SIGN IN">SIGN IN</a></li>
               </ul>
             </nav>

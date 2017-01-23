@@ -1,56 +1,131 @@
-<!DOCTYPE html>
-<html lang="en-US">
-<head>
-  <title>EQHO Translation</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" http-equiv="X-UA-Compatible" />
-  <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,600,700" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,700" rel="stylesheet"> 
-  <link rel="stylesheet" type="text/css" href="<?php echo e(asset('/customer/css/slick.css')); ?>"/>
-  <link rel="stylesheet" type="text/css" href="<?php echo e(asset('/customer/css/slick-theme.css')); ?>"/>
-  <link rel="stylesheet" href="<?php echo e(asset('/customer/css/jquery-ui.css')); ?>">
-  <link rel="stylesheet" type="text/css" href="<?php echo e(asset('/customer/css/font-awesome.css')); ?>">
-  <link rel="stylesheet" type="text/css" href="<?php echo e(asset('/customer/css/style.css')); ?>">
-  <link rel="stylesheet" type="text/css" href="<?php echo e(asset('/customer/css/responsive.css')); ?>">
+<?php $__env->startSection('title'); ?>
+  Users
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
 
-</head>
-<body>
-<div class="main-wrapper eqho-clear-fix">
-  <?php echo $__env->make('customer.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-  
-
-  <div class="site-content-wrap">
-    <section class="languages">
+    <section class="odering-process-1">
       <div class="eqho-container">
-        <div class="languages-content">
-          <h3>Over 65 Languages <span>One Easy to Use Platform. No Monthly Fees</span></h3>
-          <p class="content">EQHO has been delivering fast, accurate translations to global brands for 20 years. We harness the power of our proprietary translation technology, which enables our team of 3,500 linguists to deliver your project quickly and cost effectively.
-          </p>
-          <div class="system-img-wrap">
-          
-          </div>
-        </div>
-      </div>
-      <div>
-        <h1>What Whould Like to You Translate?</h1>
-        <a>Clear all words</a>
-        <form action="<?php echo e(url('/translation-application/step-one')); ?>" method="post" class="form-horizontal form-label-left" enctype='multipart/form-data'>
-          <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
-          <textarea placeholder="Type Your text here.." name='content' rows='10' cols='50'></textarea>
-          Or 
-          <input type='file' name='file' />
-          <input type="submit"  value="Next:Choose languages" />
-        </form>
-      </div>
+        <div class="eqho-clear-fix translator-wrap">
+        <form action="<?php echo e(url('/translation-application/step-one')); ?>" method="post" class="" enctype='multipart/form-data'>
+           <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
+          <div class="like-to-translate">
+            <div class="translate-inner">
+              <h2>What would you like to translate?</h2>
+              <p>Clear All Words</p>
 
-      <div>
-        <table border=1>
-          <tr><th colspan=2><h1>Your Result</h1></th></tr>
-          <tr><td>Total Words:</td><td>0</td></tr>
-          <tr><td>Languages:</td><td>0</td></tr>
-          <tr><td>Purpose:</td><td>0</td></tr>
-          <tr><td>Type:</td><td>0</td></tr>
-        </table>
+              <div class="translate-content">
+                <textarea placeholder="Type your text here..." name='content'></textarea>
+                <div class="upload-files">
+                  <span class="lable-text">Click to upload file</span>
+                    <div class="upload-files-btn">
+                       
+                        <span type="button" class="fileinput-button">
+                                <span>Upload Files</span>
+                                <input name="file[]" multiple="multiple" size="1" type="file">
+                        </span>
+                      
+                      
+                    </div>
+                </div> <!-- upload-files -->
+                
+              </div> <!-- translate-content -->
+              
+            </div> <!-- translate-inner -->
+            <div class="choose-lang-btn">
+              <input type='submit' value='Next: Choose Languages' class='btn_ctrl' >
+            </div>
+            <div class="guidelines">
+              <h4>GUIDELINES</h4>
+              <ul>
+                <li>
+                  <p><i class="fa fa-question-circle" aria-hidden="true"></i> Files that we accept</p>
+                  <div class="guide-tool-tip">
+                    <h5>We accept the following files:</h5>
+                    <div class="guide-file-type">
+                      <p><img src="<?php echo e(asset('/customer/img/acrobat.png')); ?>" title="acrobat" /> <span class="file-name">Acrobat</span> <span class="extension">.pdf</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/excel.png')); ?>" title="excel" /> <span class="file-name">Excel</span> <span class="extension">.xls, .xlsx, .xlsm</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/open-office.png')); ?>" title="open-office" /> <span class="file-name">Open Office</span> <span class="extension">.odt</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/power-point.png')); ?>" title="power-point" /> <span class="file-name">PowerPoint</span> <span class="extension">.ppt, .pptx</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/plain-text.png')); ?>" title="plain-text" /> <span class="file-name">Plain Text</span> <span class="extension">.txt</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/word.png')); ?>" title="word" /> <span class="file-name">.doc, .docx</span> <span class="extension">.pdf</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/rich-text-format.png')); ?>" title="rich-text-format" /> <span class="file-name">Rich Text Format</span> <span class="extension">.rtf</span> </p>
+                    </div>
+                    <div class="guide-file-text">
+                      <p>We only accept files that have extractable text. Please note that we cannot accept images or documents where text is contained in an image. For more info, visit our <a href="#" title="FAQ">FAQ</a>.</p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <p><i class="fa fa-question-circle" aria-hidden="true"></i> Exclude code and mark-up from your word count</p>
+                  <div class="guide-tool-tip">
+                    <h5>We accept the following files:</h5>
+                    <div class="guide-file-type">
+                      <p><img src="<?php echo e(asset('/customer/img/acrobat.png')); ?>" alt='acrobat' title="acrobat" /> <span class="file-name">Acrobat</span> <span class="extension">.pdf</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/excel.png')); ?>" title="excel" /> <span class="file-name">Excel</span> <span class="extension">.xls, .xlsx, .xlsm</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/open-office.png')); ?>" title="open-office" /> <span class="file-name">Open Office</span> <span class="extension">.odt</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/power-point.png')); ?>" title="power-point" /> <span class="file-name">PowerPoint</span> <span class="extension">.ppt, .pptx</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/plain-text.png')); ?>" title="plain-text" /> <span class="file-name">Plain Text</span> <span class="extension">.txt</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/word.png')); ?>" title="word" /> <span class="file-name">.doc, .docx</span> <span class="extension">.pdf</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/rich-text-format.png')); ?>" title="rich-text-format" /> <span class="file-name">Rich Text Format</span> <span class="extension">.rtf</span> </p>
+                    </div>
+                    <div class="guide-file-text">
+                      <p>We only accept files that have extractable text. Please note that we cannot accept images or documents where text is contained in an image. For more info, visit our <a href="#" title="FAQ">FAQ</a>.</p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <p><i class="fa fa-question-circle" aria-hidden="true"></i> Layout and other services</p>
+                  <div class="guide-tool-tip">
+                    <h5>We accept the following files:</h5>
+                    <div class="guide-file-type">
+                      <p><img src="<?php echo e(asset('/customer/img/acrobat.png')); ?>" title="acrobat" /> <span class="file-name">Acrobat</span> <span class="extension">.pdf</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/excel.png')); ?>" title="excel" /> <span class="file-name">Excel</span> <span class="extension">.xls, .xlsx, .xlsm</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/open-office.png')); ?>" title="open-office" /> <span class="file-name">Open Office</span> <span class="extension">.odt</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/power-point.png')); ?>" title="power-point" /> <span class="file-name">PowerPoint</span> <span class="extension">.ppt, .pptx</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/plain-text.png')); ?>" title="plain-text" /> <span class="file-name">Plain Text</span> <span class="extension">.txt</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/word.png')); ?>" title="word" /> <span class="file-name">.doc, .docx</span> <span class="extension">.pdf</span> </p>
+                      
+                      <p><img src="<?php echo e(asset('/customer/img/rich-text-format.png')); ?>" title="rich-text-format" /> <span class="file-name">Rich Text Format</span> <span class="extension">.rtf</span> </p>
+                    </div>
+                    <div class="guide-file-text">
+                      <p>We only accept files that have extractable text. Please note that we cannot accept images or documents where text is contained in an image. For more info, visit our <a href="#" title="FAQ">FAQ</a>.</p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              
+            </div>
+          </div> <!-- like-to-translate -->
+         </form>
+          <div class="your-order">
+            <h2>Your Order</h2>
+            <ul>
+              <li><p>Total Words</p> <span>0</span></li>
+              <li><p>Languages</p> <span>0</span></li>
+              <li><p>Purpose</p> <span>none</span></li>
+              <li><p>Type</p> <span>none</span></li>
+              <li><p>Your Price</p> <span>$0.00</span></li>
+            </ul>
+          </div>
+
+        </div> <!-- translator-wrap -->
       </div>
     </section>
      
@@ -65,11 +140,7 @@
         </div>
       </div> <!-- eqho-container -->
     </section> <!-- contact-sales -->
+<?php $__env->stopSection(); ?>
 
-    <?php echo $__env->make('customer.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-
-  </div><!-- site-content-wrap -->
-</div> <!-- main-wrapper -->
-<?php echo $__env->make('customer.homepageJs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-</body>
-</html>
+  
+<?php echo $__env->make('customer.front-app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

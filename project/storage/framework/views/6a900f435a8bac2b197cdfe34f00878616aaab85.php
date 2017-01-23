@@ -1,25 +1,8 @@
-<!DOCTYPE html>
-<html lang="en-US">
-<head>
-  <title>EQHO Translation</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" http-equiv="X-UA-Compatible" />
-  <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,600,700" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,700" rel="stylesheet"> 
-  <link rel="stylesheet" type="text/css" href="<?php echo e(asset('/customer/css/slick.css')); ?>"/>
-  <link rel="stylesheet" type="text/css" href="<?php echo e(asset('/customer/css/slick-theme.css')); ?>"/>
-  <link rel="stylesheet" href="<?php echo e(asset('/customer/css/jquery-ui.css')); ?>">
-  <link rel="stylesheet" type="text/css" href="<?php echo e(asset('/customer/css/font-awesome.css')); ?>">
-  <link rel="stylesheet" type="text/css" href="<?php echo e(asset('/customer/css/style.css')); ?>">
-  <link rel="stylesheet" type="text/css" href="<?php echo e(asset('/customer/css/responsive.css')); ?>">
+<?php $__env->startSection('title'); ?>
+  Users
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
 
-</head>
-<body>
-<div class="main-wrapper eqho-clear-fix">
-  <?php echo $__env->make('customer.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-  
-  <?php echo $__env->make('customer.banner', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-  <div class="site-content-wrap">
     <section class="languages">
       <div class="eqho-container">
         <div class="languages-content">
@@ -58,7 +41,7 @@
     <?php echo $__env->make('customer.sections.faq', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
     <?php echo $__env->make('customer.sections.clients', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-
+   
     <section class="contact-sales">
       <div class="eqho-container">
         <h3>Have a <span>Large Project?</span></h3>
@@ -68,11 +51,5 @@
         </div>
       </div> <!-- eqho-container -->
     </section> <!-- contact-sales -->
-
-    <?php echo $__env->make('customer.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-
-  </div><!-- site-content-wrap -->
-</div> <!-- main-wrapper -->
-<?php echo $__env->make('customer.homepageJs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-</body>
-</html>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('customer.front-app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
