@@ -45,7 +45,7 @@
                             <?php foreach($languagePackages as $languagePackage): ?>
                                 <tr>
                                     <td><?php echo e($languagePackage->name); ?></td>
-                                     <td><?php echo e($languagePackage->name); ?></td>
+                                     <td><?php echo e($languagePackage->price_per_word); ?></td>
                                     <td><?php echo e($languagePackage->created_at); ?></td>
                                     <td><?php echo e($languagePackage->status); ?></td>
                                    <td>

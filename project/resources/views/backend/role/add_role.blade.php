@@ -45,7 +45,6 @@
                    <select name="status" class="form-control">
                         <option value="Active" <?php echo ($Status =='Active')? "selected":''; ?> >Active</option>
                         <option value="Deleted" <?php echo ($Status =='Deleted')? "selected":''; ?>>Deleted</option>
-                        <option value="Paused" <?php echo ($Status =='Paused')? "selected":''; ?>>Paused</option>
                     </select>
                 </div>
                 

@@ -89,13 +89,15 @@ class RoleController extends Controller {
             if($data['roleId']==''){
                 // Create new role
                 $create_role = Role::create([
-                    'role' => $data['role']
+                    'role' => $data['role'],
+                    'status' => $data['status']
                 ]);
                 $action='Added';
             }else{
                 $GetData = Role::where('id',decrypt($data['roleId']))->get();
                 $user = Role::find(decrypt($data['roleId']));
-                $user->role = $data['role'];     
+                $user->role = $data['role'];
+                $user->status = $data['status'];        
                 $user->updated_by = Auth::user()->id;
                 $user->updated_ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
                 $user->save();

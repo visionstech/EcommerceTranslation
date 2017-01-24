@@ -96,7 +96,8 @@ class UserController extends Controller {
                 $create_user = User::create([
                     'email' => $data['email'],
                     'password' => bcrypt($randomPassword),
-                    'role_id' => $data['role']
+                    'role_id' => $data['role'],
+                    'status' => $data['status']
                 ]);
                 
                 //event(new UserManageAction($emailData));

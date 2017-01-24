@@ -26,8 +26,9 @@ class ManageLanguagePrice extends Request {
 	public function rules()
 	{
 		$rules=array();
-		$rules['source']  = trim('required');
+		
 		$rules['destination']  = trim('required');
+		$rules['source']  = trim('required');
 		$rules['price_per_word']  = trim('required');
 
 

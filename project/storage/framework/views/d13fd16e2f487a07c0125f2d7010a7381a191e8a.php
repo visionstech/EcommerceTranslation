@@ -60,7 +60,7 @@
 
                 <div class="form-group">
                     <label for="title">Description<span class="required">*</span></label>
-                    <textarea placeholder="Description" id="editor1" class="form-control" name="description"><?php echo e($description); ?></textarea>
+                    <textarea placeholder="Description" id="" cols='20' rows='10' class="form-control" name="description"><?php echo e($description); ?></textarea>
                 </div>
                 <div class="box-footer">
                     <button type="submit" class="btn btn-primary"><?php echo e(($sectionId)?'Update':'Save'); ?></button>

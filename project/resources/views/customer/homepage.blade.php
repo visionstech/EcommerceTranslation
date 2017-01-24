@@ -1,6 +1,6 @@
 @extends('customer.front-app')
 @section('title')
-  Users
+  EQHO
 @endsection
 @section('content')
 

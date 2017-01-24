@@ -28,6 +28,12 @@
     <?php echo $__env->make('customer.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
   </div><!-- site-content-wrap -->
 </div> <!-- main-wrapper -->
-<?php echo $__env->make('customer.homepageJs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+<?php if($current_url==$homePageUrl): ?>
+  <?php echo $__env->make('customer.homepageJs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php else: ?>
+  <?php echo $__env->make('customer.innerPageJs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php endif; ?>
+
 </body>
 </html>

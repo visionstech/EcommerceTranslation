@@ -1,12 +1,12 @@
 <?php $__env->startSection('title'); ?>
-  Users
+  Translation Order
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
 
     <section class="odering-process-1">
       <div class="eqho-container">
         <div class="eqho-clear-fix translator-wrap">
-        <form action="<?php echo e(url('/translation-application/step-one')); ?>" method="post" class="" enctype='multipart/form-data'>
+        <form action="<?php echo e(url('/translation-application/cart-update')); ?>" name="frmupload" method="post" id='myForm' class="" enctype='multipart/form-data'>
            <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
           <div class="like-to-translate">
             <div class="translate-inner">
@@ -15,16 +15,43 @@
 
               <div class="translate-content">
                 <textarea placeholder="Type your text here..." name='content'></textarea>
+                <div class="item-to-translate">
+                  <!--<table border="0">
+                    <tr>
+                      <td class="type"><img src="<?php echo e(asset('/customer/img/plain-text.png')); ?>" title="plain-text" alt="plain-text"></td>
+                      <td class="perview">text...</td>
+                      <td class="switch"><span class="words">370 words</span><span class="close"><a href="#" title="Edit">Edit</a> <i class="fa fa-times-circle-o" aria-hidden="true"></i></span></td>
+                    </tr>
+                    <tr>
+                      <td class="type"><img src="<?php echo e(asset('/customer/img/acrobat.png')); ?>" title="acrobat" alt="acrobat" /></td>
+                      <td class="perview">Acrobat.pdf</td>
+                      <td class="switch"><span class="words">370 words</span><span class="close"><i class="fa fa-times-circle-o" aria-hidden="true"></i></span></td>
+                    </tr>
+                    <tr>
+                      <td class="type"><img src="<?php echo e(asset('/customer/img/acrobat.png')); ?>" title="acrobat" alt="acrobat" /></td>
+                      <td class="perview">Acrobat.pdf</td>
+                      <td class="switch"><span class="words">370 words</span><span class="close"><i class="fa fa-times-circle-o" aria-hidden="true"></i></span></td>
+                    </tr>
+                    <tr>
+                      <td class="type"><img src="<?php echo e(asset('/customer/img/multiple-docs.png')); ?>" title="multiple-docs" alt="multiple-docs" /></td>
+                      <td class="perview">3 Items</td>
+                      <td class="switch">741 words</td>
+                    </tr>
+                  </table>-->
+                </div>
                 <div class="upload-files">
                   <span class="lable-text">Click to upload file</span>
                     <div class="upload-files-btn">
-                       
-                        <span type="button" class="fileinput-button">
-                                <span>Upload Files</span>
-                                <input name="file[]" multiple="multiple" size="1" type="file">
-                        </span>
-                      
-                      
+                       <span type="button" class="fileinput-button">
+                            <span>Upload Files</span>
+                            <input name="file[]" class="file" multiple="multiple" size="1" type="file">
+ 
+                              <div class='progress' id="progress_div">
+                              <div class='bar' id='bar1'></div>
+                              <div class='percent' id='percent1'>0%</div>
+                              </div>
+         
+                        </span>                      
                     </div>
                 </div> <!-- upload-files -->
                 
@@ -32,7 +59,7 @@
               
             </div> <!-- translate-inner -->
             <div class="choose-lang-btn">
-              <input type='submit' value='Next: Choose Languages' class='btn_ctrl' >
+              <input type='submit'  value='Next: Choose Languages' class='btn_ctrl' >
             </div>
             <div class="guidelines">
               <h4>GUIDELINES</h4>
@@ -114,10 +141,11 @@
             </div>
           </div> <!-- like-to-translate -->
          </form>
+         
           <div class="your-order">
             <h2>Your Order</h2>
             <ul>
-              <li><p>Total Words</p> <span>0</span></li>
+              <li><p>Total Words</p> <span class='total_words'>0</span></li>
               <li><p>Languages</p> <span>0</span></li>
               <li><p>Purpose</p> <span>none</span></li>
               <li><p>Type</p> <span>none</span></li>

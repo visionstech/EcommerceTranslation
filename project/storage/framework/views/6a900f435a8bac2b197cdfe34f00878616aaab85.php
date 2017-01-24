@@ -1,5 +1,5 @@
 <?php $__env->startSection('title'); ?>
-  Users
+  EQHO
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
 

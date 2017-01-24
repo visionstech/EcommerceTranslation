@@ -49,17 +49,4 @@
        </div>
     </section>    
 <?php $__env->stopSection(); ?>
-<?php $__env->startSection('js'); ?>
-<script src="https://cdn.ckeditor.com/4.5.7/standard/ckeditor.js"></script>
-<script>
-  $(function () {
-    // Replace the <textarea id="editor1"> with a CKEditor
-    // instance, using default configuration.
-    CKEDITOR.replace('editor1');
-    //bootstrap WYSIHTML5 - text editor
-    $(".textarea").wysihtml5();
-  });
-</script>
-<?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('backend.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

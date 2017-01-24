@@ -1020,3 +1020,380 @@ span.extension {
   font-weight: 700;
 }
 
+/*------------------------- Odering-process step-1 ------------------*/
+.header-bg{background-color: #424242;}
+section.odering-process-1{background-color: #FAFAFA;padding: 110px 0 0;}
+.translator-wrap {
+  margin: 55px 0;
+}
+.translator-wrap h2{
+    color: #424242;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 40px
+  }
+.like-to-translate{
+    float: left;
+    width: 70%;
+    margin: 0 28px 0 0;
+    
+  }
+.translate-inner{
+  border: 1px solid #ebebeb;
+  padding: 30px 0;
+}
+.like-to-translate h2{
+    padding: 0 30px 0;
+    margin: 0;
+  }
+.like-to-translate p{
+    text-align: right;
+    padding: 0 30px;
+    margin: 15px 0;
+    font-size: 13px;
+    color: #96bd35;
+    font-family:'Open Sans', sans-serif;
+  }
+.translate-content{
+    padding:0 30px;
+  }
+.translate-content textarea{
+    min-height: 250px;
+    color:#787878;
+    font-size: 14px;
+    font-family:'Open Sans', sans-serif;
+    font-style: italic;
+    border: 1px solid #efefef;
+    padding: 20px;
+    width: 100%;
+  }
+.upload-files{
+    padding: 15px 20px;
+    border: 1px solid #efefef;
+    margin: 25px 0 0;
+    text-align: center;
+  }
+
+.lable-text {
+    color: #424242;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0 20px;
+    font-family:'Open Sans', sans-serif;
+  }
+.upload-files-wrap {
+    display: inline-block;
+  }
+.fileinput-button {
+    border: 1px solid #c5c5c5;
+    border-radius: 3px;
+    padding: 5px 15px;
+    position: relative;
+    color: #424242;
+    font-weight: 400;
+    font-size: 14px;
+    font-family:'Open Sans', sans-serif;
+  }
+.upload-files-btn {
+    display: inline-block;
+  }
+.upload-files input {
+    cursor: pointer;
+    height: 30px;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 124px;
+  }
+.btn-wrap {
+    margin: 30px 0 50px;
+    text-align: right;
+  }
+.btn-wrap .btn_ctrl {
+    background: #96bd35 none repeat scroll 0 0;
+    border-radius: 3px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 15px 20px;
+    text-align: center;
+    display: inline-block;
+    transition: all 0.5s ease 0s;
+    border: 1px solid transparent;
+    min-width: 220px;
+  }
+.btn-wrap .btn_ctrl.back-btn {
+  background: #9d9d9d;
+  margin: 0 15px 0 0;
+}
+.btn-wrap .btn_ctrl:hover {
+    border: 1px solid #f5b12e;
+    color: #f5b12e;
+    background-color:transparent;
+  }
+.guidelines{
+    font-family:'Open Sans', sans-serif;
+    border: 1px solid #ebebeb;
+    padding: 20px 15px;
+  }
+.guidelines h4 {
+    color: #7b7b7b;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 5px;
+  }
+.guidelines ul li {
+    color: #afafaf;
+    cursor: pointer;
+    font-size: 13px;
+    list-style: outside none none;
+    padding: 4px 0;
+    position: relative;
+  }
+.guidelines p:hover {
+    color: #7b7b7b;
+  }
+.guidelines p {
+  color: inherit;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  font-size: 13px;
+}
+.guidelines li i {
+  display: inline-block;
+  margin-right: 7px;
+}
+
+.guide-tool-tip {
+  border: 1px solid #dedede;
+  border-top: 0px;
+  position: absolute;
+  top: -495px;
+  left: 60px;
+  width: 325px;
+  border-radius: 5px;
+  font-family:'Open Sans', sans-serif; 
+  background-color: #ffffff;
+  z-index: 999;
+  display: none;
+}
+.guide-tool-tip::before {
+  border-left: 0 solid rgba(0, 0, 0, 0);
+  border-right: 118px solid rgba(0, 0, 0, 0);
+  border-top: 164px solid #ffffff;
+  bottom: -43px;
+  content: "";
+  height: 0;
+  left: -18px;
+  margin-left: 0;
+  position: absolute;
+  transform: rotate(30deg);
+  width: 0;
+  z-index: -1;
+}
+.guide-tool-tip::after {
+  border-left: 0 solid rgba(0, 0, 0, 0);
+  border-right: 135px solid rgba(0, 0, 0, 0);
+  border-top: 188px solid #dedede;
+  bottom: -53px;
+  content: "";
+  height: 0;
+  left: -18px;
+  margin-left: 0;
+  position: absolute;
+  transform: rotate(30deg);
+  width: 0;
+  z-index: -2;
+}
+.guide-tool-tip h5 {
+  background: #f5b12e none repeat scroll 0 0;
+  color: #ffffff;
+  font-size: 15px;
+  padding: 18px;
+}
+.guide-file-type {
+  padding: 0 10px;
+  background: #ffffff none repeat scroll 0 0;
+}
+.guide-file-type > p {
+  border-bottom: 1px solid #efefef;
+  color: #424242;
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 10px 0;
+}
+.guide-file-type > p:hover{color: #424242;}
+.guide-file-type img {
+  margin-right: 10px;
+  vertical-align: middle;
+}
+span.file-name {
+  display: inline-block;
+  width: 165px;
+}
+span.extension {
+  display: inline-block;
+  text-align: right;
+  width: 100px;
+}
+.guide-file-text {
+  padding:30px 10px;
+  background: #ffffff none repeat scroll 0 0;
+}
+.guide-file-text > p {
+  color: #afafaf;
+  font-size: 13px;
+  font-weight: 600;
+}
+.guide-file-text p:hover {
+  color: #afafaf;
+}
+.guidelines ul li:hover .guide-tool-tip {
+  display: inline-block;
+}
+.item-to-translate {
+  border: 1px solid #efefef;
+  margin: 25px 0;
+  padding: 20px;
+}
+.item-to-translate table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.item-to-translate table td {
+  border-bottom: 1px solid #efefef;
+  padding: 10px;
+  color: #696969;
+  font-size: 17px;
+  font-weight: 400;
+}
+.item-to-translate table tr:last-of-type td{
+  color: #424242;
+  font-size: 18px;
+  font-weight: 700;
+}
+td.type {
+  width: 7%;
+}
+td.perview {
+  width: 60%;
+}
+td.switch {
+  text-align: right;
+  width: 30%;
+}
+.close {
+  display: none;
+}
+span.words {
+  display: inline-block;
+}
+td.switch:hover span.words {
+  display: none;
+}
+td.switch:hover span.close {
+  display: inline-block;
+
+}
+span.close a:hover, span.close i:hover{
+  color:#F5B12E;
+  cursor: pointer;
+}
+
+.your-order{
+    border: 1px solid #ebebeb;
+    float: right;
+    width: 27.5%;
+    padding:30px 20px;
+  }
+.your-order h2{
+    padding: 0px 0px 5px;
+    border-bottom: 1px solid #e3e3e3;
+  }
+.your-order li {
+  color: #696969;
+  font-size: 17px;
+  font-weight: 400;
+  list-style: outside none none;
+  padding:15px 0 10px;
+}
+.your-order p {
+  display: inline-block;
+  min-width: 75%;
+}
+.your-order span {
+  display: inline-block;
+  text-align: right;
+  width: 23%;
+  font-weight: 300;
+}
+.your-order li:last-of-type {
+  color: #424242;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 30px 0 0;
+}
+.your-order li:last-of-type span {
+  font-weight: 700;
+}
+
+/*------------------------- Odering-process step-2 ------------------*/
+.select-lang {
+  border: 1px solid #ebebeb;
+  padding:30px 0 65px;
+}
+.select-lang h2 {
+  padding: 0 30px 18px;
+}
+.select-lang .form-group {
+  margin: 0 0 20px;
+  padding: 0 30px;
+  font-family:'Open Sans', sans-serif;
+}
+.select-lang .form-group label {
+  color: #424242;
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.select-lang select {
+  border: 1px solid #efefef;
+  border-radius: 0;
+  color: #787878;
+  font-size: 14px;
+  font-style: italic;
+  max-width: 100%;
+  padding: 15px;
+  width: 410px;
+}
+
+/* File Uplaod Css need To update from Designer */
+.progress 
+{
+  display:none; 
+  position:relative; 
+  width:400px; 
+  border: 1px solid #ddd; 
+  padding: 1px; 
+  border-radius: 3px; 
+}
+.bar 
+{ 
+  background-color: #F5B12E; 
+  width:0%; 
+  height:20px; 
+  border-radius: 3px; 
+}
+.percent 
+{ 
+  position:absolute; 
+  display:inline-block; 
+  top:3px; 
+  left:48%; 
+}

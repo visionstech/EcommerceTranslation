@@ -49,11 +49,13 @@
                             @foreach($users as $user)
                             <?php //$adsId=encrypt($position->id); 
                                     if($user->role_id==1){
-                                        $role='Admin';
+                                        $role='Superadmin';
                                     }else if($user->role_id==2){
-                                        $role='User';
+                                        $role='Management';
+                                    }else if($user->role_id==3){
+                                        $role='Customer';
                                     }else{
-                                        $role='Manager';
+                                        $role='Translator';
                                     }
                             ?>
                                 <tr>

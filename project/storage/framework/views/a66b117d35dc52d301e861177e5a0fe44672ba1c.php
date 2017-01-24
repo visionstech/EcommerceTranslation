@@ -52,8 +52,8 @@
                 <?php $Status = (old('status')) ? old('status') : ((!empty($userDetail)) ? $userDetail[0]['status'] : 'Live');  
                         ?>
                 <div class="form-group">
-                   <label for="role">User Role<span class="required">*</span></label>
-                   <select name="role" class="form-control">
+                   <label for="status">User Status<span class="required">*</span></label>
+                   <select name="status" class="form-control">
                         <option value="Active" <?php echo ($Status =='Active')? "selected":''; ?> >Active</option>
                         <option value="Deleted" <?php echo ($Status =='Deleted')? "selected":''; ?>>Deleted</option>
                         <option value="Paused" <?php echo ($Status =='Paused')? "selected":''; ?>>Paused</option>

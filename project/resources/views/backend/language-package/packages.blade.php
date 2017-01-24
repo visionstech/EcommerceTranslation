@@ -46,7 +46,7 @@
                             @foreach($languagePackages as $languagePackage)
                                 <tr>
                                     <td>{{ $languagePackage->name }}</td>
-                                     <td>{{ $languagePackage->name }}</td>
+                                     <td>{{ $languagePackage->price_per_word }}</td>
                                     <td>{{ $languagePackage->created_at }}</td>
                                     <td>{{ $languagePackage->status }}</td>
                                    <td>

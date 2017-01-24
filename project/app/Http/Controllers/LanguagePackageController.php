@@ -90,13 +90,14 @@ class LanguagePackageController extends Controller {
                 $create_language = LanguagePackage::create([
                     'name' => $data['name'],
                     'price_per_word' => $data['price_per_word'],
-                    'description' => $data['description']
+                    'description' => $data['description'],
+                    'status' => $data['status'],
                 ]);
                 $action='Added';
             }else{
                 $languagePackage = LanguagePackage::find(decrypt($data['packageId']));
                 $languagePackage->name = $data['name'];
-                $languagePackage->short = $data['short'];       
+                $languagePackage->price_per_word = $data['price_per_word'];       
                 $languagePackage->status = $data['status'];       
                 $languagePackage->updated_by = Auth::user()->id;
                 $languagePackage->updated_ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];

@@ -28,6 +28,12 @@
     @include('customer.footer')
   </div><!-- site-content-wrap -->
 </div> <!-- main-wrapper -->
-@include('customer.homepageJs')
+
+@if($current_url==$homePageUrl)
+  @include('customer.homepageJs')
+@else
+  @include('customer.innerPageJs')
+@endif
+
 </body>
 </html>

@@ -13,10 +13,16 @@
         @endif
     <!-- Banner Content -->
     <div class="banner-info">
+    <?php $c=1; ?>
       @if(count($sections))
+
         @foreach($sections as $section)
           @if($section->section_type=='banner-info')
-            <?php echo $section->description; ?>
+            <?php 
+            if($c<2){
+              echo $section->description;
+            }
+            $c++; ?>
           @endif
         @endforeach
       @endif
