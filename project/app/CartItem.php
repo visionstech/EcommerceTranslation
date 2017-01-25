@@ -10,5 +10,5 @@ class CartItem extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['id','user_id','content','file','file_path','content_words','file_words','total_words','user_ip'];
+    protected $fillable = ['id','user_id','content','file','file_path','content_words','total_words','user_ip'];
 }

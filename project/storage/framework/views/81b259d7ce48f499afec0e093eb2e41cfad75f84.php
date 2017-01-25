@@ -6,15 +6,15 @@
     <section class="odering-process-1">
       <div class="eqho-container">
         <div class="eqho-clear-fix translator-wrap">
-        <form action="<?php echo e(url('/translation-application/cart-update')); ?>" name="frmupload" method="post" id='myForm' class="" enctype='multipart/form-data'>
-           <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
+        <form id='myForm' name="frmupload" method="post"  enctype='multipart/form-data'>
+           <input type="hidden" name="_token" id='token' value="<?php echo e(csrf_token()); ?>">
           <div class="like-to-translate">
             <div class="translate-inner">
               <h2>What would you like to translate?</h2>
               <p>Clear All Words</p>
 
               <div class="translate-content">
-                <textarea placeholder="Type your text here..." name='content'></textarea>
+                <textarea placeholder="Type your text here..." id='content' name='content'></textarea>
                 <div class="item-to-translate">
                   <!--<table border="0">
                     <tr>
@@ -39,12 +39,15 @@
                     </tr>
                   </table>-->
                 </div>
+                <div>Deleted Elements</div>
+                <div class="item-to-translate" id="trashedItems">
+                </div>
                 <div class="upload-files">
                   <span class="lable-text">Click to upload file</span>
                     <div class="upload-files-btn">
                        <span type="button" class="fileinput-button">
                             <span>Upload Files</span>
-                            <input name="file[]" class="file" multiple="multiple" size="1" type="file">
+                            <input name="file[]" class="file" multiple type="file">
  
                               <div class='progress' id="progress_div">
                               <div class='bar' id='bar1'></div>
@@ -56,10 +59,10 @@
                 </div> <!-- upload-files -->
                 
               </div> <!-- translate-content -->
-              
+         
             </div> <!-- translate-inner -->
-            <div class="choose-lang-btn">
-              <input type='submit'  value='Next: Choose Languages' class='btn_ctrl' >
+            <div class="btn-wrap">
+              <input type='submit'  value='Next: Choose Languages' id='testSub' class='btn_ctrl' >
             </div>
             <div class="guidelines">
               <h4>GUIDELINES</h4>
@@ -156,7 +159,28 @@
         </div> <!-- translator-wrap -->
       </div>
     </section>
-     
+   <!-- Error Popup --> 
+    <div class="over-lay">
+              <div class="unsupported-popup">
+                <h1>Unsupported file format <span class="close-icon"><i class="fa fa-times popup-close" aria-hidden="true"></i></span></h1>
+                <table class="error-table">
+                  <tbody id='error-tbody'>
+                    <tr>
+                      <td><img src="<?php echo e(asset('/customer/img/multiple-docs.png')); ?>" title="plain-text" alt="plain-text"></td>
+                      <td>File-type.png</td>
+                    </tr>
+                    <tr>
+                      <td><img src="<?php echo e(asset('/customer/img/multiple-docs.png')); ?>" title="acrobat" alt="acrobat"></td>
+                      <td>File-type.png</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p>Files listed above have not been uploaded, because they are in a format that we do not support.</p>
+                <div class="popup-close-btn">
+                  <input type="submit" name="" value="Close" class="popup-close" />
+                </div>
+              </div> <!-- unsupported-popup -->
+            </div> <!-- over-lay --> 
 
     <section class="contact-sales">
 

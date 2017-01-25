@@ -21,7 +21,9 @@
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
           </a>
         </li>
-        <?php if(Auth::user()->role_id==1){ ?>
+        <?php if(Auth::user()){ 
+                if(Auth::user()->role_id==1){ 
+          ?>
                 <li class="{{ (strpos($_SERVER['REQUEST_URI'],'user') != false)?'active':'' }}">
                   <a href="{{ url('/user') }}">
                     <i class="fa fa-users"></i> <span>Manage Users</span>
@@ -68,7 +70,7 @@
                     
                   </ul>
                 </li>
-        <?php } ?>
+        <?php }} ?>
       </ul>
     </section>
     <!-- /.sidebar -->

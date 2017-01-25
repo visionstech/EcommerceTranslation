@@ -3,7 +3,11 @@
 <script src="{{ asset('/customer/js/jquery-ui.js') }}"></script>
  <script type="text/javascript" src="{{ asset('/customer/js/jquery.form.js') }}"></script>
 <script>
+
+
 $(document).ready(function(){
+  //$('.over-lay').show();
+  var baseUrl='<?php echo url('/'); ?>';
   // ......... Menu Toggle .............
   $("#menu-toggle").click(function(){
       $(".menu-navigation").toggle(400);
@@ -34,6 +38,109 @@ $(document).ready(function(){
     }
   }, false);
   // ....... END.........
+  //Get Cart Data on Page load
+
+  $.ajax({
+        
+        url: baseUrl+'/translation-application/cart-update',
+        type:'get',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+          var data = $.parseJSON(res);
+          //console.log(data[0]);return false;
+          $('.item-to-translate').html(data[1]);
+          var TotalWords= $('.switch_total').html();
+          
+          $('#content').val(data[0]);
+          $('#trashedItems').html(data[2]);
+          $('.total_words').html(TotalWords);
+        }
+      });
+  //End Get Cart Data on Page load
+
+  $('.popup-close').click(function(){
+    $('.over-lay').hide();
+  });
+
+  
+
+  $('#myForm input[class=file]').change(function(){
+      //$("#testSub").click();
+      var bar = $('#bar1');
+      var percent = $('#percent1');
+      var data = new FormData();
+      var file = $(".file");
+      InvalidFiles=[];
+      $.each($(file), function (i, obj) {
+          $.each(obj.files, function (j, file) {
+            if(file.type=='application/pdf'){
+                data.append("files[" + j + "]", file);
+            }else{
+              InvalidFiles.push(file.name);
+            }
+        })
+      });
+      data.append('_token',$('#token').val());
+      data.append('content',$('#content').val());
+      
+      if(InvalidFiles.length > 0){
+          var errorString='';
+          $.each(InvalidFiles, function( index, value ) {
+             errorString += '<tr><td><img src="{{ asset("/customer/img/multiple-docs.png") }}" title="plain-text" alt="plain-text"></td><td>'+value+'</td></tr>';
+            //errorString +=value;
+            //errorString +='<br/>';
+          });
+         // alert(errorString);
+          $('#error-tbody').html(errorString);
+          $('.over-lay').show();
+      }
+
+      $.ajax({
+        
+        url: baseUrl+'/translation-application/cart-update',
+        type:'post',
+       // data: {'_token':$('#token').val()},
+        data: data,
+        processData: false,
+        contentType: false,
+        beforeSend: function(){
+           //alert('dfsdfsdfsdfsdfsdfsdf');return false;
+          document.getElementById("progress_div").style.display="block";
+          var percentVal = '0%';
+          bar.width(percentVal)
+          percent.html(percentVal);
+         },
+        uploadProgress: function(event, position, total, percentComplete) {
+          var percentVal = percentComplete + '%';
+          bar.width(percentVal)
+          percent.html(percentVal);
+        },
+        
+        success: function(res) {
+          var percentVal = '100%';
+          bar.width(percentVal)
+          percent.html(percentVal);
+
+          var data = $.parseJSON(res);
+          $('.item-to-translate').html(data[1]);
+          var TotalWords= $('.switch_total').html();
+          
+          $('#content').val(data[0]);
+          $('.total_words').html(TotalWords);
+        },
+        complete: function(xhr) {
+          if(xhr.responseText)
+          {
+            document.getElementById("output_image").innerHTML=xhr.responseText;
+          }
+        }
+      }); 
+      //$("#testSub").click();
+
+      //alert('sfsdfsd');
+  });
+
 });
 
   //Step One Save Cart Data
@@ -41,7 +148,10 @@ $(document).ready(function(){
 /*function upload_image() 
 {*/
 
- $('.btn_ctrl').click(function () {
+
+
+ /*$('.file').change(function () {
+  
   var bar = $('#bar1');
   var percent = $('#percent1');
   var data = new FormData();
@@ -49,8 +159,6 @@ $(document).ready(function(){
   InvalidFiles=[];
   $.each($(file), function (i, obj) {
       $.each(obj.files, function (j, file) {
-        //console.log(file.type);
-        //InvalidFiles.push(file.type);
         if(file.type=='application/pdf'){
             data.append("files[" + j + "]", file);
         }else{
@@ -100,8 +208,50 @@ $(document).ready(function(){
       }
     }
   }); 
-});
+});*/
 
+function trashElement(value){
+   var baseUrl='<?php echo url('/'); ?>';
+    $.ajax({
+        
+        url: baseUrl+'/translation-application/cart-update/'+value,
+        type:'get',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+          var data = $.parseJSON(res);
+          //console.log(data[2]);return false;
+          $('.item-to-translate').html(data[1]);
+          var TotalWords= $('.switch_total').html();
+          
+          $('#content').val(data[0]);
+          $('#trashedItems').html(data[2]);
+          $('.total_words').html(TotalWords);
+        }
+      });
 
+}
+
+function restoreElement(value){
+   var baseUrl='<?php echo url('/'); ?>';
+    $.ajax({
+        
+        url: baseUrl+'/translation-application/cart-update/'+value+'/restore',
+        type:'get',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+          var data = $.parseJSON(res);
+          //console.log(data[2]);return false;
+          $('.item-to-translate').html(data[1]);
+          var TotalWords= $('.switch_total').html();
+          
+          $('#content').val(data[0]);
+          $('#trashedItems').html(data[2]);
+          $('.total_words').html(TotalWords);
+        }
+      });
+
+}
 
 </script>

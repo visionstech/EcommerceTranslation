@@ -34,7 +34,7 @@ class HomeController extends Controller {
     public function index()
     {
       try {
-          $sections=Section::get();
+          $sections=Section::where('status','Active')->get();
           return view('customer.homepage',compact('sections'));
         }
         catch (\Exception $e) 
