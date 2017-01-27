@@ -40,7 +40,7 @@
                 <?php $Status = (old('status')) ? old('status') : ((!empty($roleDetail)) ? $roleDetail[0]['status'] : 'Active');  
                         ?>
                 <div class="form-group">
-                  <label>Select</label>
+                  <label>Select Status</label>
                    <select name="status" class="form-control">
                         <option value="Active" <?php echo ($Status =='Active')? "selected":''; ?> >Active</option>
                         <option value="Deleted" <?php echo ($Status =='Deleted')? "selected":''; ?>>Deleted</option>

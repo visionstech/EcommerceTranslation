@@ -19,16 +19,16 @@
     <section class="content">
       <div class="row">
         <div class="col-xs-12">
-                    @if(Session::has('success')) 
-                        <div class="alert alert-success"> 
-                            {{Session::get('success')}} 
-                        </div> 
-                    @endif
-                    @if(Session::has('error')) 
-                        <div class="alert alert-danger"> 
-                            {{Session::get('error')}} 
-                        </div> 
-                    @endif
+            @if(Session::has('success')) 
+                <div class="alert alert-success"> 
+                    {{ Session::get('success') }} 
+                </div> 
+            @endif
+            @if(Session::has('error')) 
+                <div class="alert alert-danger"> 
+                    {{ Session::get('error') }} 
+                </div> 
+            @endif
            <div class="box">
             <div class="box-header">
               <h3 class="box-title"><a href="{{ url('/homepage-section/add-section/clients') }}">Add Clients</a></h3>
@@ -40,6 +40,7 @@
                             <tr>
                                 <th>Client Image</th>
                                 <th>Created at</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -54,11 +55,12 @@
                                     ?>
                                    </td>
                                     <td>{{ $section->created_at }}</td>
+                                    <td>{{ $section->status }}</td>
                                    <td>
                                     <?php if($section->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                            <a class="btn btn-primary actionAnchor" data-target="{{ '.bs-example-modal-dm_'.$section->id }}" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Deleted" data-statusDiv="Delete">Delete</a>
                                     <?php }else{ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Active" data-statusDiv="Active">Active</a>
+                                            <a class="btn btn-primary actionAnchor" data-target="{{ '.bs-example-modal-dm_'.$section->id }}" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>
                                     <a class="btn btn-primary actionedit" href="{{ url('/homepage-section/add-section/clients/'.encrypt($section->id)) }}">Edit</a>
                                    </td>
@@ -73,28 +75,38 @@
         </div>
     </section>
 <!-- Popup Model For Delete action -->
-
-<div class="modal fade bs-example-modal-dm" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">   <div class="modal-dialog modal-sm">
+@foreach($sections as $section)
+        @if($section->status != 'Deleted')
+            <?php $status='Delete';
+                  $dataStatus="Deleted";
+            ?>
+        @else
+            <?php $status='Active';
+                  $dataStatus="Active";
+            ?>
+        @endif
+<div class="modal fade {{ 'bs-example-modal-dm_'.$section->id  }}" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">   <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel2"><span class="statusDiv"></span> User</h4>
+                <h4 class="modal-title" id="myModalLabel2">{{ $status }} Client</h4>
             </div>
             <div class="modal-body">
                 <h4></h4>
-                <p>Are you sure you want to <span class="statusDiv"></span> this section ? </p>
+                <p>Are you sure you want to {{ $status }} this section ? </p>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="Id" class="Id" />
-                <input type="hidden" name="status" class="status" />
+                <input type="hidden" name="Id" class="Id"  value="{{ encrypt($section->id) }}"/>
+                <input type="hidden" name="status" class="status"  value="{{ $dataStatus }}" />
                 <input type="hidden" name="type" class="type" value='clients'/>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary delete_confirm"><span class="statusDiv"></span></button>
+                <button type="button" class="btn btn-primary delete_confirm">{{ $status }}</button>
             </div>
         </div>
     </div>
 </div>
+@endforeach
 <!-- End Popup Model -->
 @endsection
 @section('js')

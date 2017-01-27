@@ -36,7 +36,7 @@
                   <?php $source = (old('source')) ? old('source') : ((!empty($priceDetail)) ? $priceDetail[0]['source'] : '');  
                   ?>
                   <div class="form-group">
-                     <label>Language From</label>
+                     <label>Language From<span class="required">*</span></label>
                       <select name="source" class="form-control">
                           <option value=''>Select Language From</option>
                           @foreach($languages as $language)
@@ -48,7 +48,7 @@
                   ?>
                   
                   <div class="form-group">
-                     <label>Language To</label>
+                     <label>Language To<span class="required">*</span></label>
                      <select name="destination" class="form-control">
                           <option value=''>Select Language To</option>
                           @foreach($languages as $language)

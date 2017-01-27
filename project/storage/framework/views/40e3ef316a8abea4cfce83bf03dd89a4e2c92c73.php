@@ -18,16 +18,16 @@
     <section class="content">
       <div class="row">
         <div class="col-xs-12">
-                    <?php if(Session::has('success')): ?> 
-                        <div class="alert alert-success"> 
-                            <?php echo e(Session::get('success')); ?> 
-                        </div> 
-                    <?php endif; ?>
-                    <?php if(Session::has('error')): ?> 
-                        <div class="alert alert-danger"> 
-                            <?php echo e(Session::get('error')); ?> 
-                        </div> 
-                    <?php endif; ?>
+            <?php if(Session::has('success')): ?> 
+                <div class="alert alert-success"> 
+                    <?php echo e(Session::get('success')); ?> 
+                </div> 
+            <?php endif; ?>
+            <?php if(Session::has('error')): ?> 
+                <div class="alert alert-danger"> 
+                    <?php echo e(Session::get('error')); ?> 
+                </div> 
+            <?php endif; ?>
            <div class="box">
             <div class="box-header">
               <h3 class="box-title"><a href="<?php echo e(url('/homepage-section/add-section/clients')); ?>">Add Clients</a></h3>
@@ -39,6 +39,7 @@
                             <tr>
                                 <th>Client Image</th>
                                 <th>Created at</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -53,11 +54,12 @@
                                     ?>
                                    </td>
                                     <td><?php echo e($section->created_at); ?></td>
+                                    <td><?php echo e($section->status); ?></td>
                                    <td>
                                     <?php if($section->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($section->id)); ?>" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                            <a class="btn btn-primary actionAnchor" data-target="<?php echo e('.bs-example-modal-dm_'.$section->id); ?>" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($section->id)); ?>" data-status="Deleted" data-statusDiv="Delete">Delete</a>
                                     <?php }else{ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($section->id)); ?>" data-status="Active" data-statusDiv="Active">Active</a>
+                                            <a class="btn btn-primary actionAnchor" data-target="<?php echo e('.bs-example-modal-dm_'.$section->id); ?>" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($section->id)); ?>" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>
                                     <a class="btn btn-primary actionedit" href="<?php echo e(url('/homepage-section/add-section/clients/'.encrypt($section->id))); ?>">Edit</a>
                                    </td>
@@ -72,28 +74,38 @@
         </div>
     </section>
 <!-- Popup Model For Delete action -->
-
-<div class="modal fade bs-example-modal-dm" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">   <div class="modal-dialog modal-sm">
+<?php foreach($sections as $section): ?>
+        <?php if($section->status != 'Deleted'): ?>
+            <?php $status='Delete';
+                  $dataStatus="Deleted";
+            ?>
+        <?php else: ?>
+            <?php $status='Active';
+                  $dataStatus="Active";
+            ?>
+        <?php endif; ?>
+<div class="modal fade <?php echo e('bs-example-modal-dm_'.$section->id); ?>" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">   <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel2"><span class="statusDiv"></span> User</h4>
+                <h4 class="modal-title" id="myModalLabel2"><?php echo e($status); ?> Client</h4>
             </div>
             <div class="modal-body">
                 <h4></h4>
-                <p>Are you sure you want to <span class="statusDiv"></span> this section ? </p>
+                <p>Are you sure you want to <?php echo e($status); ?> this section ? </p>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="Id" class="Id" />
-                <input type="hidden" name="status" class="status" />
+                <input type="hidden" name="Id" class="Id"  value="<?php echo e(encrypt($section->id)); ?>"/>
+                <input type="hidden" name="status" class="status"  value="<?php echo e($dataStatus); ?>" />
                 <input type="hidden" name="type" class="type" value='clients'/>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary delete_confirm"><span class="statusDiv"></span></button>
+                <button type="button" class="btn btn-primary delete_confirm"><?php echo e($status); ?></button>
             </div>
         </div>
     </div>
 </div>
+<?php endforeach; ?>
 <!-- End Popup Model -->
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('js'); ?>

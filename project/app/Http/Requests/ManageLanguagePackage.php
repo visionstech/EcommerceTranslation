@@ -39,9 +39,9 @@ class ManageLanguagePackage extends Request {
 	public function messages()
 	{	
         return [
-            'name.required' => 'The Language package field is required.',
-            'name.unique' => 'The Language package field is already taken.',
-            'price_per_word.required'=> 'The Language Package Price field is required.',
+            'name.required' => 'The Package name field is required.',
+            'name.unique' => 'The Package name field is already taken.',
+            'price_per_word.required'=> 'The Price field is required.',
         ];	
 	}	
 }

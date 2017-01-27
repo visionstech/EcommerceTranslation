@@ -48,13 +48,14 @@
                                     <td><?php echo e($language->status); ?></td>
                                    <td>
                                     <?php if($language->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($language->id)); ?>" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                            <a class="btn btn-primary" data-target="<?php echo e('.bs-example-modal-dm_'.$language->id); ?>" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($language->id)); ?>" data-status="Deleted" data-statusDiv="Delete">Delete</a>
                                     <?php }else{ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($language->id)); ?>" data-status="Active" data-statusDiv="Active">Active</a>
+                                            <a class="btn btn-primary" data-target="<?php echo e('.bs-example-modal-dm_'.$language->id); ?>" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($language->id)); ?>" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>
                                     <a class="btn btn-primary actionedit" href="<?php echo e(url('/language-management/add-language/'.encrypt($language->id))); ?>">Edit</a>
                                    </td>
                                 </tr>
+
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -64,28 +65,40 @@
             </div>
         </div>
     </section>
-<!-- Popup Model For Delete action -->
-
-<div class="modal fade bs-example-modal-dm" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">   <div class="modal-dialog modal-sm">
+    <?php foreach($languages as $language): ?>
+        <?php if($language->status != 'Deleted'): ?>
+            <?php $status='Delete';
+                  $dataStatus="Deleted";
+            ?>
+        <?php else: ?>
+            <?php $status='Active';
+                  $dataStatus="Active";
+            ?>
+        <?php endif; ?>
+      <div class="modal fade <?php echo e('bs-example-modal-dm_'.$language->id); ?>" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">   <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel2"><span class="statusDiv"></span> Language</h4>
+                <h4 class="modal-title" id="myModalLabel2"><?php echo e($status); ?> Language</h4>
             </div>
             <div class="modal-body">
                 <h4></h4>
-                <p>Are you sure you want to <span class="statusDiv"></span> this language ? </p>
+                <p>Are you sure you want to <?php echo e($status); ?> this language ? </p>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="LanguageId" class="LanguageId" />
-                <input type="hidden" name="status" class="status" />
+                <input type="hidden" name="LanguageId" value="<?php echo e(encrypt($language->id)); ?>"  class="LanguageId" />
+                <input type="hidden" name="status" value="<?php echo e($dataStatus); ?>" class="status" />
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary delete_confirm"><span class="statusDiv"></span></button>
+                <button type="button" class="btn btn-primary delete_confirm"><?php echo e($status); ?></button>
             </div>
         </div>
     </div>
 </div>
+<?php endforeach; ?>
+<!-- Popup Model For Delete action -->
+
+
 <!-- End Popup Model -->
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('js'); ?>
@@ -105,8 +118,9 @@
         });
         
         $('.delete_confirm').click(function(){
-            var LanguageId=$('.LanguageId').val();
-            var Status=$('.status').val();
+
+            var LanguageId= $(this).prev().prev().prev().val();
+            var Status= $(this).prev().prev().val();
             window.location.href=baseUrl+'/language-management/delete-language/'+LanguageId+'/'+Status;
         });        
     });

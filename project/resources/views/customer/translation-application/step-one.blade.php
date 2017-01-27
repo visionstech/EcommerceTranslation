@@ -4,7 +4,7 @@
 @endsection
 @section('content')
 
-    <section class="odering-process-1">
+    <section class="odering-process-1" id="Step-one">
       <div class="eqho-container">
         <div class="eqho-clear-fix translator-wrap">
         <form id='myForm' name="frmupload" method="post"  enctype='multipart/form-data'>
@@ -12,58 +12,36 @@
           <div class="like-to-translate">
             <div class="translate-inner">
               <h2>What would you like to translate?</h2>
-              <p>Clear All Words</p>
+              <p><a onclick="clearAllElements();" href="javascript:void(0)">Clear All Words</a></p>
 
               <div class="translate-content">
                 <textarea placeholder="Type your text here..." id='content' name='content'></textarea>
                 <div class="item-to-translate">
-                  <!--<table border="0">
-                    <tr>
-                      <td class="type"><img src="{{ asset('/customer/img/plain-text.png') }}" title="plain-text" alt="plain-text"></td>
-                      <td class="perview">text...</td>
-                      <td class="switch"><span class="words">370 words</span><span class="close"><a href="#" title="Edit">Edit</a> <i class="fa fa-times-circle-o" aria-hidden="true"></i></span></td>
-                    </tr>
-                    <tr>
-                      <td class="type"><img src="{{ asset('/customer/img/acrobat.png') }}" title="acrobat" alt="acrobat" /></td>
-                      <td class="perview">Acrobat.pdf</td>
-                      <td class="switch"><span class="words">370 words</span><span class="close"><i class="fa fa-times-circle-o" aria-hidden="true"></i></span></td>
-                    </tr>
-                    <tr>
-                      <td class="type"><img src="{{ asset('/customer/img/acrobat.png') }}" title="acrobat" alt="acrobat" /></td>
-                      <td class="perview">Acrobat.pdf</td>
-                      <td class="switch"><span class="words">370 words</span><span class="close"><i class="fa fa-times-circle-o" aria-hidden="true"></i></span></td>
-                    </tr>
-                    <tr>
-                      <td class="type"><img src="{{ asset('/customer/img/multiple-docs.png') }}" title="multiple-docs" alt="multiple-docs" /></td>
-                      <td class="perview">3 Items</td>
-                      <td class="switch">741 words</td>
-                    </tr>
-                  </table>-->
                 </div>
-                <div>Deleted Elements</div>
-                <div class="item-to-translate" id="trashedItems">
+                <div class='progress' id="progress_div">
+                  <div class='bar' id='bar1'></div>
+                  <div class='percent' id='percent1'>0%</div>
                 </div>
                 <div class="upload-files">
-                  <span class="lable-text">Click to upload file</span>
+                  <span class="lable-text">Or Click to upload file</span>
                     <div class="upload-files-btn">
                        <span type="button" class="fileinput-button">
                             <span>Upload Files</span>
-                            <input name="file[]" class="file" multiple type="file">
- 
-                              <div class='progress' id="progress_div">
-                              <div class='bar' id='bar1'></div>
-                              <div class='percent' id='percent1'>0%</div>
-                              </div>
-         
+                            <input name="file[]" class="file" multiple type="file">       
                         </span>                      
                     </div>
                 </div> <!-- upload-files -->
-                
+                <div class="del-wrap">
+                    <h4><span class="del-arrow"><i class="fa fa-trash-o" aria-hidden="true"></i> <span class='deleted_count'> 0 </span>Deleted Elements</span> <span class="del-permanent"><a onclick="delete_permanently();">Delete permanently</a></span></h4>
+                    <div class="item-to-translate" id="trashedItems">
+                    </div>
+                </div>
               </div> <!-- translate-content -->
          
             </div> <!-- translate-inner -->
             <div class="btn-wrap">
-              <input type='submit'  value='Next: Choose Languages' id='testSub' class='btn_ctrl' >
+             <!-- <input type='submit'  value='Next: Choose Languages' id='testSub' class='btn_ctrl' >-->
+              <a href="{{ url('/translation-application/step-two') }}" class="btn_ctrl">Next: Choose Languages</a>
             </div>
             <div class="guidelines">
               <h4>GUIDELINES</h4>
@@ -161,7 +139,7 @@
       </div>
     </section>
    <!-- Error Popup --> 
-    <div class="over-lay">
+      <div class="over-lay">
               <div class="unsupported-popup">
                 <h1>Unsupported file format <span class="close-icon"><i class="fa fa-times popup-close" aria-hidden="true"></i></span></h1>
                 <table class="error-table">

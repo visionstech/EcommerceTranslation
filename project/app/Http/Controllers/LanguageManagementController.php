@@ -91,7 +91,7 @@ class LanguageManagementController extends Controller {
                     'name' => $data['name'],
                     'short' => $data['short']
                 ]);
-                $action='Added';
+                $action='added';
             }else{
                 $GetData = Language::where('id',decrypt($data['languageId']))->get();
                 $language = Language::find(decrypt($data['languageId']));
@@ -101,7 +101,7 @@ class LanguageManagementController extends Controller {
                 $language->updated_by = Auth::user()->id;
                 $language->updated_ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
                 $language->save();
-                $action='Updated';
+                $action='updated';
             }
             return redirect()->back()->with('success', 'Language '.$action.' Successfully.');
         }
@@ -123,11 +123,12 @@ class LanguageManagementController extends Controller {
     {
       try {
         if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
-            return redirect('language-management')->with('error', 'You are not autorize to delete this role.');
+            return redirect('language-management')->with('error', 'You are not autorize to delete this language.');
         }
         //Soft Delete Language
+        $msg=($status=='Active')?'Activated':'Deleted';
         $updateUser=Language::where('id',decrypt($languageId))->update(array('status'=>$status));
-        return redirect('language-management')->with('success', 'Language '.$status.' Successfully.');
+        return redirect('language-management')->with('success', 'Language '.$msg.' Successfully.');
       }catch (\Exception $e){   
         $result = ['exception_message' => $e->getMessage()];
         return view('errors.error', $result);

@@ -10,6 +10,6 @@ class LanguagePackage extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['id','name','description','updated_by','updated_ip'];
+    protected $fillable = ['id','name','description','price_per_word','updated_by','updated_ip'];
 
 }

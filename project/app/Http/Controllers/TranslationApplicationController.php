@@ -6,6 +6,7 @@ use App\Http\Requests;
 use Illuminate\Contracts\Auth\Guard;
 use Auth;
 use App\Section;
+use App\Language;
 use App\CartItem;
 use File;
 
@@ -53,7 +54,7 @@ class TranslationApplicationController extends Controller {
       * @param Request data            
       * @return Response
       * Created on: 20/01/2017
-      * Updated on: 23/01/2017
+      * Updated on: 27/01/2017
     **/
 
     public function postCartUpdate(Request $request)
@@ -64,7 +65,16 @@ class TranslationApplicationController extends Controller {
           $cartData=array();
           $CountedWords=0;
           $filenames=array();
-          $fileWords=array();        
+          $fileWords=array();
+          $userIp=(array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
+        
+          if(Auth::user()){
+              $whereColumn='user_id';
+              $whereValue=Auth::user()->id;
+          }else{
+              $whereColumn='user_ip';
+              $whereValue=$userIp;
+          }        
             
           if($file){
             foreach ($file as $key => $value){
@@ -91,26 +101,21 @@ class TranslationApplicationController extends Controller {
 
           //Cart Update Data
           $userIp=(array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
-          if(Auth::user()){
-            $getContentCart=CartItem::where('user_id',Auth::user()->id)->where('file',null)->first();
-            $getFileCart=CartItem::where('user_id',Auth::user()->id)->where('file','!=',null)->get();
-          }else{
-            $getContentCart=CartItem::where('user_ip',$userIp)->where('file',null)->first();
-            $getFileCart=CartItem::where('user_ip',$userIp)->where('file','!=',null)->get();
-          }
+
+          $getContentCart=CartItem::where($whereColumn,$whereValue)->where('file',null)->first();
+          $getFileCart=CartItem::where($whereColumn,$whereValue)->where('file','!=',null)->get();
+          
           $CartDataFinal=array();
-            
-
-
-            $content_words=(isset($data['content']))?(str_word_count($data['content'])):0;
+          
+          $content_words=(isset($data['content']))?(str_word_count($data['content'])):0;
             
             if($content_words!=0){
 
-              if(count($getContentCart)){
+              if($getContentCart != null){
                 //Update textarea content
-                  $cartUpdate = CartItem::find($getCart[0]->id);
-                  $cartUpdate->content = $content_words;
-                  $section->save();
+                  $cartUpdate = CartItem::find($getContentCart->id);
+                  $cartUpdate->content = (isset($data['content']))?$data['content']:'';
+                  $cartUpdate->save();
 
               }else{
                 //insert textarea content
@@ -139,16 +144,11 @@ class TranslationApplicationController extends Controller {
                         'user_ip'=>$userIp
                       ]);
                 }
-
             }
           
-          if(Auth::user()){
-            $getContentCartUpdated=CartItem::where('user_id',Auth::user()->id)->where('file',null)->where('status','Active')->first();
-            $getFileCartUpdated=CartItem::where('user_id',Auth::user()->id)->where('file','!=',null)->where('status','Active')->get();
-          }else{
-            $getContentCartUpdated=CartItem::where('user_ip',$userIp)->where('file',null)->where('status','Active')->first();
-            $getFileCartUpdated=CartItem::where('user_ip',$userIp)->where('file','!=',null)->where('status','Active')->get();
-          }
+          $getContentCartUpdated=CartItem::where($whereColumn,$whereValue)->where('file',null)->where('status','Active')->first();
+          $getFileCartUpdated=CartItem::where($whereColumn,$whereValue)->where('file','!=',null)->where('status','Active')->get();
+          
           
           $totalWordsCounted=0;
           $cartHtml='<table border="0">';
@@ -170,7 +170,7 @@ class TranslationApplicationController extends Controller {
                 $cartHtml .='<tr>
                         <td class="type"><img src="http://localhost/eqho/customer/img/acrobat.png" title="acrobat" alt="acrobat" /></td>
                         <td class="perview">'.$file->file.'</td>
-                        <td class="switch"><span class="words">'.$file->content_words.' words</span><span class="close"><i class="fa fa-times-circle-o" onclick="trashElement('.$getFileCartUpdated->id.');" aria-hidden="true"></i></span></td>
+                        <td class="switch"><span class="words">'.$file->content_words.' words</span><span class="close"><i class="fa fa-times-circle-o" onclick="trashElement('.$file->id.');" aria-hidden="true"></i></span></td>
                       </tr>';
                 $totalWordsCounted=($totalWordsCounted+$file->content_words);
             }
@@ -180,27 +180,26 @@ class TranslationApplicationController extends Controller {
                       <td class="perview">'.(count($getFileCartUpdated)+count($getContentCartUpdated)).' Items</td>
                       <td class="switch"><span class="switch_total">'.$totalWordsCounted.'</span> words</td>
                     </tr>';
+
           $cartHtml .='</table>';
 
           // Get Trashed Items Of The Cart And Update It In Trashed Div
-          if(Auth::user()){
-            $getContentCartTrashed=CartItem::where('user_id',Auth::user()->id)->where('file',null)->where('status','Trashed')->get();
-            $getFileCartTrashed=CartItem::where('user_id',Auth::user()->id)->where('file','!=',null)->where('status','Trashed')->get();
-          }else{
-            $getContentCartTrashed=CartItem::where('user_ip',$userIp)->where('file',null)->where('status','Trashed')->get();
-            $getFileCartTrashed=CartItem::where('user_ip',$userIp)->where('file','!=',null)->where('status','Trashed')->get();
-          }
+          $getContentCartTrashed=CartItem::where($whereColumn,$whereValue)->where('file',null)->where('status','Trashed')->first();
+          $getFileCartTrashed=CartItem::where($whereColumn,$whereValue)->where('file','!=',null)->where('status','Trashed')->get();
           
           $totalWordsCountedTrashed=0;
-          $cartHtmlTrashed='<table border="0">';
+          $cartHtmlTrashed='';
+          if($getContentCartTrashed != null || count($getFileCartTrashed)){
+            $cartHtmlTrashed='<table border="0">';
+          }
           if($getContentCartTrashed != null){
             if($getContentCartTrashed->content){
               $cartHtmlTrashed .='<tr>
                         <td class="type"><img src="http://localhost/eqho/customer/img/plain-text.png" title="plain-text" alt="plain-text"></td>
                         <td class="perview">text...</td>
-                        <td class="switch"><span class="words">'.$getContentCartTrashed[0]->content_words.' words</span><span class="close"><a href="#" title="Edit">Edit</a> <span onclick="trashElement('.$getContentCartTrashed[0]->id.')"><i class="fa fa-times-circle-o" aria-hidden="true"></i></span></span></td>
+                        <td class="switch"><span class="words">'.$getContentCartTrashed->content_words.' words</span><span class="close"><a href="#" title="Edit">Edit</a> <span onclick="trashElement('.$getContentCartTrashed->id.')"><i class="fa fa-times-circle-o" aria-hidden="true"></i></span></span></td>
                       </tr>';
-              $totalWordsCountedTrashed=($totalWordsCountedTrashed+$getContentCartTrashed[0]->content_words);
+              $totalWordsCountedTrashed=($totalWordsCountedTrashed+$getContentCartTrashed->content_words);
             }
            $content_wordsTrashed=$getContentCartUpdated->content;
           }else{
@@ -211,18 +210,23 @@ class TranslationApplicationController extends Controller {
                 $cartHtmlTrashed .='<tr>
                         <td class="type"><img src="http://localhost/eqho/customer/img/acrobat.png" title="acrobat" alt="acrobat" /></td>
                         <td class="perview">'.$file->file.'</td>
-                        <td class="switch"><span class="words">'.$file->content_words.' words</span><span class="close"><span onclick="trashElement('.$getFileCartTrashed->id.')"><i class="fa fa-times-circle-o" aria-hidden="true"></i></span></span></td>
+                        <td class="switch"><span class="words">'.$file->content_words.' words</span><span class="close"><span onclick="trashElement('.$file->id.')"><i class="fa fa-times-circle-o" aria-hidden="true"></i></span></span></td>
                       </tr>';
                 $totalWordsCountedTrashed=($totalWordsCountedTrashed+$file->content_words);
             }
         }
-        $cartHtmlTrashed .='<tr>
-                      <td class="type"><img src="http://localhost/eqho/customer/img/multiple-docs.png" title="multiple-docs" alt="multiple-docs" /></td>
-                      <td class="perview">'.(count($getFileCartTrashed)+count($getContentCartTrashed)).' Items</td>
-                      <td class="switch"><span class="switch_total">'.$totalWordsCountedTrashed.'</span> words</td>
-                    </tr>';
-          $cartHtmlTrashed .='</table>';
-          $returnData=array($content_words,$cartHtml,$cartHtmlTrashed,$content_wordsTrashed);
+        if($totalWordsCountedTrashed>0){
+          $cartHtmlTrashed .='<tr>
+                        <td class="type"><img src="http://localhost/eqho/customer/img/multiple-docs.png" title="multiple-docs" alt="multiple-docs" /></td>
+                        <td class="perview">'.(count($getFileCartTrashed)+count($getContentCartTrashed)).' Items</td>
+                        <td class="switch"><span class="switch_total">'.$totalWordsCountedTrashed.'</span> words</td>
+                      </tr>';
+            $cartHtmlTrashed .='</table>';
+            $totalDeletedItems=(count($getFileCartTrashed)+count($getContentCartTrashed));
+          }else{
+            $totalDeletedItems=''; 
+          }
+          $returnData=array($content_words,$cartHtml,$cartHtmlTrashed,$content_wordsTrashed,$totalDeletedItems);
           echo json_encode($returnData);exit;
 
       }catch (\Exception $e){   
@@ -234,35 +238,46 @@ class TranslationApplicationController extends Controller {
       }
     }
 
-
     /**
       * Step one will get cart data on page load.
       * @param Request data            
       * @return Response
       * Created on: 20/01/2017
-      * Updated on: 23/01/2017
+      * Updated on: 27/01/2017
     **/
     
-    public function getCartUpdate($itemId=null,$restore=null)
+    public function getCartUpdate($restore=null,$itemId=null)
     {
       try {
-        if(($itemId) && !($restore)){
-          $getContentCartUpdated=CartItem::where('id',$itemId )->update(['status'=>'Trashed']);
+        $userIp=(array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
+        
+        if(Auth::user()){
+            $whereColumn='user_id';
+            $whereValue=Auth::user()->id;
+        }else{
+            $whereColumn='user_ip';
+            $whereValue=$userIp;
+        }
+        if(($restore) && !($itemId)){
+            if($restore=='delete_permanently'){
+              $deletePermanent=CartItem::where($whereColumn,$whereValue)->where('status','Trashed')->delete(); 
+            }else{
+              $deleteAll=CartItem::where($whereColumn,$whereValue)->delete();  
+            }
         }
         if(($itemId) && ($restore)){
-          $getContentCartUpdated=CartItem::where('id',$itemId )->update(['status'=>'Active']);
+          $UpdateStatus=CartItem::where('id',$itemId )->update(['status'=>$restore]);
         }
 
-        $userIp=(array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
-        if(Auth::user()){
-            $getContentCartUpdated=CartItem::where('user_id',Auth::user()->id)->where('file',null)->where('status','Active')->first();
-            $getFileCartUpdated=CartItem::where('user_id',Auth::user()->id)->where('file','!=',null)->where('status','Active')->get();
-          }else{
-            $getContentCartUpdated=CartItem::where('user_ip',$userIp)->where('file',null)->where('status','Active')->first();
-            $getFileCartUpdated=CartItem::where('user_ip',$userIp)->where('file','!=',null)->where('status','Active')->get();
-          }
+        
+        $getContentCartUpdated=CartItem::where($whereColumn,$whereValue)->where('file',null)->where('status','Active')->first();
+        $getFileCartUpdated=CartItem::where($whereColumn,$whereValue)->where('file','!=',null)->where('status','Active')->get();
+
           $totalWordsCounted=0;
-          $cartHtml='<table border="0">';
+          $cartHtml='';
+          if($getContentCartUpdated != null || count($getFileCartUpdated)){
+           $cartHtml='<table border="0">';
+          }
           if($getContentCartUpdated != null){
             if($getContentCartUpdated->content){
               $cartHtml .='<tr>
@@ -286,30 +301,30 @@ class TranslationApplicationController extends Controller {
                 $totalWordsCounted=($totalWordsCounted+$file->content_words);
             }
         }
-        $cartHtml .='<tr>
+        if($getContentCartUpdated != null || count($getFileCartUpdated)){
+          $cartHtml .='<tr>
                       <td class="type"><img src="http://localhost/eqho/customer/img/multiple-docs.png" title="multiple-docs" alt="multiple-docs" /></td>
                       <td class="perview">'.(count($getFileCartUpdated)+count($getContentCartUpdated)).' Items</td>
                       <td class="switch"><span class="switch_total">'.$totalWordsCounted.'</span> words</td>
                     </tr>';
           $cartHtml .='</table>';
-
+        }
           // Get Trashed Items Of The Cart And Update It In Trashed Div
-          if(Auth::user()){
-            $getContentCartTrashed=CartItem::where('user_id',Auth::user()->id)->where('file',null)->where('status','Trashed')->first();
-            $getFileCartTrashed=CartItem::where('user_id',Auth::user()->id)->where('file','!=',null)->where('status','Trashed')->get();
-          }else{
-            $getContentCartTrashed=CartItem::where('user_ip',$userIp)->where('file',null)->where('status','Trashed')->first();
-            $getFileCartTrashed=CartItem::where('user_ip',$userIp)->where('file','!=',null)->where('status','Trashed')->get();
-          }
+          
+          $getContentCartTrashed=CartItem::where($whereColumn,$whereValue)->where('file',null)->where('status','Trashed')->first();
+          $getFileCartTrashed=CartItem::where($whereColumn,$whereValue)->where('file','!=',null)->where('status','Trashed')->get();
           
           $totalWordsCountedTrashed=0;
-          $cartHtmlTrashed='<table border="0">';
+          $cartHtmlTrashed='';
+          if($getContentCartTrashed != null || count($getFileCartTrashed)){
+            $cartHtmlTrashed='<table border="0">';
+          }
           if($getContentCartTrashed != null){
             if($getContentCartTrashed->content){
               $cartHtmlTrashed .='<tr>
                         <td class="type"><img src="http://localhost/eqho/customer/img/plain-text.png" title="plain-text" alt="plain-text"></td>
-                        <td class="perview">text...</td>
-                        <td class="switch"><span class="words">'.$getContentCartTrashed->content_words.' words</span><span class="close"><a href="#" title="Edit">Edit</a><i class="fa fa-undo" onclick="restoreElement('.$getContentCartTrashed->id.');" aria-hidden="true"></i></span></td>
+                        <td class="perview"><del>text...</del></td>
+                        <td class="switch"><span class="words">'.$getContentCartTrashed->content_words.' words</span><span class="close"><i class="fa fa-undo" onclick="restoreElement('.$getContentCartTrashed->id.');" aria-hidden="true"></i></span></td>
                       </tr>';
               $totalWordsCountedTrashed=($totalWordsCountedTrashed+$getContentCartTrashed->content_words);
             }
@@ -321,19 +336,25 @@ class TranslationApplicationController extends Controller {
             foreach($getFileCartTrashed as $key=>$file){
                 $cartHtmlTrashed .='<tr>
                         <td class="type"><img src="http://localhost/eqho/customer/img/acrobat.png" title="acrobat" alt="acrobat" /></td>
-                        <td class="perview">'.$file->file.'</td>
+                        <td class="perview"><del>'.$file->file.'</del></td>
                         <td class="switch"><span class="words">'.$file->content_words.' words</span><span class="close"><i class="fa fa-undo" onclick="restoreElement('.$file->id.');" aria-hidden="true"></i></span></td>
                       </tr>';
                 $totalWordsCountedTrashed=($totalWordsCountedTrashed+$file->content_words);
             }
         }
-        $cartHtmlTrashed .='<tr>
+        if($totalWordsCountedTrashed>0){
+          $cartHtmlTrashed .='<tr>
                       <td class="type"><img src="http://localhost/eqho/customer/img/multiple-docs.png" title="multiple-docs" alt="multiple-docs" /></td>
                       <td class="perview">'.(count($getFileCartTrashed)+count($getContentCartTrashed)).' Items</td>
                       <td class="switch"><span class="switch_total">'.$totalWordsCountedTrashed.'</span> words</td>
                     </tr>';
-          $cartHtmlTrashed .='</table>';
-          $returnData=array($content_words,$cartHtml,$cartHtmlTrashed,$content_wordsTrashed);
+            $totalDeletedItems=(count($getFileCartTrashed)+count($getContentCartTrashed));
+            $cartHtmlTrashed .='</table>';
+          }else{
+            $totalDeletedItems='';
+          }
+          
+          $returnData=array($content_words,$cartHtml,$cartHtmlTrashed,$content_wordsTrashed,$totalDeletedItems);
           echo json_encode($returnData);exit;
 
       }catch (\Exception $e){   
@@ -343,6 +364,22 @@ class TranslationApplicationController extends Controller {
              ];
         return view('errors.error', $result);
       }
+    }
+
+    public function getStepTwo()
+    {
+      try {
+          $sections=Section::where('status','Active')->get();
+          $languages=Language::where('status','Active')->get();
+          return view('customer.translation-application.step-two',compact('sections','languages'));
+        }
+        catch (\Exception $e) 
+        {   
+            $result = [
+                    'exception_message' => $e->getMessage()
+             ];
+            return view('errors.error', $result);
+        }
     }
     
 }

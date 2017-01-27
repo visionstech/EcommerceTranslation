@@ -93,18 +93,19 @@ class LanguagePackageController extends Controller {
                     'description' => $data['description'],
                     'status' => $data['status'],
                 ]);
-                $action='Added';
+                $action='added';
             }else{
                 $languagePackage = LanguagePackage::find(decrypt($data['packageId']));
                 $languagePackage->name = $data['name'];
-                $languagePackage->price_per_word = $data['price_per_word'];       
+                $languagePackage->price_per_word = $data['price_per_word'];  
+                $languagePackage->description = $data['description'];  
                 $languagePackage->status = $data['status'];       
                 $languagePackage->updated_by = Auth::user()->id;
                 $languagePackage->updated_ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
                 $languagePackage->save();
-                $action='Updated';
+                $action='updated';
             }
-            return redirect()->back()->with('success', 'Language package'.$action.' Successfully.');
+            return redirect()->back()->with('success', 'Language package '.$action.' Successfully.');
         }
         catch (\Exception $e) 
         {   
@@ -118,17 +119,18 @@ class LanguagePackageController extends Controller {
       * @param  package id and Delete Status         
       * @return Response
       * Created on: 11/01/2017
-      * Updated on: 11/01/2017
+      * Updated on: 27/01/2017
     **/
-    public function getDeleteLanguage($languageId=null,$status=null)
+    public function getDeletePackage($packageId=null,$status=null)
     {
       try {
         if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
             return redirect('language-management')->with('error', 'You are not autorize to delete this role.');
         }
-        //Soft Delete Language
-        $updateUser=Language::where('id',decrypt($languageId))->update(array('status'=>$status));
-        return redirect('language-package')->with('success', 'Language '.$status.' Successfully.');
+        //Soft Delete Language Package
+        $msg=($status=='Active')?'Activated':'Deleted';
+        $updateUser=LanguagePackage::where('id',decrypt($packageId))->update(array('status'=>$status));
+        return redirect('language-package')->with('success', 'Language package '.$msg.' Successfully.');
       }catch (\Exception $e){   
         $result = ['exception_message' => $e->getMessage()];
         return view('errors.error', $result);

@@ -92,7 +92,7 @@ class RoleController extends Controller {
                     'role' => $data['role'],
                     'status' => $data['status']
                 ]);
-                $action='Added';
+                $action='added';
             }else{
                 $GetData = Role::where('id',decrypt($data['roleId']))->get();
                 $user = Role::find(decrypt($data['roleId']));
@@ -101,7 +101,7 @@ class RoleController extends Controller {
                 $user->updated_by = Auth::user()->id;
                 $user->updated_ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
                 $user->save();
-                $action='Updated';
+                $action='updated';
             }
             return redirect()->back()->with('success', 'Role '.$action.' Successfully.');
         }
@@ -125,9 +125,10 @@ class RoleController extends Controller {
         if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
             return redirect('role')->with('error', 'You are not autorize to delete this role.');
         }
-        //Soft Delete Users
+        //Soft Delete User's Role
+        $msg=($status=='Active')?'Activated':'Deleted';
         $updateUser=Role::where('id',decrypt($roleId))->update(array('status'=>$status));
-        return redirect('role')->with('success', 'Role '.$status.' Successfully.');
+        return redirect('role')->with('success', 'Role '.$msg.' Successfully.');
       }catch (\Exception $e){   
         $result = ['exception_message' => $e->getMessage()];
         return view('errors.error', $result);

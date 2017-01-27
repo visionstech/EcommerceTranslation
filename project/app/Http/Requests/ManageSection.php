@@ -26,7 +26,8 @@ class ManageSection extends Request {
 
 		$GetData = Section::where('title',$this->request->get('title'))->where('section_type',$this->request->get('sectionType'))->get();		
 		
-		if((($this->request->get('sectionType')=='clients') || ($this->request->get('sectionType')=='banner-image') || ($this->request->get('sectionType')=='banner-bottom-logos') || ($this->request->get('sectionType')=='what-we-translate') || ($this->request->get('sectionType')=='header-image') || ($this->request->get('sectionType')=='how-it-works') || ($this->request->get('sectionType')=='features')) && ($this->request->get('method')=="create")){ 
+		
+		if((($this->request->get('sectionType')=='clients') || ($this->request->get('sectionType')=='banner-image') || ($this->request->get('sectionType')=='banner-bottom-logos') || ($this->request->get('sectionType')=='header-image')) && ($this->request->get('method')=="create")){ 
 
 			$rules['image']=trim('required|mimes:jpeg,bmp,png,jpg');
 			return $rules;
@@ -37,13 +38,11 @@ class ManageSection extends Request {
 			return $rules;
 		}
 
-		if((($this->request->get('sectionType')=='clients') || ($this->request->get('sectionType')=='banner-image') || ($this->request->get('sectionType')=='banner-bottom-logos') || ($this->request->get('sectionType')=='what-we-translate') || ($this->request->get('sectionType')=='header-image') || ($this->request->get('sectionType')=='how-it-works') || ($this->request->get('sectionType')=='features')) && ($this->request->get('method')=="update")){
+		if((($this->request->get('sectionType')=='clients') || ($this->request->get('sectionType')=='banner-image') || ($this->request->get('sectionType')=='banner-bottom-logos') || ($this->request->get('sectionType')=='header-image')) && ($this->request->get('method')=="update")){
 			
 			return $rules;
 		}
 		
-		
-
 		if($this->request->get('method')=="update"){
 			
 			$rules['title']  = trim('required|unique:sections,title,'.decrypt($this->request->get('sectionId')));
@@ -55,7 +54,9 @@ class ManageSection extends Request {
 				$rules['title']=trim('required|unique:sections');
 			}
 		}
-		if(($this->request->get('sectionType')=='how-it-works') || ($this->request->get('sectionType')=='features') || ($this->request->get('sectionType')=='what-we-translate')){
+
+		
+		if((($this->request->get('sectionType')=='how-it-works') || ($this->request->get('sectionType')=='features') || ($this->request->get('sectionType')=='what-we-translate') || ($this->request->get('sectionType')=='eqho-by-numbers')) && ($this->request->get('method')=="create")){
 			$rules['image']=trim('required|mimes:jpeg,bmp,png,jpg');
 		}
 		$rules['description']=trim('required');

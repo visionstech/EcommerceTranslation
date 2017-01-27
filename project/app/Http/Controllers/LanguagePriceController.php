@@ -104,7 +104,7 @@ class LanguagePriceController extends Controller {
                     'status' => $data['status'],
                 ]);
 
-                $action='Added';
+                $action='added';
             }else{
                 $GetCheckData=LanguagePrice::where('source',$data['source'])->where('destination',$data['destination'])->where('id','!=',decrypt($data['priceId']))->count();
                 if($GetCheckData>0){
@@ -118,7 +118,7 @@ class LanguagePriceController extends Controller {
                 $languagePrice->updated_by = Auth::user()->id;
                 $languagePrice->updated_ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
                 $languagePrice->save();
-                $action='Updated';
+                $action='updated';
             }
             return redirect('language-price')->with('success', 'Language Price '.$action.' Successfully.');
         }
@@ -142,9 +142,10 @@ class LanguagePriceController extends Controller {
         if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
             return redirect('language-price')->with('error', 'You are not autorize to delete this role.');
         }
-        //Soft Delete Language
-        $updateUser=Language::where('id',decrypt($languageId))->update(array('status'=>$status));
-        return redirect('language-price')->with('success', 'Language Price '.$status.' Successfully.');
+        //Soft Delete Language Prices
+        $msg=($status=='Active')?'Activated':'Deleted';
+        $updateUser=LanguagePrice::where('id',decrypt($languageId))->update(array('status'=>$status));
+        return redirect('language-price')->with('success', 'Language Price '.$msg.' Successfully.');
       }catch (\Exception $e){   
         $result = ['exception_message' => $e->getMessage()];
         return view('errors.error', $result);

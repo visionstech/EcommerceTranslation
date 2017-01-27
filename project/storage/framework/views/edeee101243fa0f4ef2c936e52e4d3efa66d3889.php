@@ -40,7 +40,7 @@
                   <div class="form-group">
                       <?php $price_per_word = (old('price_per_word')) ? old('price_per_word') : ((!empty($packageDetail)) ? $packageDetail[0]['price_per_word'] : '');  
                       ?>
-                      <label for="language">Price Per Word<span class="required">*</span></label>
+                      <label for="language">Price<span class="required">*</span></label>
                       <input type="text" placeholder="Price Per Word" class="form-control" name="price_per_word" value="<?php echo e($price_per_word); ?>">
                   </div>
                   <div class="form-group">

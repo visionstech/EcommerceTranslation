@@ -40,6 +40,7 @@
                             <tr>
                                 <th>Banner Bottom Logo</th>
                                 <th>Created at</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -54,6 +55,7 @@
                                     ?>
                                    </td>
                                     <td>{{ $section->created_at }}</td>
+                                    <td>{{ $section->status }}</td>
                                    <td>
                                     <?php if($section->status != 'Deleted'){ ?>
                                             <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Deleted" data-statusDiv="Delete">Delete</a>

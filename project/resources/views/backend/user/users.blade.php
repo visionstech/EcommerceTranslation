@@ -3,7 +3,10 @@
 	Users
 @endsection
 @section('content')
-
+<style>
+#example1_filter label input.input-sm {
+  margin: 0 0 0 5px;
+}</style>
     <section class="content-header">
       <h1>
         Manage Users

@@ -27,8 +27,9 @@ class ManageLanguagePrice extends Request {
 	{
 		$rules=array();
 		
-		$rules['destination']  = trim('required');
+		
 		$rules['source']  = trim('required');
+		$rules['destination']  = trim('required');
 		$rules['price_per_word']  = trim('required');
 
 
@@ -38,8 +39,8 @@ class ManageLanguagePrice extends Request {
 	public function messages()
 	{	
         return [
-            'source.required' => 'The Language To field is required.',
-            'destination.required' => 'The Language From field is required.',
+            'source.required' => 'The Language From field is required.',
+            'destination.required' => 'The Language To field is required.',
             'price_per_word.required' => 'The Language Price Per Word field is required.',
         ];	
 	}	

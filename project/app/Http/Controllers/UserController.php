@@ -101,7 +101,7 @@ class UserController extends Controller {
                 ]);
                 
                 //event(new UserManageAction($emailData));
-                $action='Added';
+                $action='added';
             }else{
                 $GetData = User::where('id',decrypt($data['userId']))->get();
                 $user = User::find(decrypt($data['userId']));
@@ -111,7 +111,7 @@ class UserController extends Controller {
                 $user->updated_by = Auth::user()->id;
                 $user->updated_ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
                 $user->save();
-                $action='Updated';
+                $action='updated';
             }
             return redirect()->back()->with('success', 'User '.$action.' Successfully.');
         }
@@ -135,9 +135,10 @@ class UserController extends Controller {
         if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
             return redirect('user')->with('error', 'You are not autorize to delete this user.');
         }
+        $msg=($status=='Active')?'Activated':'Deleted';
         //Soft Delete Users
         $updateUser=User::where('id',decrypt($userId))->update(array('status'=>$status));
-        return redirect('user')->with('success', 'User '.$status.' Successfully.');
+        return redirect('user')->with('success', 'User '.$msg.' Successfully.');
       }catch (\Exception $e){   
         $result = ['exception_message' => $e->getMessage()];
         return view('errors.error', $result);

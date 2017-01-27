@@ -274,7 +274,7 @@ class HomepageSectionController extends Controller {
                     'image_title'=>$imageTitle,
                     'image_path'=>'/uploads'
                 ]);
-                $action='Added';
+                $action='added';
             }else{
               //Update Section Data
                 $GetData = Section::where('id',decrypt($data['sectionId']))->get();
@@ -294,7 +294,7 @@ class HomepageSectionController extends Controller {
                 $section->image_path = $imagePath;
                 $section->updated_ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
                 $section->save();
-                $action='Updated';
+                $action='updated';
             }
             return redirect($redirect)->with('success', 'Section '.$action.' Successfully.');
         }
@@ -322,8 +322,9 @@ class HomepageSectionController extends Controller {
             return view('errors.404');
         }
         //Soft Delete Sections
+        $msg=($status=='Active')?'Activated':'Deleted';
         $updateSection=Section::where('id',decrypt($Id))->update(array('status'=>$status));
-        return redirect('homepage-section/view-sections/'.$sectionType)->with('success', 'Section '.$status.' Successfully.');
+        return redirect('homepage-section/view-sections/'.$sectionType)->with('success', 'Section '.$msg.' Successfully.');
       }catch (\Exception $e){   
         $result = ['exception_message' => $e->getMessage()];
         return view('errors.error', $result);

@@ -852,6 +852,7 @@ section.odering-process-1{background-color: #FAFAFA;padding: 110px 0 0;}
     transition: all 0.5s ease 0s;
     border: 1px solid transparent;
     min-width: 220px;
+    cursor: pointer;
   }
 .btn-wrap .btn_ctrl.back-btn {
   background: #9d9d9d;
@@ -1413,7 +1414,378 @@ span.close a:hover, span.close i:hover{
   background: #ffffff;
 }
 
-/* File Uplaod Css need To update from Designer */
+/*------------------------- Odering-process step-3 Purpose of translation ------------------*/
+.purpose, .instructions {
+  border: 1px solid #ebebeb;
+  padding: 30px 0px;
+  position: relative;
+}
+.purpose h2 {
+  margin: 0 0 20px;
+}
+.purpose .form-group {
+  font-family: "Open Sans",sans-serif;
+  margin: 0 0 20px;
+  padding: 0 30px;
+  position: relative;
+}
+ul.purpose-list {
+  background: #ffffff none repeat scroll 0 0;
+  border: 1px solid #ebebeb;
+  height: 400px;
+  max-width: 100%;
+  overflow-y: scroll;
+  padding: 20px;
+  position: absolute;
+  top:83px;
+  width: 410px;
+  z-index: 99;
+  display: none;
+}
+.purpose-list li {
+  list-style: outside none none;
+}
+.purpose-list-text h6 {
+  border-bottom: 1px solid #ebebeb;
+  color: #96bd35;
+  font-size: 14px;
+  padding: 10px 0;
+}
+.purpose-list-text > ul {
+  padding: 0 0 0 20px;
+}
+.purpose-list-text li {
+  color: #424242;
+  font-size: 13px;
+  padding: 5px 0;
+}
+.purpose-list-text li.li-head{
+  border-bottom: 1px solid #ebebeb;
+  color: #727272;
+  font-weight: 700;
+  padding: 15px 0;
+}
+
+
+.purpose .form-group label {
+  color: #424242;
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.purpose .purpose-btn {
+  background: rgba(0, 0, 0, 0) url("../img/select-arrow.png") no-repeat scroll right 15px center;
+  border: 1px solid #efefef;
+  border-radius: 0;
+  color: #787878;
+  cursor: pointer;
+  font-size: 14px;
+  font-style: italic;
+  max-width: 100%;
+  padding: 15px;
+  text-align: left;
+  width: 410px;
+}
+.purpose-type {
+  padding: 0 30px;
+}
+.purpose-type table {
+  width: 100%;
+  font-family: "Open Sans",sans-serif;
+}
+.purpose-type table th {
+  background: #bdbdbd none repeat scroll 0 0;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+  position: relative;
+}
+thead.custom-radio label {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 700;
+}
+thead.custom-radio .check {
+  background: #ffffff;
+  border: 1px solid #707070;
+  left: 20px;
+  top: 20px;
+}
+.purpose-type table th, .purpose-type table td {
+  padding: 15px 20px;
+}
+.purpose-type table td {
+  background: #f3f3f3;
+}
+.purpose-type table tr td:nth-child(2) {
+  background: #ffffff;
+}
+.purpose-type table .radio {
+  display: inline-block;
+  cursor: pointer;
+}
+.purpose_radio {
+  margin: 0 7px 4px 0;
+  vertical-align: middle;
+}
+.purpose-type th span {
+  border: 1px solid #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+  font-size: 14px;
+  height: 20px;
+  padding: 0;
+  width: 20px;
+}
+.purpose-table-list li {
+  color: #424242;
+  font-size: 13px;
+  padding: 5px;
+}
+.purpose-type table tr:last-of-type td {
+  border-top: 1px solid #d5d5d5;
+  color: #6c6c6c;
+  font-family: "Raleway",sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+.purpose-type table tr:last-of-type td a {
+  color: #96bd35;
+  font-size: 14px;
+}
+.btn-wrap .back-btn.no-margin {
+  margin: 0;
+}
+.existing-customer{
+  border: 1px solid #ebebeb;
+  padding: 30px;
+  position: relative;
+  font-family: "Open Sans",sans-serif;
+}
+.existing-customer p {
+  color: #787878;
+  font-family: "Open Sans",sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 15px 0;
+  padding: 0;
+  text-align: left;
+}
+.custom-radio li{
+  position: relative;
+  padding: 5px 0;
+  list-style: none;
+}
+.existing-option label {
+  color: #787878;
+  font-size: 13px;
+}
+.existing-login {
+  margin: 20px 0 0;
+}
+.existing-login .btn_ctrl {
+  background-color: #96bd35;
+  border: 1px none rgba(0, 0, 0, 0);
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 7px 25px;
+}
+.instructions{
+  margin: 30px 0 0;
+  padding: 30px;
+  font-family: "Open Sans",sans-serif;
+}
+.instructions h4 {
+  color: #424242;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 20px;
+}
+.instructions h4 span {
+  color: #96bd35;
+  display: inline-block;
+  font-weight: 400;
+}
+.instructions .option-btn {
+  background: rgba(0, 0, 0, 0) url("../img/select-arrow.png") no-repeat scroll right 15px center;
+  border: 1px solid #efefef;
+  border-radius: 0;
+  color: #787878;
+  cursor: pointer;
+  font-size: 14px;
+  font-style: italic;
+  max-width: 100%;
+  padding: 15px;
+  text-align: left;
+  width: 410px;
+}
+.instructions .form-group {
+  margin: 0 0 20px;
+}
+.instructions .form-group label {
+  color: #7b7b7b;
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  margin:0 0 10px;
+}
+.instructions .form-group textarea{
+    min-height: 100px;
+    color:#787878;
+    font-size: 14px;
+    font-family:'Open Sans', sans-serif;
+    font-style: italic;
+    border: 1px solid #efefef;
+    padding: 20px;
+    width: 100%;
+  }
+.pay-method > p {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 25px 0;
+  width: 100%;
+}
+.pay-method p span {
+  color: #f5b12e;
+  font-weight: 600;
+  text-align: left;
+  width: auto;
+}
+.pay-method .custom-radio {
+  margin: 22px 0 0;
+}
+.custom-radio .pay-option li {
+  display: inline-block;
+  padding: 3px 5px;
+  position: relative;
+}
+.custom-radio .pay-option label {
+  font-weight: 600;
+  padding: 0 5px 0 18px;
+  font-size: 18px;
+  color: #424242;
+  
+}
+.btn-wrap.pay-now .btn_ctrl {
+  background: #f5b12e;
+  min-width: auto;
+  width: 100%;
+}
+.btn-wrap.pay-now .btn_ctrl:hover {
+  background-color: rgba(0, 0, 0, 0);
+}
+.btn-wrap.pay-now {
+  margin: 30px 0 0;
+}
+.pay-method .custom-check {
+  margin: 0 0 15px;
+}
+.custom-check label {
+  color: #424242;
+  display: inline-block;
+  font-size: 15px;
+  width: 90%;
+}
+.custom-check input {
+  display: inline-block;
+  height: 22px;
+  vertical-align: top;
+  width: 18px;
+}
+.your-order.your-result {
+  border: 0 none;
+  padding: 0;
+}
+.your-result-inner {
+  border: 1px solid #ebebeb;
+  padding: 30px 20px;
+}
+
+.btn-wrap.view-full {
+  margin: 30px 0;
+}
+.btn-wrap.view-full .btn_ctrl {
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  border: 1px solid #9d9d9d;
+  color: #424242;
+  font-family: "Raleway",sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  width: 100%;
+}
+.btn-wrap.view-full .btn_ctrl:hover {
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid #f5b12e;
+  color: #f5b12e;
+}
+/*------------------------- Odering-process step-3(d) new window popup------------------*/
+.quote-wrap {
+  padding: 10px;
+}
+.quote-wrap .form-filds .form-group label {
+  font-weight: 600;
+  font-size: 15px;
+}
+.quote-wrap .form-filds .form-ctrl {
+  border: 1px solid #d1d1d1;
+  color: #828282;
+  font-style: normal;
+  font-family: 'Open Sans', sans-serif;
+}
+.quote-content h1 {
+  border-bottom: 2px solid #e7e7e7;
+  color: #828282;
+  font-size: 22px;
+  font-weight: 700;
+  padding: 15px 0;
+}
+.quote-tables-erap table{
+  border-collapse: collapse;
+  margin: 20px 0;
+  width: 100%;
+}
+.quote-tables-erap table th, .quote-tables-erap table td {
+  border: 1px solid #efefef;
+  padding: 15px;
+  text-align: left;
+  color: #424242;
+}
+.quote-tables-erap table td {
+  font-size: 13px;
+}
+.quote-tables-erap table th {
+  font-size: 14px;
+  font-weight: 700;
+}
+table.trashed tr:last-of-type td:first-of-type {
+  font-size: 15px;
+  font-weight: 700;
+}
+table.trashed th:nth-child(2) {
+  width: 80%;
+}
+
+table.language th:first-of-type {
+  width: 20%;
+}
+table.language th:nth-child(4) {
+  width: 30%;
+}
+table.language tr:last-of-type td{
+  font-size: 18px;
+  font-weight: 700;
+}
+.language td img {
+  vertical-align: middle;
+}
+
+
+
+/*.............................. Dynamic deleted element step1 27 jan 2017........................*/
 .progress 
 {
   display:none; 
@@ -1422,10 +1794,11 @@ span.close a:hover, span.close i:hover{
   border: 1px solid #ddd; 
   padding: 1px; 
   border-radius: 3px; 
+  margin: 0 auto;
 }
 .bar 
 { 
-  background-color: #F5B12E; 
+  background-color: #424242; 
   width:0%; 
   height:20px; 
   border-radius: 3px; 
@@ -1434,6 +1807,56 @@ span.close a:hover, span.close i:hover{
 { 
   position:absolute; 
   display:inline-block; 
-  top:3px; 
-  left:48%; 
+  top:1px; 
+  left:48%;
+  color: #ffffff;
+  font-weight: 700; 
+}
+.del-wrap h4 {
+  position: relative;
+  padding: 15px 0;
+  font-size: 15px;
+  font-family: 'Open Sans',sans-serif;
+}
+.del-wrap h4 span.del-permanent {
+  position: absolute;
+  right: 0;
+}
+span.del-arrow:after {
+    content: "\f0d7";
+    position: absolute;
+    right:0px;
+    top: 5px;
+    font-family: FontAwesome;
+    font-size: 14px;
+}
+span.del-arrow.arrow-up:after {
+    content: "\f0d8";
+}
+span.del-arrow {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  width: 180px;
+  color: #7d7d7d;
+}
+span.del-arrow.arrow-up{
+  color: #424242;
+}
+.del-wrap h4 span.del-permanent a{
+  background: transparent;
+  border:0;
+  color: #96bd35;
+  font-size: 13px;
+  cursor: pointer;
+}
+.del-wrap h4 span.del-permanent a:hover{
+  text-decoration: underline;
+}
+.like-to-translate p a {
+  cursor: pointer;
+}
+.like-to-translate p a:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
