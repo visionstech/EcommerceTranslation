@@ -38,14 +38,23 @@ $(document).ready(function(){
     }
   }, false);
   // ....... END.........
-  //Get Cart Data on Page load
+  
+
+  $('.popup-close').click(function(){
+    $('.over-lay').hide();
+  });
+
+  
+// Step 1 Cart Functionality of Saving Items
+
+ //Get Cart Data on Page load
   $('#trashedItems').hide();
   $('.del-arrow').hide();
   $('.del-permanent').hide();
   $('#content').show();
   $.ajax({
         
-        url: baseUrl+'/translation-application/cart-update',
+        url: baseUrl+'/translation-application/cart-item',
         type:'get',
         processData: false,
         contentType: false,
@@ -70,14 +79,6 @@ $(document).ready(function(){
       });
   //End Get Cart Data on Page load
 
-  $('.popup-close').click(function(){
-    $('.over-lay').hide();
-  });
-
-  
-
-  //$('#content').show();
-
 
   $('.del-arrow').click(function(){
     $('#trashedItems').toggle();
@@ -86,11 +87,7 @@ $(document).ready(function(){
     
   });
 
-
-  
-
   $('#myForm input[class=file]').change(function(){
-      //$("#testSub").click();
       var bar = $('#bar1');
       var percent = $('#percent1');
       var data = new FormData();
@@ -119,7 +116,7 @@ $(document).ready(function(){
 
       $.ajax({
         
-        url: baseUrl+'/translation-application/cart-update',
+        url: baseUrl+'/translation-application/cart-item',
         type:'post',
         data: data,
         processData: false,
@@ -167,7 +164,7 @@ function trashElement(value){
    var baseUrl='<?php echo url('/'); ?>';
     $.ajax({
         
-        url: baseUrl+'/translation-application/cart-update/Trashed/'+value,
+        url: baseUrl+'/translation-application/cart-item/Trashed/'+value,
         type:'get',
         processData: false,
         contentType: false,
@@ -175,9 +172,6 @@ function trashElement(value){
           var data = $.parseJSON(res);
           $('.item-to-translate').html(data[1]);
           var TotalWords= $('.switch_total').html();
-          
-         // $('#content').val(data[0]);
-          //$('.del-wrap').show();
           if(data[0]){
             $('#content').val(data[0]);
             $('#content').hide();
@@ -187,8 +181,7 @@ function trashElement(value){
             $('.deleted_count').html(data[4]);
             $('.del-arrow').show();
             $('.del-permanent').hide();
-          }  
-          //$('#trashedItems').html(data[2]);
+          }
           $('.total_words').html(TotalWords);
         }
       });
@@ -199,18 +192,14 @@ function restoreElement(value){
    var baseUrl='<?php echo url('/'); ?>';
     $.ajax({
         
-        url: baseUrl+'/translation-application/cart-update/Active/'+value,
+        url: baseUrl+'/translation-application/cart-item/Active/'+value,
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
           var data = $.parseJSON(res);
-          //console.log(data[2]);return false;
           $('.item-to-translate').html(data[1]);
           var TotalWords= $('.switch_total').html();
-          
-          //$('#content').val(data[0]);
-          //$('#trashedItems').html(data[2]);
           if(data[0]){
             $('#content').val(data[0]);
             $('#content').hide();
@@ -219,6 +208,10 @@ function restoreElement(value){
             $('#trashedItems').html(data[2]);
             $('.deleted_count').html(data[4]);
             $('.del-arrow').show();
+          }else{
+            $('#trashedItems').html('');
+            $('.deleted_count').html(0);
+            $('.del-arrow').hide();
           }
           $('.total_words').html(TotalWords);
         }
@@ -230,7 +223,7 @@ function clearAllElements(){
    var baseUrl='<?php echo url('/'); ?>';
     $.ajax({
         
-        url: baseUrl+'/translation-application/cart-update/clearAll',
+        url: baseUrl+'/translation-application/cart-item/clearAll',
         type:'get',
         processData: false,
         contentType: false,
@@ -254,7 +247,7 @@ function delete_permanently(){
    var baseUrl='<?php echo url('/'); ?>';
     $.ajax({
         
-        url: baseUrl+'/translation-application/cart-update/delete_permanently',
+        url: baseUrl+'/translation-application/cart-item/delete_permanently',
         type:'get',
         processData: false,
         contentType: false,
@@ -268,16 +261,31 @@ function delete_permanently(){
         }
       });
 }
+function editContent(){
+  $('#content').show();
+}
+// Ending of Step 1 Cart Functionality of Saving Items
+
 
 // order process select list
+
+  
+  //........... end .......
+  
+  // Start jQuery Of Step 2 Cart 
+  
+
+$(document).ready(function(){
+  var baseUrl='<?php echo url('/'); ?>';
+
   $(".select-langs").click(function(){
       $(".show-1").toggle();
   });
   $(".select-langs").blur(function(){
       $(".show-1").hide();
   });
-  
-  $('.all-languages li').click( function() {
+
+  $(document).on('click','.all-languages li',function() {
     if ($(this).hasClass("active-li")) {
       $(this).removeClass("active-li");
     }
@@ -289,7 +297,190 @@ function delete_permanently(){
   $(".translate-btn, .popup-close").click(function(){
       $(".lang-popup").toggle();
   });
+  $(document).on('click','.add-more',function() {
+    $(".lang-popup").toggle();
+  });
+ $(".translate_to_summary").hide();
+  $.ajax({        
+        url: baseUrl+'/translation-application/cart-language',
+        type:'get',
+        processData: false,
+        contentType: false,
+        beforeSend: function(){
+          $('.final_price').html('Calculating...');
+          $('.language_count').html('Counting...');
+        },
+        success: function(res) {
+          var data = $.parseJSON(res);
+          $('#added_langs').html(data[0]);
+          if(data[0]){
+             $(".translate_to_popup").hide();
+             $(".translate_to_summary").show();
+          }
+          $('.total_words').html(data[1]);
+          $('.language_count').html(data[2]);
+          $('.final_price').html(data[3]);
+          
+        }
+  });
+  $('.all-languages').html('');
+  $(".source").change(function(){
+      var Html ="<img src='{{ asset('/customer/img/english-lang.jpg') }}' alt='english' title='english'>";
+      Html += $('.source option:selected').text();
+      $("#selected_lang").html(Html);
+      var fromLang=$('.source').val();
+      $.ajax({        
+          url: baseUrl+'/translation-application/valid-translations/'+fromLang,
+          type:'get',
+          success: function(res) {
+            var data = $.parseJSON(res);
+            $('.all-languages').html(data[0]);
+          }
+      });
+
+      clearAllLanguages();
+
+  });
+
+  $(".from_lang_li").click(function(){
+    $(".source").val($(this).attr('id'));
+    $("#selected_lang").html($(this).html());
+    $("#selected_lang").attr('data-id',$(this).attr('id'));
+    var fromLang=$('.source').val();
+      $.ajax({        
+          url: baseUrl+'/translation-application/valid-translations/'+fromLang,
+          type:'get',
+          success: function(res) {
+            var data = $.parseJSON(res);
+            $('.all-languages').html(data[0]);
+          }
+      }); 
+  });
   
-  //........... end .......
-  
+  var ToLangs=[];
+  $(document).on('click','.eqho-clear-fix > li',function() {  
+    if($(this).hasClass('active-li')){
+        ToLangs.push($(this).attr('data-id'));
+    }else{
+        var i = ToLangs.indexOf($(this).attr('data-id'));
+        if(i != -1) {
+          ToLangs.splice(i, 1);
+        }
+    }
+    var languageSelected=ToLangs.length;
+    $('.total-lang').find('p').html('Selected Languages: ('+languageSelected+')');
+    $('.choose_langs').html('Choose Languages ('+languageSelected+')');
+    
+  });
+
+  $("form#step2").submit(function(event) {
+        
+        event.preventDefault();
+        var data = new FormData();
+        var fromLang=$('#selected_lang').attr('data-id');
+        data.append('_token',$('#token').val());
+        data.append('from_language_id',fromLang);
+        $.each($(ToLangs), function (i, obj) {
+          data.append("to_language_id[" + i + "]", obj);
+        });
+        $('.final_price').html('Calculating...');
+        $('.language_count').html('Counting...');
+        $.ajax({        
+          url: baseUrl+'/translation-application/cart-language',
+          type:'post',
+          data: data,
+          processData: false,
+          contentType: false,
+          
+          success: function(res) {
+            var data = $.parseJSON(res);
+            $('.lang-popup').hide();
+            $('#added_langs').html(data[0]);
+            if(data[0]){
+               $(".translate_to_popup").hide();
+               $(".translate_to_summary").show();
+            }
+            $('.total_words').html(data[1]);
+            $('.language_count').html(data[2]);
+            $('.final_price').html(data[3]);
+          }
+        }); 
+    });
+});
+
+function clearAllLanguages(){
+   var baseUrl='<?php echo url('/'); ?>';
+    $('.final_price').html('Calculating...');
+    $('.language_count').html('Counting...');
+    $.ajax({
+        
+        url: baseUrl+'/translation-application/cart-language/Deleted',
+        type:'get',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+          var data = $.parseJSON(res);
+          $(".translate_to_summary").hide();          
+          $('#added_langs').html('');
+          $(".translate_to_popup").show();
+          $('.total_words').html(data[1]);
+          $('.language_count').html(data[2]);
+
+          
+        }
+      });
+}
+function trashTranslation(value){
+   var baseUrl='<?php echo url('/'); ?>';
+    $('.final_price').html('Calculating...');
+    $('.language_count').html('Counting...');
+    $.ajax({
+        
+        url: baseUrl+'/translation-application/cart-language/Trashed/'+value,
+        type:'get',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+          var data = $.parseJSON(res);
+          $('.lang-popup').hide();
+          $('#added_langs').html(data[0]);
+          if(data[0]){
+            $(".translate_to_popup").hide();
+            $(".translate_to_summary").show();
+          }
+          $('.total_words').html(data[1]);
+          $('.language_count').html(data[2]);
+          $('.final_price').html(data[3]);
+        }
+      });
+
+}
+
+function restoreTranslation(value){
+   var baseUrl='<?php echo url('/'); ?>';
+    $('.final_price').html('Calculating...');
+    $('.language_count').html('Counting...');
+    $.ajax({
+        
+        url: baseUrl+'/translation-application/cart-language/Active/'+value,
+        type:'get',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+          var data = $.parseJSON(res);
+          $('.lang-popup').hide();
+          $('#added_langs').html(data[0]);
+          if(data[0]){
+            $(".translate_to_popup").hide();
+            $(".translate_to_summary").show();
+          }
+          $('.total_words').html(data[1]);
+          $('.language_count').html(data[2]);
+          $('.final_price').html(data[3]);
+          
+        }
+      });
+
+}
+// End jQuery Of Step 2 Cart 
 </script>

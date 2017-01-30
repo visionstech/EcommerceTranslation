@@ -15,7 +15,38 @@ header, section, footer, aside, nav, main, article, figure {
 .border-after::after {  background: #ffffff none repeat scroll 0 0;  bottom: 0;  content: "";
   height: 3px;  left: 0;  margin: 0 auto;  position: absolute;  right: 0;  width: 70px;
 }
-textarea{-webkit-appearance:none;-moz-appearance:none;-o-appearance:none;-ms-appearance:none;appearance:none;resize: none;}
+select, textarea{-webkit-appearance:none;-moz-appearance:none;-o-appearance:none;-ms-appearance:none;appearance:none;resize: none;}
+select{background: url("../img/select-arrow.png") no-repeat scroll right 15px center;}
+.form-filds .form-group{  margin: 0 0 20px;}
+.form-filds .form-group label {color: #424242;display: block;font-size: 20px;font-weight: 700;margin: 0 0 8px;
+}
+.form-filds .form-ctrl {border: 1px solid #efefef;border-radius: 0;color: #787878;font-size: 12px;
+  font-style: italic;max-width: 100%;padding: 15px;width: 410px;
+}
+.form-filds textarea.form-ctrl{height: 100px}
+/*----------------------Custom Radio-------------------------*/
+.custom-radio input[type=radio]{  position: absolute;  visibility: hidden;}
+
+.custom-radio label {cursor: pointer;display: block;font-weight: 300;padding:0 5px 0 25px;position: relative;
+    transition: all 0.25s linear 0s;z-index: 9;}
+.custom-radio .check {border: 1px solid #acacac;border-radius: 100%;display: block;height: 15px;
+  left: 0;position: absolute;top: 6px;transition: border 0.25s linear 0s;width: 15px;z-index: 5;}
+.custom-radio .check::before {border-radius: 100%;content: "";display: block;height: 5px;left: 4px;
+  margin: auto;position: absolute;top: 4px;transition: background 0.25s linear 0s;width: 5px;}
+.custom-radio input[type=radio]:checked ~ .check {border: 1px solid #7f9b3a;background: #7f9b3a;}
+.custom-radio input[type=radio]:checked ~ .check::before{ background: #ffffff;}
+/*----------------------Custom Checkbox-------------------------*/
+.custom-checkbox input{opacity: 0;position: absolute;}
+
+.custom-checkbox input, .custom-checkbox label{display: inline-block;vertical-align: middle;cursor: pointer;}
+
+.checkbox-custom-label{position: relative;}
+
+.custom-checkbox input + .checkbox-custom-label:before{background: #ffffff none repeat scroll 0 0;
+    border: 1px solid #96bd35;content: "";display: inline-block;height: 15px;left: 0;margin-right: 10px;
+    padding: 2px;position: absolute;text-align: center;vertical-align: middle;width: 15px;}
+
+.custom-checkbox input:checked + .checkbox-custom-label:before {content: "\f00c";font-family: 'FontAwesome';color: #96bd35;font-size: 16px;}
 
 
 /*------------------------ header css ---------------------*/
@@ -1226,7 +1257,7 @@ span.close a:hover, span.close i:hover{
   padding: 0 0 10px;
   position: relative;
 }
-.lang-popup h1 span {
+.lang-popup h1 span.close_choose {
   color: #b6b6b6;
   position: absolute;
   right: 0;
@@ -1276,7 +1307,7 @@ span.close a:hover, span.close i:hover{
   padding: 0 10px;
   vertical-align: middle;
 }
-.language-selected span {
+.language-selected span.list-caret-down {
   background-color: #757575;
   color: #ffffff;
   padding:16px 20px;
@@ -1502,6 +1533,15 @@ ul.purpose-list {
   text-align: left;
   position: relative;
 }
+.purpose-type table th.selected-radio {
+  background: #96bd35;
+}
+.purpose-type table tr:last-of-type td.select-word{
+  color: #f5b12e;
+}
+.purpose-type table tr:last-of-type td.select-word a{
+  color: #f5b12e;
+}
 thead.custom-radio label {
   display: inline-block;
   font-size: 16px;
@@ -1554,6 +1594,10 @@ thead.custom-radio .check {
 .purpose-type table tr:last-of-type td a {
   color: #96bd35;
   font-size: 14px;
+}
+.purpose-type table tr:last-of-type td a:hover{
+  color: #f5b12e;
+  text-decoration: underline;
 }
 .btn-wrap .back-btn.no-margin {
   margin: 0;
@@ -1681,20 +1725,17 @@ thead.custom-radio .check {
 .btn-wrap.pay-now {
   margin: 30px 0 0;
 }
-.pay-method .custom-check {
+.pay-method .custom-checkbox {
   margin: 0 0 15px;
 }
-.custom-check label {
+.custom-checkbox label {
   color: #424242;
   display: inline-block;
   font-size: 15px;
-  width: 90%;
+  padding: 0 0 0 35px;
 }
-.custom-check input {
+.custom-checkbox input {
   display: inline-block;
-  height: 22px;
-  vertical-align: top;
-  width: 18px;
 }
 .your-order.your-result {
   border: 0 none;
@@ -1781,8 +1822,21 @@ table.language tr:last-of-type td{
 }
 .language td img {
   vertical-align: middle;
+  margin-right: 5px;
 }
-
+.btn-wrap.download {
+  margin: 30px 0;
+  text-align: left;
+}
+.btn-wrap.download .btn_ctrl {
+  background: #e9e9e9 url("../img/download-btn.png") no-repeat scroll left 45px center;
+  color: #767676;
+  border: 1px solid #989898;
+}
+.btn-wrap.download .btn_ctrl:hover {
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid #f5b12e;
+}
 
 
 /*.............................. Dynamic deleted element step1 27 jan 2017........................*/
