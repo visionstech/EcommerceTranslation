@@ -8,6 +8,7 @@ use Auth;
 use Session;
 use App\Section;
 use App\Language;
+use App\LanguagePackage;
 use App\CartItem;
 use App\CartLanguage;
 use App\LanguagePrice;
@@ -71,7 +72,6 @@ class TranslationApplicationController extends Controller {
           $CountedWords=0;
           $filenames=array();
           $fileWords=array();
-         // $userIp=(array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
           $sessionId =Session::getId();
           if(Auth::user()){
               $whereColumn='user_id';
@@ -105,8 +105,6 @@ class TranslationApplicationController extends Controller {
           }                  
 
           //Cart Update Data
-          //$userIp=(array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
-
           $getContentCart=CartItem::where($whereColumn,$whereValue)->where('file',null)->first();
           $getFileCart=CartItem::where($whereColumn,$whereValue)->where('file','!=',null)->get();
           
@@ -245,7 +243,7 @@ class TranslationApplicationController extends Controller {
 
     /**
       * Step one will get cart data on page load.
-      * @param Request data            
+      * @param status and item id        
       * @return Response
       * Created on: 20/01/2017
       * Updated on: 27/01/2017
@@ -371,6 +369,13 @@ class TranslationApplicationController extends Controller {
       }
     }
 
+    /**
+      * Step one will get cart page of step2.
+      * @param null
+      * @return Response
+      * Created on: 28/01/2017
+      * Updated on: 31/01/2017
+    **/
     public function getStepTwo()
     {
       try {
@@ -387,6 +392,13 @@ class TranslationApplicationController extends Controller {
         }
     }
 
+    /**
+      * Step one will post cart data step 2 on page load.
+      * @param Request data            
+      * @return Response
+      * Created on: 28/01/2017
+      * Updated on: 30/01/2017
+    **/
     public function postCartLanguage(Request $request)
     {
       try {
@@ -471,6 +483,13 @@ class TranslationApplicationController extends Controller {
       }
     }
 
+    /**
+      * Step one will get cart data step 2 on page load.
+      * @param status and cart language id   
+      * @return Response
+      * Created on: 29/01/2017
+      * Updated on: 31/01/2017
+    **/
     public function getCartLanguage($status=null,$cartLangId=null)
     {
       try {
@@ -536,7 +555,6 @@ class TranslationApplicationController extends Controller {
               $languageCartHtml .='<tr><td colspan="4" class="add-more" onclick="addMore();">+ Add more Languages</td>
                           </tr><tr><td colspan="3">'.$totalLanguages.' Languages</td><td>$'.$totalPrice.'</td></tr>';
             }
-            //echo $languageCartHtml;exit;
             $returnData=array($languageCartHtml,$getWordsCount,$totalLanguages,'$'.$totalPrice);
             echo json_encode($returnData);exit;
 
@@ -548,6 +566,13 @@ class TranslationApplicationController extends Controller {
       }
     }
 
+    /**
+      * Step one will Get valid languages translations on step2.
+      * @param From language id or null        
+      * @return Response
+      * Created on: 30/01/2017
+      * Updated on: 30/01/2017
+    **/
     public function getValidTranslations($from_language_id=null)
     {
       try {
@@ -572,5 +597,142 @@ class TranslationApplicationController extends Controller {
               return view('errors.error', $result);
       }
     
+    }
+
+    /**
+      * Step one will Get page of Step 3 .
+      * @param null      
+      * @return Response
+      * Created on: 31/01/2017
+      * Updated on: 31/01/2017
+    **/
+    public function getStepThree()
+    {
+      try {
+
+          $currency_input = 2;
+          //currency codes : http://en.wikipedia.org/wiki/ISO_4217
+          $currency_from = "USD";
+          $currency_to = "INR";
+          $this->getConvertedCurrency($currency_from,$currency_to,$currency_input);
+          
+          $sections=Section::where('status','Active')->get();
+          $languages=Language::where('status','Active')->get();
+          $languagePackages=LanguagePackage::all();
+          return view('customer.translation-application.step-three',compact('sections','languages','languagePackages'));
+        }
+        catch (\Exception $e) 
+        {   
+            $result = [
+                    'exception_message' => $e->getMessage()
+             ];
+            return view('errors.error', $result);
+        }
+    }
+
+    /**
+      * Step one will Get Converted currency.
+      * @param $currencyfrom,to and currency value         
+      * @return Response
+      * Created on: 30/01/2017
+      * Updated on: 30/01/2017
+    **/
+    public function getConvertedCurrency($currency_from,$currency_to,$currency_input){
+
+          $yql_base_url = "http://query.yahooapis.com/v1/public/yql";
+          $yql_query = 'select * from yahoo.finance.xchange where pair in ("'.$currency_from.$currency_to.'")';
+          $yql_query_url = $yql_base_url . "?q=" . urlencode($yql_query);
+          $yql_query_url .= "&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+          $yql_session = curl_init($yql_query_url);
+          curl_setopt($yql_session, CURLOPT_RETURNTRANSFER,true);
+          $yqlexec = curl_exec($yql_session);
+          $yql_json =  json_decode($yqlexec,true);
+          $currency_output = (float) $currency_input*$yql_json['query']['results']['rate']['Rate'];
+          return $currency_output;
+    }
+
+    /**
+      * Step one will post payment.
+      * @param $currencyfrom,to and currency value         
+      * @return Response
+      * Created on: 31/01/2017
+      * Updated on: 31/01/2017
+    **/
+    public function postStepThree (Request $request){
+       \Stripe\Stripe::setApiKey ( 'sk_test_8cnU38GePfiBbNfvSFVsUsEX' );
+       $data=$request->all();
+       $amount=explode('$', $data['final_amount']);
+       //
+        try {
+            $InsertPayment=\Stripe\Charge::create ( array (
+                    "amount" => ($amount[1]*100),
+                    "currency" => "usd",
+                    "source" => $data['stripeToken'], // obtained with Stripe.js
+                    "description" => "Test payment." 
+            ) );
+            //echo "<pre>";print_r($InsertPayment);exit;
+            return redirect('/translation-application/step-three')->with('success', 'payment  Successfully.');
+            Session::flash ( 'success-message', 'Payment done successfully !' );
+            //return Redirect::back ();
+        } catch ( \Exception $e ) {
+          echo "ssssssssssssssss11111111111";exit;
+            Session::flash ( 'fail-message', "Error! Please Try again." );
+            //return Redirect::back ();
+        }
+
+    }
+
+    /**
+      * Step one will get cart data step 3 on page load.
+      * @param status and cart language id   
+      * @return Response
+      * Created on: 29/01/2017
+      * Updated on: 31/01/2017
+    **/
+    public function getCartPackages($status=null,$cartLangId=null)
+    {
+      try {
+            $dataUrl=url('/');                
+            $url=explode('index.php',$dataUrl); 
+            $sessionId =Session::getId();
+            if(Auth::user()){
+                $whereColumn='user_id';
+                $whereValue=Auth::user()->id;
+            }else{
+                $whereColumn='session_id';
+                $whereValue=$sessionId;
+            }
+            if($status=='Deleted'){
+              //$deleteCart=CartLanguage::where($whereColumn,$whereValue)->delete();
+            }
+            if(($status=='Trashed') || ($status=='Active')){
+              //$trashCart=CartLanguage::where('id',$cartLangId)->update(['status'=>$status]);
+            }
+
+            $getLanguagesCartUpdated=CartLanguage::where($whereColumn,$whereValue)->where('status','Active')->get();
+            $getWordsCount=CartItem::where($whereColumn,$whereValue)->sum('content_words');
+            
+            $languageCartHtml='';
+            $totalPrice=0;
+            $totalLanguages=count($getLanguagesCartUpdated);
+            if(count($getLanguagesCartUpdated)){
+
+              foreach($getLanguagesCartUpdated as $getLanguagesCartUpdate){
+                $getLanguageData=LanguagePrice::join('languages','languages.id','=','language_prices.destination')->select('languages.name as destinationLang','language_prices.*')->where('language_prices.source',$getLanguagesCartUpdate->from_language_id)->where('language_prices.destination',$getLanguagesCartUpdate->to_language_id)->get();
+                $price=(count($getLanguageData))?$getLanguageData[0]->price_per_word:0;
+                $destLanguage=(count($getLanguageData))?$getLanguageData[0]->destinationLang:'';
+                $totalPriceCalculated=($getWordsCount*$price);
+                $totalPrice=$totalPrice+$totalPriceCalculated;
+              }
+            }
+            $returnData=array($getWordsCount,$totalLanguages,'$'.$totalPrice);
+            echo json_encode($returnData);exit;   
+
+      } catch (\Exception $e) {   
+              $result = [
+                      'exception_message' => $e->getMessage()
+               ];
+              return view('errors.error', $result);
+      }
     }
 }

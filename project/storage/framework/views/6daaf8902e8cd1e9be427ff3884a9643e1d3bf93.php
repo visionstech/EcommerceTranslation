@@ -1,10 +1,9 @@
 <script type="text/javascript" src="<?php echo e(asset('/customer/js/jquery-v3.1.1.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('/customer/js/slick.min.js')); ?>"></script>
 <script src="<?php echo e(asset('/customer/js/jquery-ui.js')); ?>"></script>
- <script type="text/javascript" src="<?php echo e(asset('/customer/js/jquery.form.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset('/customer/js/jquery.form.js')); ?>"></script>
+
 <script>
-
-
 $(document).ready(function(){
   //$('.over-lay').show();
   var baseUrl='<?php echo url('/'); ?>';
@@ -277,6 +276,59 @@ function editContent(){
 
 $(document).ready(function(){
   var baseUrl='<?php echo url('/'); ?>';
+
+  // ----------Step3 -------------
+  $(".package_li").click(function(){
+      var liId=$(this).attr('id');
+      var Id = liId.split('-');
+      alert(Id[1]);
+      $('.radio_package').removeAttr('checked');
+      $('#sel-radio-'+Id[1]).attr('checked',true);      
+      $('.radio_package').parent().removeClass('selected-radio');
+      $('#sel-radio-'+Id[1]).parent().addClass('selected-radio');
+      $( ".words-price>td" ).removeClass('select-word');
+      $( ".words-price>td:eq( "+(Id[1]-1)+" )" ).addClass('select-word');
+  });
+  //Get step 3 Data on Page Load
+  $.ajax({        
+          url: baseUrl+'/translation-application/cart-packages',
+          type:'get',
+          processData: false,
+          contentType: false,
+          beforeSend: function(){
+            $('.final_price').html('Calculating...');
+            $('.language_count').html('Counting...');
+          },
+          success: function(res) {
+            var data = $.parseJSON(res);
+            $('.total_words').html(data[0]);
+            $('.language_count').html(data[1]);
+            $('.final_price').html(data[2]);
+            $('.final_price').html(data[2]);
+            $('.final_amount').val(data[2]);
+            $('.stripe-button').attr('data-amount','747474');
+            
+            
+          }
+    });
+
+  //End Page load step 3 Data
+  
+  // ----------Select purpose--------------
+  $(".purpose-btn").click(function(){
+      $(".purpose-list").toggle();
+  });
+  $(".sel-radio").click(function(){
+    var idd = $(this).data('id');
+    //alert(idd);
+    $("th").removeClass("selected-radio");
+    $(this).closest("th").addClass("selected-radio");
+
+    $(".purpose-type-table").find('tr:last td').removeClass('select-word');
+    $(".purpose-type-table").find('tr:last td:nth-child('+idd+')').addClass('select-word');
+  });
+  //--------END Step 3 ---
+
 
   $(".select-langs").click(function(){
       $(".show-1").toggle();

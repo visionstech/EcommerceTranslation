@@ -24,7 +24,8 @@ class ManageSection extends Request {
 	{	
 		$rules=array();	
 
-		$GetData = Section::where('title',$this->request->get('title'))->where('section_type',$this->request->get('sectionType'))->get();		
+		$GetData = Section::where('title',$this->request->get('title'))->where('section_type',$this->request->get('sectionType'))->get();
+		
 		
 		
 		if((($this->request->get('sectionType')=='clients') || ($this->request->get('sectionType')=='banner-image') || ($this->request->get('sectionType')=='banner-bottom-logos') || ($this->request->get('sectionType')=='header-image')) && ($this->request->get('method')=="create")){ 
@@ -44,8 +45,12 @@ class ManageSection extends Request {
 		}
 		
 		if($this->request->get('method')=="update"){
-			
-			$rules['title']  = trim('required|unique:sections,title,'.decrypt($this->request->get('sectionId')));
+			$GetUpdateData = Section::where('title',$this->request->get('title'))->where('section_type',$this->request->get('sectionType'))->where('id','!=',decrypt($this->request->get('sectionId')))->get();		
+			if(!count($GetUpdateData)){
+				$rules['title']  = trim('required');
+			}else{
+				$rules['title']=trim('required|unique:sections');
+			}
 
 		}else{
 			if(!count($GetData)){
