@@ -1922,6 +1922,7 @@ span.del-arrow.arrow-up{
   padding: 15px 0 15px 20px;
   text-align: left;
   margin: 0px;
+  cursor: pointer;
 }
 .btn-wrap.pay-now > form {
   display: block;

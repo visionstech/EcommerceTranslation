@@ -10,7 +10,8 @@
               <form>
               <div class="purpose">
                 <h2>What will you use the translation for?</h2>
-                
+                <input type="hidden" name="_token" id='token' value="{{ csrf_token() }}">
+                <input type="hidden" id="purpose" name="purpose" vaue=""/>
                 <div class="form-group">
                   <label>Your choice will help us price your order correctly</label>
                   <button type="button" id="" class="purpose-btn">-- Select purpose --</button>
@@ -163,14 +164,14 @@
               <ul>
                 <li><p>Total Words</p> <span class='total_words'>0</span></li>
                 <li><p>Languages</p> <span class='language_count'>0</span></li>
-                <li><p>Purpose</p> <span>none</span></li>
-                <li><p>Type</p> <span>none</span></li>
+                <li><p>Purpose</p> <span class='package_purpose'>none</span></li>
+                <li><p>Type</p> <span class='package_name'>none</span></li>
                 <li><p>Your Price</p> <span class='final_price'>$0.00</span></li>
               </ul>
               <div class="pay-method">
                 <p>Estimated delivery <span>5 days</span></p>
                 <div class="custom-checkbox">
-                  <input id="checkbox-1" name="checkbox-3" type="checkbox">
+                  <input id="checkbox-1" name="terms_condition" type="checkbox" value='1'>
                         <label for="checkbox-1" class="checkbox-custom-label">I agree to the Terms & Conditions and Quality Policy</label>    
                         
                 </div>
@@ -183,25 +184,24 @@
                       <div class="check"></div>
                     </li>
                     <li>
-                      <input type="radio" id="pay-2" name="pay">
+                      <input type="radio" id="pay-2" name="pay" checked>
                       <label for="pay-2">Credit card</label>
                       <div class="check"><div class="inside"></div></div>
                     </li>
                   </ul>
                 </div> <!-- custom-radio -->
                 <div class="btn-wrap pay-now">
-                 <!--<input value="Pay Now" name="" class="btn_ctrl" type="submit">-->
-                  <form action="{{ url('/translation-application/step-three') }}" class="" method="POST">
+                  <input value="Pay Now" name="" class="btn_ctrl pay_button" type="button">
+                  <form action="{{ url('/translation-application/step-three') }}" class="payment_form" method="POST">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="final_amount" class="final_amount" value="">
                     <script
                       src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                       data-key="pk_test_r4CeAbcQPVt8E2CMepdZOz3l"
-                      data-image="http://localhost/eqho/uploads/header-image_Y1thKMaaDZWL0OUuDlDY.png"                      data-name="eqho.com"
+                      data-image="http://localhost/eqho/uploads/header-image_Y1thKMaaDZWL0OUuDlDY.png" data-name="eqho.com"
                       data-description="Payment of translations"
                       data-amount="34343">
                     </script>
-
                   </form>
                 </div>
               </div>

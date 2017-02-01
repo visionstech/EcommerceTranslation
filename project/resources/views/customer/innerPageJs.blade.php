@@ -276,18 +276,67 @@ function editContent(){
 
 $(document).ready(function(){
   var baseUrl='<?php echo url('/'); ?>';
-
+  if($('#checkbox-1'). prop("checked") == false){
+      $('.payment_form').hide();
+      $('.pay_button').show();      
+  }else{
+      $('.payment_form').show();
+      $('.pay_button').hide();
+  }
+  
+  $(document).on('click','#checkbox-1',function() {
+    if($('#checkbox-1'). prop("checked") == false){
+      $('.payment_form').hide();
+      $('.pay_button').show();      
+   }else{
+      $('.payment_form').show();
+      $('.pay_button').hide();
+    }
+  });
+  $(".pay_button").click(function(){
+      alert('Please agree terms and conditions.');
+  });
+  
+  $(document).on('click','.package_li  p',function() {
+    $('#purpose').val($(this).html());
+  });
   // ----------Step3 -------------
-  $(".package_li").click(function(){
+  $(document).on('click',".package_li",function() {
       var liId=$(this).attr('id');
       var Id = liId.split('-');
-      alert(Id[1]);
       $('.radio_package').removeAttr('checked');
       $('#sel-radio-'+Id[1]).attr('checked',true);      
       $('.radio_package').parent().removeClass('selected-radio');
       $('#sel-radio-'+Id[1]).parent().addClass('selected-radio');
       $( ".words-price>td" ).removeClass('select-word');
       $( ".words-price>td:eq( "+(Id[1]-1)+" )" ).addClass('select-word');
+
+      var data = new FormData();
+      data.append('_token',$('#token').val());
+      data.append('purpose',$('#purpose').val());
+      data.append('package',Id[1]);
+      $.ajax({        
+          url: baseUrl+'/translation-application/cart-packages',
+          type:'post',
+          data:data,
+          processData: false,
+          contentType: false,
+          beforeSend: function(){
+            $('.final_price').html('Calculating...');
+            $('.language_count').html('Counting...');
+          },
+          success: function(res) {
+            var data = $.parseJSON(res);
+            $('.total_words').html(data[0]);
+            $('.language_count').html(data[1]);
+            $('.final_price').html(data[2]);
+            $('.final_price').html(data[2]);
+            $('.final_amount').val(data[2]);            
+            $('.package_name').html(data[3]);
+            $('.package_purpose').html(data[4]);
+             
+          }
+    });
   });
   //Get step 3 Data on Page Load
   $.ajax({        
@@ -306,9 +355,8 @@ $(document).ready(function(){
             $('.final_price').html(data[2]);
             $('.final_price').html(data[2]);
             $('.final_amount').val(data[2]);
-            $('.stripe-button').attr('data-amount','747474');
-            
-            
+            $('.package_name').html(data[3]);
+            $('.package_purpose').html(data[4]);            
           }
     });
 

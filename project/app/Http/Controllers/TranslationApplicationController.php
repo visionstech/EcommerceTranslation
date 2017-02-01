@@ -12,6 +12,10 @@ use App\LanguagePackage;
 use App\CartItem;
 use App\CartLanguage;
 use App\LanguagePrice;
+use App\Order;
+use App\Role;
+use App\Application;
+use App\ApplicationFile;
 use File;
 
 class TranslationApplicationController extends Controller {
@@ -609,12 +613,11 @@ class TranslationApplicationController extends Controller {
     public function getStepThree()
     {
       try {
-
           $currency_input = 2;
           //currency codes : http://en.wikipedia.org/wiki/ISO_4217
           $currency_from = "USD";
           $currency_to = "INR";
-          $this->getConvertedCurrency($currency_from,$currency_to,$currency_input);
+          //$this->getConvertedCurrency($currency_from,$currency_to,$currency_input);
           
           $sections=Section::where('status','Active')->get();
           $languages=Language::where('status','Active')->get();
@@ -659,37 +662,139 @@ class TranslationApplicationController extends Controller {
       * Updated on: 31/01/2017
     **/
     public function postStepThree (Request $request){
+
        \Stripe\Stripe::setApiKey ( 'sk_test_8cnU38GePfiBbNfvSFVsUsEX' );
+       
        $data=$request->all();
        $amount=explode('$', $data['final_amount']);
-       //
-        try {
+       
+       try {
             $InsertPayment=\Stripe\Charge::create ( array (
                     "amount" => ($amount[1]*100),
                     "currency" => "usd",
                     "source" => $data['stripeToken'], // obtained with Stripe.js
                     "description" => "Test payment." 
-            ) );
-            //echo "<pre>";print_r($InsertPayment);exit;
-            return redirect('/translation-application/step-three')->with('success', 'payment  Successfully.');
-            Session::flash ( 'success-message', 'Payment done successfully !' );
-            //return Redirect::back ();
-        } catch ( \Exception $e ) {
-          echo "ssssssssssssssss11111111111";exit;
-            Session::flash ( 'fail-message', "Error! Please Try again." );
-            //return Redirect::back ();
-        }
+            ));
+            
+          //If user not Registered on site then First Register User with email auto-generated password and email to user.
+            if(!Auth::user()){
+                $randomPassword=$random=app('App\Http\Controllers\HomepageSectionController')->getRandomString(10);
+                // Create new user
+                $create_user = User::create([
+                    'email' => $data['stripeEmail'],
+                    'password' => bcrypt($randomPassword),
+                    'role_id' => 3,
+                    'status' => 'Paused'
+                ]);
+                //Here email to user with this password below:
 
+            }
+          //payment insertion
+            $status='success';
+            $insertOrder= Order::Create([
+                      'user_id' => Auth::user()->id,
+                      'transaction_id' => $InsertPayment->id,
+                      'payment_status'=>$status,
+                      'payment_type'=>$data['stripeTokenType']
+                    ]);
+
+            $orderId = $insertOrder->id;
+          
+          //Below Save whole data in Order Table for user to view in Dashboard and Empty Cart Tables.
+            $sessionId =Session::getId();
+            
+            $getLanguagesCartUpdated=CartLanguage::join('language_packages','cart_languages.language_package','=','language_packages.id')
+                            ->select('cart_languages.*','language_packages.name as packageName','language_packages.id as packageId','language_packages.price_per_word as packagePrice')
+                            ->where('cart_languages.user_id', Auth::user()->id)
+                            ->orWhere('cart_languages.session_id',$sessionId)
+                            ->where('cart_languages.status','Active')->get();
+            $getWordsCount=CartItem::where('user_id', Auth::user()->id)
+                            ->orWhere('session_id',$sessionId)
+                            ->where('status','Active')
+                            ->sum('content_words');
+            $getCartItems=CartItem::where('user_id', Auth::user()->id)
+                            ->orWhere('session_id',$sessionId)
+                            ->where('status','Active')
+                            ->get();
+            $totalPrice=0;
+            $packagePrice=0;
+            $packageName='';
+            $totalWords=0;
+            $totalLanguagePrice=0;
+            $totalLanguages=count($getLanguagesCartUpdated);
+            if(count($getLanguagesCartUpdated)){
+              foreach($getLanguagesCartUpdated as $getLanguagesCartUpdate){
+                $getLanguageData=LanguagePrice::join('languages','languages.id','=','language_prices.destination')->select('languages.name as destinationLang','language_prices.*')->where('language_prices.source',$getLanguagesCartUpdate->from_language_id)->where('language_prices.destination',$getLanguagesCartUpdate->to_language_id)->get();
+                $price=(count($getLanguageData))?$getLanguageData[0]->price_per_word:0;               
+                $destLanguage=(count($getLanguageData))?$getLanguageData[0]->destinationLang:'';      
+                $totalLanguagePrice=($getWordsCount*$price);               
+                $totalPrice=$totalPrice+$totalLanguagePrice;
+              }
+              $packageName=$getLanguagesCartUpdated[0]->packageName;
+              $packageId=$getLanguagesCartUpdated[0]->packageId;
+              $purpose=$getLanguagesCartUpdated[0]->purpose;
+              $packagePrice=$getLanguagesCartUpdated[0]->packagePrice;              
+              $totalPrice=($totalPrice+$packagePrice);
+            }
+
+          //Insert Data in Application Table from Cart
+            if(count($getLanguagesCartUpdated)){
+              foreach($getLanguagesCartUpdated as $getLanguagesCartUpdate){
+                
+                  $createApplicationOrder= Application::Create([
+                                  'user_id' => Auth::user()->id,
+                                  'order_id' => $orderId,
+                                  'from_lang_id'=>$getLanguagesCartUpdate->from_language_id,
+                                  'to_lang_id'=>$getLanguagesCartUpdate->to_language_id,
+                                  'language_price' => $totalLanguagePrice,
+                                  'total_price' => ($totalPrice-$packagePrice),
+                                  'package_price'=>$packagePrice,
+                                  'final_price'=>$totalPrice,
+                                  'language_package'=>$packageName,
+                                  'translation_purpose' => $purpose,
+                          ]);
+
+                //Insert Cart Files In application Files Table from Cart Items Table
+                  $applicationId = $createApplicationOrder->id;
+                  foreach($getCartItems as $getCartItem){
+                    
+                    if($getCartItem->file==null){
+                      $fileName= $sessionId.'_text.txt';
+                      File::put('/var/www/html/eqho/uploads/files/'.$fileName,$getCartItem->content);
+                      chmod("/var/www/html/eqho/uploads/files/test3.txt", 0777);
+                    }else{
+                      $fileName=$getCartItem->file;
+                    }
+                    $createApplicationFiles= ApplicationFile::Create([
+                                  'user_id' => Auth::user()->id,
+                                  'order_id' => $orderId,
+                                  'application_id' => $applicationId,
+                                  'file_name'=>$fileName,
+                                  'file_path'=>'/uploads/files',
+                                  'content_words' => $getCartItem->content_words
+                          ]);
+                  }
+                }
+              
+            //Delete Languages Cart Values After insertion in final application tables
+              
+              //$getLanguagesCartUpdated=CartLanguage::where('user_id', Auth::user()->id)->orWhere('session_id',$sessionId)->delete();
+              //$getCartItemsUpdated=CartItem::where('user_id', Auth::user()->id)->orWhere('session_id',$sessionId)->delete();
+            }
+           return redirect('/translation-application/step-three')->with('success', 'Payment  done successfully.');
+        } catch ( \Exception $e ) {
+            return redirect('/translation-application/step-three')->withErrors('Error! Please Try again.');
+        }
     }
 
     /**
       * Step one will get cart data step 3 on page load.
-      * @param status and cart language id   
+      * @param null 
       * @return Response
-      * Created on: 29/01/2017
-      * Updated on: 31/01/2017
+      * Created on: 31/01/2017
+      * Updated on: 01/02/2017
     **/
-    public function getCartPackages($status=null,$cartLangId=null)
+    public function getCartPackages()
     {
       try {
             $dataUrl=url('/');                
@@ -702,21 +807,17 @@ class TranslationApplicationController extends Controller {
                 $whereColumn='session_id';
                 $whereValue=$sessionId;
             }
-            if($status=='Deleted'){
-              //$deleteCart=CartLanguage::where($whereColumn,$whereValue)->delete();
-            }
-            if(($status=='Trashed') || ($status=='Active')){
-              //$trashCart=CartLanguage::where('id',$cartLangId)->update(['status'=>$status]);
-            }
+            
+            $getLanguagesCartUpdated=CartLanguage::join('language_packages','cart_languages.language_package','=','language_packages.id')->select('cart_languages.*','language_packages.name as packageName','language_packages.price_per_word as packagePrice')->where('cart_languages.'.$whereColumn,$whereValue)->where('cart_languages.status','Active')->get();
 
-            $getLanguagesCartUpdated=CartLanguage::where($whereColumn,$whereValue)->where('status','Active')->get();
             $getWordsCount=CartItem::where($whereColumn,$whereValue)->sum('content_words');
             
             $languageCartHtml='';
             $totalPrice=0;
+            $packagePrice=0;
+            $packageName='';
             $totalLanguages=count($getLanguagesCartUpdated);
             if(count($getLanguagesCartUpdated)){
-
               foreach($getLanguagesCartUpdated as $getLanguagesCartUpdate){
                 $getLanguageData=LanguagePrice::join('languages','languages.id','=','language_prices.destination')->select('languages.name as destinationLang','language_prices.*')->where('language_prices.source',$getLanguagesCartUpdate->from_language_id)->where('language_prices.destination',$getLanguagesCartUpdate->to_language_id)->get();
                 $price=(count($getLanguageData))?$getLanguageData[0]->price_per_word:0;
@@ -724,8 +825,70 @@ class TranslationApplicationController extends Controller {
                 $totalPriceCalculated=($getWordsCount*$price);
                 $totalPrice=$totalPrice+$totalPriceCalculated;
               }
+              $packageName=$getLanguagesCartUpdated[0]->packageName;
+              $purpose=$getLanguagesCartUpdated[0]->purpose;
+              $packagePrice=$getLanguagesCartUpdated[0]->packagePrice;              
+              $totalPrice=($totalPrice+$packagePrice);
             }
-            $returnData=array($getWordsCount,$totalLanguages,'$'.$totalPrice);
+            $returnData=array($getWordsCount,$totalLanguages,'$'.$totalPrice,$packageName,$purpose);
+            echo json_encode($returnData);exit;   
+
+      } catch (\Exception $e) {   
+              $result = [
+                      'exception_message' => $e->getMessage()
+               ];
+              return view('errors.error', $result);
+      }
+    }
+
+    /**
+      * Step one will get cart data step 3 on page load.
+      * @param status and cart language id   
+      * @return Response
+      * Created on: 01/01/2017
+      * Updated on: 01/02/2017
+    **/
+    public function postCartPackages(Request $request)
+    {
+      try {
+            $dataUrl=url('/');                
+            $url=explode('index.php',$dataUrl); 
+            $data=$request->all();
+            $sessionId =Session::getId();
+            if(Auth::user()){
+                $whereColumn='user_id';
+                $whereValue=Auth::user()->id;
+            }else{
+                $whereColumn='session_id';
+                $whereValue=$sessionId;
+            }
+            //Update Cart Languages with package and purpose now.
+            $CartPackagesUpdate=CartLanguage::where($whereColumn,$whereValue)->update(['purpose'=>$data['purpose'],'language_package'=>$data['package']]);
+              
+
+            $getLanguagesCartUpdated=CartLanguage::join('language_packages','cart_languages.language_package','=','language_packages.id')->select('cart_languages.*','language_packages.name as packageName','language_packages.price_per_word as packagePrice')->where('cart_languages.'.$whereColumn,$whereValue)->where('cart_languages.status','Active')->get();
+            
+            $getWordsCount=CartItem::where($whereColumn,$whereValue)->sum('content_words');
+            
+            $languageCartHtml='';
+            $totalPrice=0;
+            $packagePrice=0;
+            $packageName='';
+            $totalLanguages=count($getLanguagesCartUpdated);
+            if(count($getLanguagesCartUpdated)){
+              foreach($getLanguagesCartUpdated as $getLanguagesCartUpdate){
+                $getLanguageData=LanguagePrice::join('languages','languages.id','=','language_prices.destination')->select('languages.name as destinationLang','language_prices.*')->where('language_prices.source',$getLanguagesCartUpdate->from_language_id)->where('language_prices.destination',$getLanguagesCartUpdate->to_language_id)->get();
+                $price=(count($getLanguageData))?$getLanguageData[0]->price_per_word:0;
+                $destLanguage=(count($getLanguageData))?$getLanguageData[0]->destinationLang:'';
+                $totalPriceCalculated=($getWordsCount*$price);
+                $totalPrice=$totalPrice+$totalPriceCalculated;
+              }
+              $packageName=$getLanguagesCartUpdated[0]->packageName;
+              $purpose=$getLanguagesCartUpdated[0]->purpose;
+              $packagePrice=$getLanguagesCartUpdated[0]->packagePrice;          
+              $totalPrice=($totalPrice+$packagePrice);
+            }
+            $returnData=array($getWordsCount,$totalLanguages,'$'.$totalPrice,$packageName,$purpose);
             echo json_encode($returnData);exit;   
 
       } catch (\Exception $e) {   

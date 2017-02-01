@@ -128,10 +128,10 @@
             <h2>Your Order</h2>
             <ul>
               <li><p>Total Words</p> <span class='total_words'>0</span></li>
-              <li><p>Languages</p> <span>0</span></li>
-              <li><p>Purpose</p> <span>none</span></li>
-              <li><p>Type</p> <span>none</span></li>
-              <li><p>Your Price</p> <span>$0.00</span></li>
+                <li><p>Languages</p> <span class='language_count'>0</span></li>
+                <li><p>Purpose</p> <span class='package_purpose'>none</span></li>
+                <li><p>Type</p> <span class='package_name'>none</span></li>
+                <li><p>Your Price</p> <span class='final_price'>$0.00</span></li>
             </ul>
           </div>
 
