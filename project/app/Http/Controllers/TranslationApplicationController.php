@@ -14,8 +14,13 @@ use App\CartLanguage;
 use App\LanguagePrice;
 use App\Order;
 use App\Role;
-use App\Application;
-use App\ApplicationFile;
+use App\Project;
+use App\ProjectFile;
+use App\ProjectInstruction;
+use App\ProjectBrief;
+use App\ProjectGloosary;
+use App\ProjectStyle;
+use App\ProjectTranslator;
 use File;
 
 class TranslationApplicationController extends Controller {
@@ -87,9 +92,13 @@ class TranslationApplicationController extends Controller {
             
           if($file){
             foreach ($file as $key => $value){
-                $fileType=$value->getMimeType();
-                if($fileType=='application/pdf'){
+
                 
+                $validFiles=array('ppt','pptx','doc','docx','xls','xlsm','xlsx','rtf','odt','txt','pdf');
+                $dummypath = $value->getClientOriginalName();
+                $extention = pathinfo($dummypath, PATHINFO_EXTENSION);
+                $fileType=$value->getMimeType();
+                if (in_array($extention, $validFiles)) {
                   $random=app('App\Http\Controllers\HomepageSectionController')->getRandomString(10);
                   $fileName= $random.'_'.$value->getClientOriginalName();
                   $filenames[]=$fileName;
@@ -174,8 +183,49 @@ class TranslationApplicationController extends Controller {
           }
           if(count($getFileCartUpdated)){
             foreach($getFileCartUpdated as $key=>$file){
+              $filetype=explode('.', $file->file);
+               $getExtensionGet=$filetype[sizeof($filetype)-1];
+               switch($getExtensionGet){
+                  case 'ppt':
+                  $imageLogo='power-point.png';
+                  break;
+                  case 'pptx':
+                  $imageLogo='power-point.png';
+                  break;
+                  case 'doc':
+                  $imageLogo='word.png';
+                  break;
+                  case 'docx':
+                  $imageLogo='word.png';
+                  break;
+                  case 'xls':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'xlsm':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'xlsx':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'rtf':
+                  $imageLogo='rich-text-format.png';
+                  break;
+                  case 'odt':
+                  $imageLogo='open-office.png';
+                  break;
+                  case 'txt':
+                  $imageLogo='plain-text.png';
+                  break;
+                  case 'pdf':
+                  $imageLogo='acrobat.png';
+                  break;
+                  default:
+                  $imageLogo='acrobat.png';
+                  break;
+                }
+               
                 $cartHtml .='<tr>
-                        <td class="type"><img src="'.$url[0].'/customer/img/acrobat.png" title="acrobat" alt="acrobat" /></td>
+                        <td class="type"><img src="'.$url[0].'/customer/img/'.$imageLogo.'" title="acrobat" alt="acrobat" /></td>
                         <td class="perview">'.$file->file.'</td>
                         <td class="switch"><span class="words">'.$file->content_words.' words</span><span class="close"><i class="fa fa-times-circle-o" onclick="trashElement('.$file->id.');" aria-hidden="true"></i></span></td>
                       </tr>';
@@ -214,8 +264,48 @@ class TranslationApplicationController extends Controller {
           }
           if(count($getFileCartTrashed)){
             foreach($getFileCartTrashed as $key=>$file){
+              $filetype=explode('.', $file->file);
+               $getExtensionGet=$filetype[sizeof($filetype)-1];
+               switch($getExtensionGet){
+                  case 'ppt':
+                  $imageLogo='power-point.png';
+                  break;
+                  case 'pptx':
+                  $imageLogo='power-point.png';
+                  break;
+                  case 'doc':
+                  $imageLogo='word.png';
+                  break;
+                  case 'docx':
+                  $imageLogo='word.png';
+                  break;
+                  case 'xls':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'xlsm':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'xlsx':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'rtf':
+                  $imageLogo='rich-text-format.png';
+                  break;
+                  case 'odt':
+                  $imageLogo='open-office.png';
+                  break;
+                  case 'txt':
+                  $imageLogo='plain-text.png';
+                  break;
+                  case 'pdf':
+                  $imageLogo='acrobat.png';
+                  break;
+                  default:
+                  $imageLogo='acrobat.png';
+                  break;
+                }
                 $cartHtmlTrashed .='<tr>
-                        <td class="type"><img src="'.$url[0].'/customer/img/acrobat.png" title="acrobat" alt="acrobat" /></td>
+                        <td class="type"><img src="'.$url[0].'/customer/img/'.$imageLogo.'" title="acrobat" alt="acrobat" /></td>
                         <td class="perview">'.$file->file.'</td>
                         <td class="switch"><span class="words">'.$file->content_words.' words</span><span class="close"><span onclick="trashElement('.$file->id.')"><i class="fa fa-times-circle-o" aria-hidden="true"></i></span></span></td>
                       </tr>';
@@ -300,8 +390,48 @@ class TranslationApplicationController extends Controller {
           }
           if(count($getFileCartUpdated)){
             foreach($getFileCartUpdated as $key=>$file){
+               $filetype=explode('.', $file->file);
+               $getExtensionGet=$filetype[sizeof($filetype)-1];
+               switch($getExtensionGet){
+                  case 'ppt':
+                  $imageLogo='power-point.png';
+                  break;
+                  case 'pptx':
+                  $imageLogo='power-point.png';
+                  break;
+                  case 'doc':
+                  $imageLogo='word.png';
+                  break;
+                  case 'docx':
+                  $imageLogo='word.png';
+                  break;
+                  case 'xls':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'xlsm':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'xlsx':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'rtf':
+                  $imageLogo='rich-text-format.png';
+                  break;
+                  case 'odt':
+                  $imageLogo='open-office.png';
+                  break;
+                  case 'txt':
+                  $imageLogo='plain-text.png';
+                  break;
+                  case 'pdf':
+                  $imageLogo='acrobat.png';
+                  break;
+                  default:
+                  $imageLogo='acrobat.png';
+                  break;
+                }
                 $cartHtml .='<tr>
-                        <td class="type"><img src="'.$url[0].'/customer/img/acrobat.png" title="acrobat" alt="acrobat" /></td>
+                        <td class="type"><img src="'.$url[0].'/customer/img/'.$imageLogo.'" title="acrobat" alt="acrobat" /></td>
                         <td class="perview">'.$file->file.'</td>
                         <td class="switch"><span class="words">'.$file->content_words.' words</span><span class="close"><span class="close"><i class="fa fa-times-circle-o" onclick="trashElement('.$file->id.');" aria-hidden="true"></i></span></td>
                       </tr>';
@@ -341,8 +471,48 @@ class TranslationApplicationController extends Controller {
           }
           if(count($getFileCartTrashed)){
             foreach($getFileCartTrashed as $key=>$file){
+                $filetype=explode('.', $file->file);
+               $getExtensionGet=$filetype[sizeof($filetype)-1];
+               switch($getExtensionGet){
+                  case 'ppt':
+                  $imageLogo='power-point.png';
+                  break;
+                  case 'pptx':
+                  $imageLogo='power-point.png';
+                  break;
+                  case 'doc':
+                  $imageLogo='word.png';
+                  break;
+                  case 'docx':
+                  $imageLogo='word.png';
+                  break;
+                  case 'xls':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'xlsm':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'xlsx':
+                  $imageLogo='excel.png';
+                  break;
+                  case 'rtf':
+                  $imageLogo='rich-text-format.png';
+                  break;
+                  case 'odt':
+                  $imageLogo='open-office.png';
+                  break;
+                  case 'txt':
+                  $imageLogo='plain-text.png';
+                  break;
+                  case 'pdf':
+                  $imageLogo='acrobat.png';
+                  break;
+                  default:
+                  $imageLogo='acrobat.png';
+                  break;
+                }
                 $cartHtmlTrashed .='<tr>
-                        <td class="type"><img src="'.$url[0].'/customer/img/acrobat.png" title="acrobat" alt="acrobat" /></td>
+                        <td class="type"><img src="'.$url[0].'/customer/img/'.$imageLogo.'" title="acrobat" alt="acrobat" /></td>
                         <td class="perview"><del>'.$file->file.'</del></td>
                         <td class="switch"><span class="words">'.$file->content_words.' words</span><span class="close"><i class="fa fa-undo" onclick="restoreElement('.$file->id.');" aria-hidden="true"></i></span></td>
                       </tr>';
@@ -618,11 +788,21 @@ class TranslationApplicationController extends Controller {
           $currency_from = "USD";
           $currency_to = "INR";
           //$this->getConvertedCurrency($currency_from,$currency_to,$currency_input);
-          
           $sections=Section::where('status','Active')->get();
+          $userId=(Auth::user())?Auth::user()->id:0;
+          $previousTranslators=ProjectTranslator::join('users','users.id','=','project_translators.translator_id')->select('project_translators.*','users.email as translatorEmail')->where('user_id',$userId)->get();
+          $previousGloosaries=ProjectGloosary::where('user_id',$userId)->get();
+          $previousStyles=ProjectStyle::where('user_id',$userId)->get();
+          $previousBriefs=ProjectBrief::where('user_id',$userId)->get();
+
+          $latestOrderId = Session::get('orderId'); 
+          if(!$latestOrderId){
+            $latestOrder=Order::where('user_id',$userId)->orderBy('id','desc')->first();
+            $latestOrderId=($latestOrder!=null)?$latestOrder->id:0;
+          }
           $languages=Language::where('status','Active')->get();
           $languagePackages=LanguagePackage::all();
-          return view('customer.translation-application.step-three',compact('sections','languages','languagePackages'));
+          return view('customer.translation-application.step-three',compact('sections','languages','languagePackages','previousTranslators','previousGloosaries','previousStyles','previousBriefs','latestOrderId'));
         }
         catch (\Exception $e) 
         {   
@@ -699,7 +879,7 @@ class TranslationApplicationController extends Controller {
                     ]);
 
             $orderId = $insertOrder->id;
-          
+            Session::put('orderId', $orderId);
           //Below Save whole data in Order Table for user to view in Dashboard and Empty Cart Tables.
             $sessionId =Session::getId();
             
@@ -737,11 +917,11 @@ class TranslationApplicationController extends Controller {
               $totalPrice=($totalPrice+$packagePrice);
             }
 
-          //Insert Data in Application Table from Cart
+          //Insert Data in Project Table from Cart
             if(count($getLanguagesCartUpdated)){
               foreach($getLanguagesCartUpdated as $getLanguagesCartUpdate){
                 
-                  $createApplicationOrder= Application::Create([
+                  $createApplicationOrder= Project::Create([
                                   'user_id' => Auth::user()->id,
                                   'order_id' => $orderId,
                                   'from_lang_id'=>$getLanguagesCartUpdate->from_language_id,
@@ -754,21 +934,21 @@ class TranslationApplicationController extends Controller {
                                   'translation_purpose' => $purpose,
                           ]);
 
-                //Insert Cart Files In application Files Table from Cart Items Table
+                //Insert Cart Files In Project Files Table from Cart Items Table
                   $applicationId = $createApplicationOrder->id;
                   foreach($getCartItems as $getCartItem){
                     
                     if($getCartItem->file==null){
-                      $fileName= $sessionId.'_text.txt';
+                      $fileName= $sessionId.(Auth::user()->id).'_text.txt';
                       File::put('/var/www/html/eqho/uploads/files/'.$fileName,$getCartItem->content);
-                      chmod("/var/www/html/eqho/uploads/files/test3.txt", 0777);
+                      chmod("/var/www/html/eqho/uploads/files/".$fileName, 0777);
                     }else{
                       $fileName=$getCartItem->file;
                     }
-                    $createApplicationFiles= ApplicationFile::Create([
+                    $createApplicationFiles= ProjectFile::Create([
                                   'user_id' => Auth::user()->id,
                                   'order_id' => $orderId,
-                                  'application_id' => $applicationId,
+                                  'project_id' => $applicationId,
                                   'file_name'=>$fileName,
                                   'file_path'=>'/uploads/files',
                                   'content_words' => $getCartItem->content_words
@@ -875,6 +1055,8 @@ class TranslationApplicationController extends Controller {
             $packagePrice=0;
             $packageName='';
             $totalLanguages=count($getLanguagesCartUpdated);
+            $purpose='';
+            $packageName='';
             if(count($getLanguagesCartUpdated)){
               foreach($getLanguagesCartUpdated as $getLanguagesCartUpdate){
                 $getLanguageData=LanguagePrice::join('languages','languages.id','=','language_prices.destination')->select('languages.name as destinationLang','language_prices.*')->where('language_prices.source',$getLanguagesCartUpdate->from_language_id)->where('language_prices.destination',$getLanguagesCartUpdate->to_language_id)->get();
@@ -898,4 +1080,159 @@ class TranslationApplicationController extends Controller {
               return view('errors.error', $result);
       }
     }
+
+    /**
+      * Save Gloosaries/instructions/styleguides/briefs data step 3.
+      * @param null 
+      * @return Response
+      * Created on: 31/01/2017
+      * Updated on: 01/02/2017
+    **/
+    
+    public function postOptionalData(Request $request){
+
+        $orderId = Session::get('orderId');
+        $userId=(Auth::user())?Auth::user()->id:0;
+        if(!$orderId){
+          $latestOrder=Order::where('user_id',$userId)->orderBy('id','desc')->first();
+          $orderId=($latestOrder!=null)?$latestOrder->id:0;
+        }
+        $data=$request->all();
+        if(($orderId ==0) || ($userId ==0)){
+          //Error
+        }
+
+        if($data['type']=='instruction'){
+          //Save Data in project_instruction table          
+          $checkInstruction=ProjectInstruction::where('order_id',$orderId)->first();
+          if($checkInstruction != null){
+            //Update Row
+            $updateInstruction= ProjectInstruction::where('order_id',$orderId)
+                                                ->update([
+                                                          'tone'=>  $data['tone'],
+                                                          'instruction'=>$data['instruction'],
+                                                        ]);
+          }else{
+            //Insert Row
+            $createInstruction= ProjectInstruction::Create([
+                                  'user_id' => Auth::user()->id,
+                                  'order_id' => $orderId,
+                                  'tone'=>  $data['tone'],
+                                  'instruction'=>$data['instruction'],
+                                ]);
+          }
+
+        }
+        if($data['type']=='brief'){
+          $file=$data['briefs'];
+          $filenames=array();
+          if($file){
+            $fileUploadedData =$this->uploadAssets($file);
+            if(!empty($fileUploadedData[0])){
+              foreach($fileUploadedData[0] as $filename){
+                $createInstruction= ProjectBrief::Create([
+                                      'user_id' => Auth::user()->id,
+                                      'order_id' => $orderId,
+                                      'file_name'=>  $filename,
+                                      'file_path'=>'uploads/files/'
+                                    ]);
+              }
+            }
+          }
+          return $fileUploadedData;
+        }
+        //Gloosaries
+        if($data['type']=='gloosary'){
+          $file=$data['gloosaries'];
+          $filenames=array();
+          if($file){
+            $fileUploadedData =$this->uploadAssets($file);
+            if(!empty($fileUploadedData[0])){
+              foreach($fileUploadedData[0] as $filename){
+                $createInstruction= ProjectGloosary::Create([
+                                      'user_id' => Auth::user()->id,
+                                      'order_id' => $orderId,
+                                      'file_name'=>  $filename,
+                                      'file_path'=>'uploads/files/'
+                                    ]);
+              }
+            }
+          }
+          return $fileUploadedData;
+        }
+        //Styles
+        if($data['type']=='style'){
+          $file=$data['styles'];
+          $filenames=array();
+          if($file){
+            $fileUploadedData =$this->uploadAssets($file);
+            if(!empty($fileUploadedData[0])){
+              foreach($fileUploadedData[0] as $filename){
+                $createInstruction= ProjectStyle::Create([
+                                      'user_id' => Auth::user()->id,
+                                      'order_id' => $orderId,
+                                      'file_name'=>  $filename,
+                                      'file_path'=>'uploads/files/'
+                                    ]);
+              }
+            }
+          }
+          return $fileUploadedData;
+        }
+
+        if($data['type']=='previous'){
+          //Insert Row
+            //$checkStyle=ProjectStyle::where('order_id',$orderId)->where('user_id',Auth::user()->id)->get();
+            $createPrevious= ProjectStyle::Create([
+                                  'user_id' => Auth::user()->id,
+                                  'order_id' => $orderId,
+                                  'file_name'=>  $data['previous_style'],
+                                  'file_path'=>'uploads/files/'
+                                ]);
+            $createPrevious= ProjectGloosary::Create([
+                                      'user_id' => Auth::user()->id,
+                                      'order_id' => $orderId,
+                                      'file_name'=>  $data['previous_gloosary'],
+                                      'file_path'=>'uploads/files/'
+                                    ]);
+            $createPrevious= ProjectBrief::Create([
+                                      'user_id' => Auth::user()->id,
+                                      'order_id' => $orderId,
+                                      'file_name'=>  $data['previous_brief'],
+                                      'file_path'=>'uploads/files/'
+                                    ]);
+            $createPrevious= ProjectTranslator::Create([
+                                      'user_id' => Auth::user()->id,
+                                      'order_id' => $orderId,
+                                      'translator_id'=>  $data['previous_translator'],
+                                    ]);
+   
+
+        }
+
+  }
+  public function uploadAssets($file){
+    
+    $filenames=array();
+    $fileUrl=array();
+    foreach ($file as $key => $value){
+                
+      $validFiles=array('ppt','pptx','doc','docx','xls','xlsm','xlsx','rtf','odt','txt','pdf');
+      $dummypath = $value->getClientOriginalName();
+      $extention = pathinfo($dummypath, PATHINFO_EXTENSION);
+      $fileType=$value->getMimeType();
+      if (in_array($extention, $validFiles)) {
+        $random=app('App\Http\Controllers\HomepageSectionController')->getRandomString(10);
+        $fileName= $random.'_'.$value->getClientOriginalName();
+        $filenames[]=$fileName;
+        $value->move('/var/www/html/eqho/uploads/files/',$fileName);
+        chmod('/var/www/html/eqho/uploads/files/'.$fileName, 0777);
+        $dataUrl=url('/');                
+        $url=explode('index.php',$dataUrl);
+        $fileUrl[]=$url[0].'uploads/files/'.$fileName;
+      }
+    }
+    $fileUploadedData=array($filenames,$fileUrl);
+    return $fileUploadedData;
+  }
 }

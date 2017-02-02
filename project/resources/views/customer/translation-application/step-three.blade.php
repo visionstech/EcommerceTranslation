@@ -37,7 +37,7 @@
                         <?php $d=1; ?>
                         @foreach($languagePackages as $languagePackage)
                           <th>
-                            <input type="radio" id="sel-radio-{{$d}}" class="radio_package" name="selector">
+                            <input type="radio" id="sel-radio-{{$d}}" class="radio_package {{ $languagePackage->name }}" name="selector">
                             <label data-id="{{$d}}" class="sel-radio" for="sel-radio-{{$d}}">{{ $languagePackage->name }}</label>
                             <div class="check"></div>
                             <i class="fa fa-question-circle" aria-hidden="true"></i>
@@ -74,8 +74,9 @@
                         </td>
                       </tr>
                       <tr class="words-price">
-                        <td>From $0.12/ word</td>
-                        <td>From $0.18/ word</td>
+                        @foreach($languagePackages as $languagePackage)
+                          <td><?php echo 'From $'.$languagePackage->price_per_word.'/word'; ?></td>
+                        @endforeach
                         <td><a href="#" title="Contact Sales">Contact Sales</a></td>
                       </tr>
                     </tbody>
@@ -84,8 +85,9 @@
                   
               </div> <!-- purpose -->
               <div class="btn-wrap">
-                <input type="submit" value="Back to: Choose Languages" name="" class="btn_ctrl back-btn no-margin" />
+                <a href="{{ url('/translation-application/step-two') }}" class="btn_ctrl back-btn no-margin"> Back to: Choose Languages </a>
               </div>
+              @if($latestOrderId != 0)
               <div class="existing-customer">
                 <h4>Are you an existing customer?</h4>
                 <p>If so, you can select:</p>
@@ -96,62 +98,115 @@
                       <label for="ex-radio-1">A translator you worked with previously</label>
                       <div class="check"></div>
                     </li>
+                    <div id='previous_translators'>
+                      <div class="form-group">
+                        <label>Translators</label>
+                        <select name="previous_translator" class="option-select previous_translator" > 
+                          <option value=''>-- Select your Translator --</option>
+                          @if(count($previousTranslators))
+                            @foreach($previousTranslators as $previousTranslator)
+                              <option value='{{ $previousTranslator->translator_id }}'>{{ $previousTranslator->translatorEmail }}</option>
+                            @endforeach
+                          @endif
+                        </select>
+                      </div>
+                    </div>
                     <li>
-                      <input type="radio" id="ex-radio-2" name="existing-customer">
+                      <input type="radio" id="ex-radio-2" name="existing-assets">
                       <label for="ex-radio-2">An existing translation asset (e.g. Glossary) stored in your account</label>
                       <div class="check"><div class="inside"></div></div>
                     </li>
+                    <div id='assets'>
+                      <div class="form-group">
+                        <label>Gloosaries</label>
+                        <select name="previous_gloosary" class="option-select previous_gloosary" > 
+                          <option value=''>-- Select your Gloosary --</option>
+                          @if(count($previousGloosaries))
+                            @foreach($previousGloosaries as $previousGloosary)
+                              <option value='{{ $previousGloosary->file_name }}'>{{ $previousGloosary->file_name }}</option>
+                            @endforeach
+                          @endif
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Briefs</label>
+                        <select name="previous_brief" class="option-select previous_brief" >  
+                          <option value=''>-- Select your Brief --</option>
+                           @if(count($previousBriefs))
+                            @foreach($previousBriefs as $previousBrief)
+                              <option value='{{ $previousBrief->file_name }}'>{{ $previousBrief->file_name }}</option>
+                            @endforeach
+                          @endif
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Styles</label>
+                        <select name="previous_style" class="option-select previous_style">  
+                          <option value=''>-- Select your style --</option>
+                           @if(count($previousStyles))
+                            @foreach($previousStyles as $previousStyle)
+                              <option value='{{ $previousStyle->file_name }}'>{{ $previousStyle->file_name }}</option>
+                            @endforeach
+                          @endif
+                        </select>
+                      </div>
+                    </div>
                   </ul>
                 </div>
                 <div class="existing-login">
-                  <input type="submit" value="Login" name="" class="btn_ctrl" />
+                @if(!Auth::user())
+                  <input type="button" value="Login" name="" class="btn_ctrl" />
+                @else  
+                  <input type="button" value="Save" name="" onclick="saveOptionalData('previous');" class="btn_ctrl" />
+                @endif
                 </div>
               </div> <!-- existing-customer -->
-
+              @endif
               <div class="instructions">
                 <h4>Instructions for translator  <span>(Optional)</span></h4>
                 <div class="form-group">
                   <label>What tone you are looking for in your translation?</label>
-                  <button type="button" id="" class="option-btn">-- Select your option --</button>
-                  
-                </div>
+                  <select name="tone" class="option-select" onchange="saveOptionalData('instruction');" >                    
+                    <option value=''>-- Select your option --</option>
+                    <option>Formal</option>
+                    <option>Informal</option>
+                    <option>Friendly</option>
+                    <option>Business</option>
+                  </select>
+                 </div>
                 <div class="form-group">
                   <label>Instructions for the translator</label>
-                  <textarea placeholder="Write your instructions here..."></textarea>
-                  
+                  <textarea onblur="saveOptionalData('instruction');" name="instruction" class="instruction" placeholder="Write your instructions here..."></textarea>                  
                 </div>
                 <div class="upload-files">
                   <span class="lable-text">Upload your brief</span>
-                    <div class="upload-files-btn">
-                      <form method="POST" >
+                    <div class="upload-files-btn">                     
                         <span type="button" class="fileinput-button">
                                 <span>Upload Files</span>
-                                <input name="file" multiple="multiple" size="1" type="file">
+                                <input name="file" multiple="multiple" name="brief" class="brief" onchange="saveOptionalData('brief');" size="1" type="file">
                         </span>
-                      </form>
                     </div>
+                    <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
                 </div> <!-- upload-files -->
                 <div class="upload-files">
                   <span class="lable-text">Upload a glossary</span>
                     <div class="upload-files-btn">
-                      <form method="POST" >
                         <span type="button" class="fileinput-button">
-                                <span>Upload Files</span>
-                                <input name="file" multiple="multiple" size="1" type="file">
+                          <span>Upload Files</span>
+                          <input name="file" multiple="multiple" name="gloosary" class="gloosary" onchange="saveOptionalData('gloosary');" size="1" type="file">
                         </span>
-                      </form>
                     </div>
+                    <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
                 </div> <!-- upload-files -->
                 <div class="upload-files">
                   <span class="lable-text">Upload brand/ style guide</span>
                     <div class="upload-files-btn">
-                      <form method="POST" >
                         <span type="button" class="fileinput-button">
-                                <span>Upload Files</span>
-                                <input name="file" multiple="multiple" size="1" type="file">
+                              <span>Upload Files</span>
+                              <input name="file" multiple="multiple" name="style" class="style" onchange="saveOptionalData('style');" size="1" type="file">
                         </span>
-                      </form>
                     </div>
+                    <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
                 </div> <!-- upload-files -->
               </div><!-- instructions -->
             </form>

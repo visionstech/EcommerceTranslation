@@ -85,6 +85,7 @@ $(document).ready(function(){
     $('.del-permanent').toggle();
     
   });
+  var validFiles=['ppt','pptx','doc','docx','xls','xlsm','xlsx','rtf','odt','txt','pdf'];
 
   $('#myForm input[class=file]').change(function(){
       var bar = $('#bar1');
@@ -94,7 +95,9 @@ $(document).ready(function(){
       InvalidFiles=[];
       $.each($(file), function (i, obj) {
           $.each(obj.files, function (j, file) {
-            if(file.type=='application/pdf'){
+            var nameFile=file.name;
+            var fileExtension = nameFile.substr( (nameFile.lastIndexOf('.') +1) );
+            if($.inArray(fileExtension, validFiles) !== -1){
                 data.append("files[" + j + "]", file);
             }else{
               InvalidFiles.push(file.name);
@@ -276,6 +279,8 @@ function editContent(){
 
 $(document).ready(function(){
   var baseUrl='<?php echo url('/'); ?>';
+  //$('.complete').hide();
+
   if($('#checkbox-1'). prop("checked") == false){
       $('.payment_form').hide();
       $('.pay_button').show();      
@@ -300,7 +305,7 @@ $(document).ready(function(){
   $(document).on('click','.package_li  p',function() {
     $('#purpose').val($(this).html());
   });
-  // ----------Step3 -------------
+  // ----------Step 3 -------------
   $(document).on('click',".package_li",function() {
       var liId=$(this).attr('id');
       var Id = liId.split('-');
@@ -308,7 +313,7 @@ $(document).ready(function(){
       $('#sel-radio-'+Id[1]).attr('checked',true);      
       $('.radio_package').parent().removeClass('selected-radio');
       $('#sel-radio-'+Id[1]).parent().addClass('selected-radio');
-      $( ".words-price>td" ).removeClass('select-word');
+      $( ".words-price > td" ).removeClass('select-word');
       $( ".words-price>td:eq( "+(Id[1]-1)+" )" ).addClass('select-word');
 
       var data = new FormData();
@@ -339,6 +344,24 @@ $(document).ready(function(){
     });
   });
   //Get step 3 Data on Page Load
+  $('.purpose-type').hide();
+  $('#previous_translators').hide();
+  $('#assets').hide(); 
+  $("#ex-radio-2").click(function(){
+    if($(this).is(':checked')){
+      $('#assets').show();    
+    }else{
+      $('#assets').hide();
+    }
+  });
+  $("#ex-radio-1").click(function(){
+    if($(this).is(':checked')){
+      $('#previous_translators').show();
+    }else{
+      $('#previous_translators').hide();
+    }    
+  });
+  
   $.ajax({        
           url: baseUrl+'/translation-application/cart-packages',
           type:'get',
@@ -355,6 +378,17 @@ $(document).ready(function(){
             $('.final_price').html(data[2]);
             $('.final_price').html(data[2]);
             $('.final_amount').val(data[2]);
+            if(data[3]){
+              $('.purpose-type').show();
+              $('.radio_package').removeAttr('checked');
+              $('.'+data[3]).attr('checked',true);      
+              $('.radio_package').parent().removeClass('selected-radio');
+              $('.'+data[3]).parent().addClass('selected-radio');
+              var selectedPack=$('.'+data[3]).attr('id');
+              var Id = selectedPack.split('-');
+              $( ".words-price > td" ).removeClass('select-word');
+              $( ".words-price>td:eq( "+(Id[2]-1)+" )" ).addClass('select-word');
+            }
             $('.package_name').html(data[3]);
             $('.package_purpose').html(data[4]);            
           }
@@ -366,6 +400,10 @@ $(document).ready(function(){
   $(".purpose-btn").click(function(){
       $(".purpose-list").toggle();
   });
+  $(".option-btn").click(function(){
+      $(".option-list").toggle();
+  });
+
   $(".sel-radio").click(function(){
     var idd = $(this).data('id');
     //alert(idd);
@@ -375,6 +413,10 @@ $(document).ready(function(){
     $(".purpose-type-table").find('tr:last td').removeClass('select-word');
     $(".purpose-type-table").find('tr:last td:nth-child('+idd+')').addClass('select-word');
   });
+  
+
+
+
   //--------END Step 3 ---
 
 
@@ -582,5 +624,106 @@ function restoreTranslation(value){
       });
 
 }
+
+
 // End jQuery Of Step 2 Cart 
+
+//SAVE INSTRUCTIONS STEP 3
+
+    function saveOptionalData(type){
+          var baseUrl='<?php echo url('/'); ?>';
+          var data = new FormData();
+          data.append('_token',$('#token').val());
+          data.append('tone',$('.option-select').val());
+          data.append('instruction',$('.instruction').val());
+          data.append('type',type);
+
+          var validFiles=['ppt','pptx','doc','docx','xls','xlsm','xlsx','rtf','odt','txt','pdf'];  
+          var brief = $(".brief");
+          InvalidFiles=[];
+          $.each($(brief), function (i, obj) {
+              $.each(obj.files, function (j, file) {
+                var nameFile=file.name;
+                var fileExtension = nameFile.substr( (nameFile.lastIndexOf('.') +1) );
+                if($.inArray(fileExtension, validFiles) !== -1){
+                    data.append("briefs[" + j + "]", file);
+                }else{
+                  InvalidFiles.push(file.name);
+                }
+            })
+          });
+          var gloosary = $(".gloosary");
+          InvalidFiles=[];
+          $.each($(gloosary), function (i, obj) {
+              $.each(obj.files, function (j, file) {
+                var nameFile=file.name;
+                var fileExtension = nameFile.substr( (nameFile.lastIndexOf('.') +1) );
+                if($.inArray(fileExtension, validFiles) !== -1){
+                    data.append("gloosaries[" + j + "]", file);
+                }else{
+                  InvalidFiles.push(file.name);
+                }
+            })
+          });
+
+          var style = $(".style");
+          InvalidFiles=[];
+          $.each($(style), function (i, obj) {
+              $.each(obj.files, function (j, file) {
+                var nameFile=file.name;
+                var fileExtension = nameFile.substr( (nameFile.lastIndexOf('.') +1) );
+                if($.inArray(fileExtension, validFiles) !== -1){
+                    data.append("styles[" + j + "]", file);
+                }else{
+                  InvalidFiles.push(file.name);
+                }
+            })
+          });
+          
+          data.append('previous_translator',$('.previous_translator').val());
+          data.append('previous_gloosary',$('.previous_gloosary').val());
+          data.append('previous_brief',$('.previous_brief').val());
+          data.append('previous_style',$('.previous_style').val());
+          
+          
+          $.ajax({
+
+            url: baseUrl+'/translation-application/optional-data',
+            type:'post',
+            data: data,
+            processData: false,
+            contentType: false,          
+            success: function(res) {
+              //var data = $.parseJSON(res);
+              if(type=='brief'){
+                  $('.brief').parent().parent().next().show();
+              }
+              if(type=='gloosary'){
+                  $('.gloosary').parent().parent().next().show();
+              }
+              if(type=='style'){
+                  $('.style').parent().parent().next().show();
+              }
+              $('.complete').fadeOut(1500);
+            }
+          }); 
+    }
+
+    function getOptionalData(){
+
+        $.ajax({
+
+          url: baseUrl+'/translation-application/optional-data',
+          type:'get',
+          processData: false,
+          contentType: false,          
+          success: function(res) {
+            var data = $.parseJSON(res);
+          }
+        }); 
+
+    }
+
+
+  //END INSTRUCTIONS
 </script>

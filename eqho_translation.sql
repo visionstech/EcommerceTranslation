@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 01, 2017 at 05:58 PM
+-- Generation Time: Feb 02, 2017 at 06:54 PM
 -- Server version: 5.5.35-1ubuntu1
 -- PHP Version: 5.5.9-1ubuntu4.20
 
@@ -23,66 +23,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `applications`
---
-
-CREATE TABLE IF NOT EXISTS `applications` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL,
-  `order_id` varchar(255) DEFAULT NULL,
-  `from_lang_id` int(11) DEFAULT NULL,
-  `to_lang_id` int(11) DEFAULT NULL,
-  `language_price` varchar(255) DEFAULT NULL,
-  `total_price` varchar(255) DEFAULT NULL,
-  `package_price` varchar(255) DEFAULT NULL,
-  `final_price` varchar(255) DEFAULT NULL,
-  `language_package` varchar(100) DEFAULT NULL,
-  `translation_purpose` varchar(255) DEFAULT NULL,
-  `status` enum('pending','translated') DEFAULT 'pending',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
-
---
--- Dumping data for table `applications`
---
-
-INSERT INTO `applications` (`id`, `user_id`, `order_id`, `from_lang_id`, `to_lang_id`, `language_price`, `total_price`, `package_price`, `final_price`, `language_package`, `translation_purpose`, `status`, `created_at`, `updated_at`) VALUES
-(6, 1, 'ch_19iMgGCYdZYuUBVoxrmI02rA', 1, 4, '824', '824', '0.12', '824.12', 'Basic', 'Everyday use', 'pending', '2017-02-01 06:23:45', '2017-02-01 06:23:45');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `application_files`
---
-
-CREATE TABLE IF NOT EXISTS `application_files` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` varchar(255) DEFAULT NULL,
-  `application_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `file_name` varchar(255) DEFAULT NULL,
-  `file_path` varchar(50) DEFAULT NULL,
-  `status` enum('pending','status') DEFAULT 'pending',
-  `translated_file` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
-
---
--- Dumping data for table `application_files`
---
-
-INSERT INTO `application_files` (`id`, `order_id`, `application_id`, `user_id`, `file_name`, `file_path`, `status`, `translated_file`, `created_at`, `updated_at`) VALUES
-(19, 'ch_19iMgGCYdZYuUBVoxrmI02rA', 6, 1, '2c03d9e76d3fb03cfe2c3300e451b7bf385e2536_text.txt', '/uploads/files', 'pending', NULL, '2017-02-01 06:23:45', '2017-02-01 06:23:45'),
-(20, 'ch_19iMgGCYdZYuUBVoxrmI02rA', 6, 1, '25YMCb1QJn_Print view - phpMyAdmin 4.0.pdf', '/uploads/files', 'pending', NULL, '2017-02-01 06:23:45', '2017-02-01 06:23:45'),
-(21, 'ch_19iMgGCYdZYuUBVoxrmI02rA', 6, 1, 'JTlcDiLyaK_1.pdf', '/uploads/files', 'pending', NULL, '2017-02-01 06:23:45', '2017-02-01 06:23:45');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `cart_items`
 --
 
@@ -95,11 +35,11 @@ CREATE TABLE IF NOT EXISTS `cart_items` (
   `content_words` varchar(100) DEFAULT NULL,
   `total_words` int(11) DEFAULT NULL,
   `status` enum('Active','Trashed','Deleted') NOT NULL,
-  `session_id` varchar(255) DEFAULT NULL,
+  `session_id` varchar(100) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
 
 --
 -- Dumping data for table `cart_items`
@@ -107,8 +47,11 @@ CREATE TABLE IF NOT EXISTS `cart_items` (
 
 INSERT INTO `cart_items` (`id`, `user_id`, `content`, `file`, `file_path`, `content_words`, `total_words`, `status`, `session_id`, `created_at`, `updated_at`) VALUES
 (10, 1, 'dfg dgdfg dfgdfg dfg dfg dfg dfgdfg df', NULL, NULL, '8', 3323, 'Active', '12ccb5e2820f9a361a59657d75647375969595ce', '2017-02-01 11:47:04', '2017-01-30 01:11:02'),
-(21, 1, NULL, '25YMCb1QJn_Print view - phpMyAdmin 4.0.pdf', 'uploads/files', '947', 956, 'Trashed', 'ffe86f195395abaad485dd86cbe00884845deb95', '2017-01-31 04:44:40', '2017-01-30 23:14:40'),
-(22, 1, NULL, 'JTlcDiLyaK_1.pdf', 'uploads/files', '1105', 1114, 'Active', 'ffe86f195395abaad485dd86cbe00884845deb95', '2017-01-30 23:15:44', '2017-01-30 23:15:44');
+(21, 1, NULL, '25YMCb1QJn_Print view - phpMyAdmin 4.0.pdf', 'uploads/files', '947', 956, 'Active', 'ffe86f195395abaad485dd86cbe00884845deb95', '2017-02-02 06:26:44', '2017-02-02 00:56:44'),
+(22, 1, NULL, 'JTlcDiLyaK_1.pdf', 'uploads/files', '1105', 1114, 'Active', 'ffe86f195395abaad485dd86cbe00884845deb95', '2017-01-30 23:15:44', '2017-01-30 23:15:44'),
+(23, 1, NULL, 'MlOXpygUPb_1.ppt', 'uploads/files', '1854', 1862, 'Trashed', 'e2fa7923d7fb7c7c1baa97ce90d8d24609547f3d', '2017-02-02 06:26:34', '2017-02-02 00:56:34'),
+(24, 1, NULL, 'QTloxkiSIy_4.docx', 'uploads/files', '33', 41, 'Active', 'e2fa7923d7fb7c7c1baa97ce90d8d24609547f3d', '2017-02-02 06:26:46', '2017-02-02 00:56:46'),
+(25, 1, NULL, 'L4OrLfqoIR_1.ppt', 'uploads/files', '1854', 1862, 'Active', 'e2fa7923d7fb7c7c1baa97ce90d8d24609547f3d', '2017-02-02 00:12:22', '2017-02-02 00:12:22');
 
 -- --------------------------------------------------------
 
@@ -119,10 +62,10 @@ INSERT INTO `cart_items` (`id`, `user_id`, `content`, `file`, `file_path`, `cont
 CREATE TABLE IF NOT EXISTS `cart_languages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(200) DEFAULT NULL,
-  `session_id` varchar(255) DEFAULT NULL,
+  `session_id` varchar(100) DEFAULT NULL,
   `from_language_id` int(11) DEFAULT NULL,
-  `to_language_id` tinytext,
-  `language_package` varchar(100) DEFAULT NULL,
+  `to_language_id` int(11) DEFAULT NULL,
+  `language_package` tinyint(4) DEFAULT NULL,
   `purpose` varchar(100) DEFAULT NULL,
   `status` enum('Active','Trashed','Deleted') DEFAULT 'Active',
   `updated_by` int(11) DEFAULT NULL,
@@ -130,14 +73,15 @@ CREATE TABLE IF NOT EXISTS `cart_languages` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `cart_languages`
 --
 
 INSERT INTO `cart_languages` (`id`, `user_id`, `session_id`, `from_language_id`, `to_language_id`, `language_package`, `purpose`, `status`, `updated_by`, `updated_ip`, `created_at`, `updated_at`) VALUES
-(1, '1', 'ca6e12b4f7c1766ce1a16bd0e8dcd4576ac7c560', 1, '4', '1', 'Everyday use', 'Active', NULL, NULL, '2017-01-30 22:49:52', '2017-02-01 11:51:57');
+(3, '1', '346410b42fb830c9099b44828401e74b80b1da75', 1, 4, 1, 'Everyday use', 'Active', NULL, NULL, '2017-02-01 23:04:04', '2017-02-02 10:20:47'),
+(4, '1', '346410b42fb830c9099b44828401e74b80b1da75', 1, 2, 1, 'Everyday use', 'Active', NULL, NULL, '2017-02-01 23:04:04', '2017-02-02 10:20:47');
 
 -- --------------------------------------------------------
 
@@ -203,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `language_packages` (
 
 INSERT INTO `language_packages` (`id`, `name`, `description`, `price_per_word`, `status`, `created_at`, `updated_at`, `updated_by`, `updated_ip`) VALUES
 (1, 'Basic', '<p>Everyday use</p>\r\n\r\n<ul>\r\n	<li>Emails</li>\r\n	<li>Internal Communications</li>\r\n	<li>Letters</li>\r\n	<li>Personal Translation</li>\r\n</ul>\r\n\r\n<p>General online</p>\r\n\r\n<ul>\r\n	<li>Social Media</li>\r\n	<li>Product Descriptions</li>\r\n	<li>User-Generated Content</li>\r\n</ul>\r\n', '0.12', 'Active', '2017-01-31 06:22:49', '2017-01-31 00:52:49', 1, '127.0.0.1'),
-(2, 'Professional', '<p>Business</p>\r\n\r\n<ul>\r\n	<li>Presentations</li>\r\n	<li>Reports</li>\r\n	<li>User Guides</li>\r\n	<li>Manuals</li>\r\n</ul>\r\n', '0.18', 'Active', '2017-01-31 06:45:41', '2017-01-31 01:15:41', 1, '127.0.0.1');
+(2, 'Professional', '<p>Business</p>\r\n\r\n<ul>\r\n	<li>Presentations</li>\r\n	<li>Reports</li>\r\n	<li>User Guides</li>\r\n	<li>Manuals</li>\r\n</ul>\r\n', '0.18', 'Active', '2017-02-02 10:27:23', '2017-01-31 01:15:41', 1, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -249,14 +193,244 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 --
 -- Dumping data for table `orders`
 --
 
 INSERT INTO `orders` (`id`, `transaction_id`, `user_id`, `payment_type`, `payment_status`, `created_at`, `updated_at`) VALUES
-(14, 'ch_19iMgGCYdZYuUBVoxrmI02rA', 1, NULL, 'success', '2017-02-01 06:23:45', '2017-02-01 06:23:45');
+(14, 'ch_19iMgGCYdZYuUBVoxrmI02rA', 1, NULL, 'success', '2017-02-01 06:23:45', '2017-02-01 06:23:45'),
+(15, 'ch_19ifAzCYdZYuUBVol7RTSjgT', 1, 'card', 'success', '2017-02-02 02:08:41', '2017-02-02 02:08:41');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `projects`
+--
+
+CREATE TABLE IF NOT EXISTS `projects` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `from_lang_id` int(11) DEFAULT NULL,
+  `to_lang_id` int(11) DEFAULT NULL,
+  `language_price` varchar(50) DEFAULT NULL,
+  `total_price` varchar(50) DEFAULT NULL,
+  `package_price` varchar(50) DEFAULT NULL,
+  `final_price` varchar(50) DEFAULT NULL,
+  `language_package` varchar(100) DEFAULT NULL,
+  `translation_purpose` varchar(255) DEFAULT NULL,
+  `status` enum('pending','translated') DEFAULT 'pending',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+
+--
+-- Dumping data for table `projects`
+--
+
+INSERT INTO `projects` (`id`, `user_id`, `order_id`, `from_lang_id`, `to_lang_id`, `language_price`, `total_price`, `package_price`, `final_price`, `language_package`, `translation_purpose`, `status`, `created_at`, `updated_at`) VALUES
+(6, 1, 0, 1, 4, '824', '824', '0.12', '824.12', 'Basic', 'Everyday use', 'pending', '2017-02-01 06:23:45', '2017-02-01 06:23:45'),
+(7, 1, 15, 1, 4, '2900.5', '5220.9', '0.18', '5221.08', 'Professional', 'Business', 'pending', '2017-02-02 02:08:41', '2017-02-02 02:08:41'),
+(8, 1, 15, 1, 2, '2900.5', '5220.9', '0.18', '5221.08', 'Professional', 'Business', 'pending', '2017-02-02 02:08:42', '2017-02-02 02:08:42');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_briefs`
+--
+
+CREATE TABLE IF NOT EXISTS `project_briefs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `file_name` varchar(100) DEFAULT NULL,
+  `file_path` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
+
+--
+-- Dumping data for table `project_briefs`
+--
+
+INSERT INTO `project_briefs` (`id`, `user_id`, `order_id`, `file_name`, `file_path`, `created_at`, `updated_at`) VALUES
+(1, 1, 15, 'Jhm1RHzOgr_6.xlsx', 'uploads/files/', '2017-02-02 03:43:56', '2017-02-02 03:43:56'),
+(2, 1, 15, 'JdyrVUNzfw_8.txt', 'uploads/files/', '2017-02-02 03:52:22', '2017-02-02 03:52:22'),
+(3, 1, 15, 'UygSF0QPZB_9.doc', 'uploads/files/', '2017-02-02 03:52:22', '2017-02-02 03:52:22'),
+(4, 1, 15, 'kuMrIliu5D_10.rtf', 'uploads/files/', '2017-02-02 03:52:22', '2017-02-02 03:52:22'),
+(5, 1, 15, 'bxrA4dL1Ez_5.xls', 'uploads/files/', '2017-02-02 03:53:11', '2017-02-02 03:53:11'),
+(6, 1, 15, '4LVP9PFxYR_6.xlsx', 'uploads/files/', '2017-02-02 03:53:11', '2017-02-02 03:53:11'),
+(7, 1, 15, 'O0ByZPGJI6_7.xlsm', 'uploads/files/', '2017-02-02 03:53:11', '2017-02-02 03:53:11'),
+(8, 1, 15, '9TDBuIOgJs_8.txt', 'uploads/files/', '2017-02-02 03:53:11', '2017-02-02 03:53:11'),
+(9, 1, 15, 'FmbJgVO7YD_10.rtf', 'uploads/files/', '2017-02-02 04:05:50', '2017-02-02 04:05:50'),
+(10, 1, 15, 'KD6sergjdC_11.pptx', 'uploads/files/', '2017-02-02 04:05:50', '2017-02-02 04:05:50'),
+(11, 1, 15, 'xxm4GczC3Z_6.xlsx', 'uploads/files/', '2017-02-02 04:22:34', '2017-02-02 04:22:34'),
+(12, 1, 15, 'HpZ27Fe0M5_8.txt', 'uploads/files/', '2017-02-02 04:23:48', '2017-02-02 04:23:48'),
+(13, 1, 15, 'EKHjvylkkJ_10.rtf', 'uploads/files/', '2017-02-02 04:23:54', '2017-02-02 04:23:54'),
+(14, 1, 15, '2KAjxmAlkP_3.odt', 'uploads/files/', '2017-02-02 04:25:01', '2017-02-02 04:25:01'),
+(15, 1, 15, '6qYQOvbgxA_7.xlsm', 'uploads/files/', '2017-02-02 04:25:34', '2017-02-02 04:25:34'),
+(16, 1, 15, 'cF1FFAgQu0_7.xlsm', 'uploads/files/', '2017-02-02 04:25:50', '2017-02-02 04:25:50'),
+(17, 1, 15, 'B2yX6eaGRd_8.txt', 'uploads/files/', '2017-02-02 04:25:50', '2017-02-02 04:25:50'),
+(18, 1, 15, 'AVjnm1IEvO_7.xlsm', 'uploads/files/', '2017-02-02 04:26:04', '2017-02-02 04:26:04'),
+(19, 1, 15, 'FgKaDcJol4_6.xlsx', 'uploads/files/', '2017-02-02 04:26:17', '2017-02-02 04:26:17'),
+(20, 1, 15, 'undefined', 'uploads/files/', '2017-02-02 06:44:24', '2017-02-02 06:44:24'),
+(21, 1, 15, 'undefined', 'uploads/files/', '2017-02-02 06:44:39', '2017-02-02 06:44:39'),
+(22, 1, 15, '', 'uploads/files/', '2017-02-02 06:45:50', '2017-02-02 06:45:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_files`
+--
+
+CREATE TABLE IF NOT EXISTS `project_files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` varchar(255) DEFAULT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_path` varchar(50) DEFAULT NULL,
+  `status` enum('pending','status') DEFAULT 'pending',
+  `translated_file` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=34 ;
+
+--
+-- Dumping data for table `project_files`
+--
+
+INSERT INTO `project_files` (`id`, `order_id`, `project_id`, `user_id`, `file_name`, `file_path`, `status`, `translated_file`, `created_at`, `updated_at`) VALUES
+(19, 'ch_19iMgGCYdZYuUBVoxrmI02rA', 6, 1, '2c03d9e76d3fb03cfe2c3300e451b7bf385e2536_text.txt', '/uploads/files', 'pending', NULL, '2017-02-01 06:23:45', '2017-02-01 06:23:45'),
+(20, 'ch_19iMgGCYdZYuUBVoxrmI02rA', 6, 1, '25YMCb1QJn_Print view - phpMyAdmin 4.0.pdf', '/uploads/files', 'pending', NULL, '2017-02-01 06:23:45', '2017-02-01 06:23:45'),
+(21, 'ch_19iMgGCYdZYuUBVoxrmI02rA', 6, 1, 'JTlcDiLyaK_1.pdf', '/uploads/files', 'pending', NULL, '2017-02-01 06:23:45', '2017-02-01 06:23:45'),
+(22, '15', 7, 1, 'e2fa7923d7fb7c7c1baa97ce90d8d24609547f3d1_text.txt', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42'),
+(23, '15', 7, 1, '25YMCb1QJn_Print view - phpMyAdmin 4.0.pdf', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42'),
+(24, '15', 7, 1, 'JTlcDiLyaK_1.pdf', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42'),
+(25, '15', 7, 1, 'MlOXpygUPb_1.ppt', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42'),
+(26, '15', 7, 1, 'QTloxkiSIy_4.docx', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42'),
+(27, '15', 7, 1, 'L4OrLfqoIR_1.ppt', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42'),
+(28, '15', 8, 1, 'e2fa7923d7fb7c7c1baa97ce90d8d24609547f3d1_text.txt', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42'),
+(29, '15', 8, 1, '25YMCb1QJn_Print view - phpMyAdmin 4.0.pdf', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42'),
+(30, '15', 8, 1, 'JTlcDiLyaK_1.pdf', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42'),
+(31, '15', 8, 1, 'MlOXpygUPb_1.ppt', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42'),
+(32, '15', 8, 1, 'QTloxkiSIy_4.docx', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42'),
+(33, '15', 8, 1, 'L4OrLfqoIR_1.ppt', '/uploads/files', 'pending', NULL, '2017-02-02 02:08:42', '2017-02-02 02:08:42');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_gloosaries`
+--
+
+CREATE TABLE IF NOT EXISTS `project_gloosaries` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `file_name` varchar(100) DEFAULT NULL,
+  `file_path` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `project_gloosaries`
+--
+
+INSERT INTO `project_gloosaries` (`id`, `user_id`, `order_id`, `file_name`, `file_path`, `created_at`, `updated_at`) VALUES
+(1, 1, 15, 'ssOzNr9Lts_6.xlsx', 'uploads/files/', '2017-02-02 04:00:20', '2017-02-02 04:00:20'),
+(2, 1, 15, 'TdF0tqTx8Z_7.xlsm', 'uploads/files/', '2017-02-02 04:00:20', '2017-02-02 04:00:20'),
+(3, 1, 15, '2OxQnlix7M_1.ppt', 'uploads/files/', '2017-02-02 04:26:21', '2017-02-02 04:26:21'),
+(4, 1, 15, 'undefined', 'uploads/files/', '2017-02-02 06:44:24', '2017-02-02 06:44:24'),
+(5, 1, 15, 'undefined', 'uploads/files/', '2017-02-02 06:44:39', '2017-02-02 06:44:39'),
+(6, 1, 15, '', 'uploads/files/', '2017-02-02 06:45:50', '2017-02-02 06:45:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_instructions`
+--
+
+CREATE TABLE IF NOT EXISTS `project_instructions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `tone` varchar(20) DEFAULT NULL,
+  `instruction` tinytext,
+  `status` enum('Active','Deleted') DEFAULT 'Active',
+  `updated_ip` varchar(100) NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `project_instructions`
+--
+
+INSERT INTO `project_instructions` (`id`, `user_id`, `order_id`, `tone`, `instruction`, `status`, `updated_ip`, `updated_by`, `created_at`, `updated_at`) VALUES
+(1, 1, 15, 'Informal', 'fgh fhfghfgh fgh fghfgh', 'Active', '', NULL, '2017-02-02 03:25:38', '2017-02-02 03:26:04');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_styles`
+--
+
+CREATE TABLE IF NOT EXISTS `project_styles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `file_name` varchar(100) DEFAULT NULL,
+  `file_path` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `project_styles`
+--
+
+INSERT INTO `project_styles` (`id`, `user_id`, `order_id`, `file_name`, `file_path`, `created_at`, `updated_at`) VALUES
+(1, 1, 15, '9hwe37ibuO_4.docx', 'uploads/files/', '2017-02-02 04:03:43', '2017-02-02 04:03:43'),
+(2, 1, 15, 'MNJj9iUbe8_5.xls', 'uploads/files/', '2017-02-02 04:03:43', '2017-02-02 04:03:43'),
+(3, 1, 15, '213CKYIe9s_6.xlsx', 'uploads/files/', '2017-02-02 04:03:43', '2017-02-02 04:03:43'),
+(4, 1, 15, '5JoNnruAma_7.xlsm', 'uploads/files/', '2017-02-02 04:22:38', '2017-02-02 04:22:38'),
+(5, 1, 15, 'undefined', 'uploads/files/', '2017-02-02 06:44:24', '2017-02-02 06:44:24'),
+(6, 1, 15, 'undefined', 'uploads/files/', '2017-02-02 06:44:39', '2017-02-02 06:44:39'),
+(7, 1, 15, '', 'uploads/files/', '2017-02-02 06:45:50', '2017-02-02 06:45:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_translators`
+--
+
+CREATE TABLE IF NOT EXISTS `project_translators` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `translator_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `project_translators`
+--
+
+INSERT INTO `project_translators` (`id`, `order_id`, `user_id`, `translator_id`, `created_at`, `updated_at`) VALUES
+(1, 14, 1, 1, '2017-02-01 22:48:28', '2017-02-02 05:58:34'),
+(4, 15, 1, 1, '2017-02-02 06:45:50', '2017-02-02 06:45:50');
 
 -- --------------------------------------------------------
 
@@ -397,6 +571,27 @@ CREATE TABLE IF NOT EXISTS `social_auth` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `translators`
+--
+
+CREATE TABLE IF NOT EXISTS `translators` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `translators`
+--
+
+INSERT INTO `translators` (`id`, `user_id`, `created_at`, `updated_at`) VALUES
+(1, 3, '2017-02-01 23:55:29', '2017-02-02 01:58:47');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -421,7 +616,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `social_auth_id`, `role_id`, `status`, `remember_token`, `reset_password_token`, `updated_by`, `updated_ip`, `created_at`, `updated_at`) VALUES
-(1, 'admin@test.com', '$2y$10$sSWnm6y0E/Ob8ieK1K9se.0FlVk4duaKQIvWd3DCqDdxunRglo2t.', NULL, 1, 'Active', 'yIDDzcWxT2FcvzPIKP0yLtPqsqOPZFclGzCcZg7c7VU6kHTb3nvA3aFkwq5H', NULL, 1, '127.0.0.1', '2016-12-21 02:20:10', '2017-02-01 04:06:44'),
+(1, 'admin@test.com', '$2y$10$sSWnm6y0E/Ob8ieK1K9se.0FlVk4duaKQIvWd3DCqDdxunRglo2t.', NULL, 1, 'Active', 'Ed9Tu9ncbLjMc7uALzDJZmJVZ23IYSeDLUSyLYOVIWMOv32x12XGZBBXQc27', NULL, 1, '127.0.0.1', '2016-12-21 02:20:10', '2017-02-02 06:29:12'),
 (2, 'customer@test.com', '$2y$10$QRlRhYDD41yLxfQVY3y7cevWRCAQ.lzqhpm8cWbCQ70XYeUjUNKKa', NULL, 3, 'Deleted', '8RW8ev3BhBboXVrLEiZP1ZPLDmn3i7IIGXz1zcrpmE6QbLuffteUENefaU6b', '20r8126gw2pUfDsYGYyPmCzAsRayQ84wymvqerLRk1kE4TdAqSQ', 0, NULL, '2016-12-21 03:39:07', '2017-01-27 06:25:44'),
 (3, 'translator@gmail.com', '$2y$10$sSWnm6y0E/Ob8ieK1K9se.0FlVk4duaKQIvWd3DCqDdxunRglo2t.', NULL, 4, 'Active', NULL, NULL, 0, NULL, '2017-01-11 03:40:36', '2017-01-27 06:26:06'),
 (4, 'rajwinder@visions.net.in', '$2y$10$bH/WbvSi.obQOEXsEYNI3ej775A/hsgSNpR7fKsIcJ.LQQ4htBhH2', NULL, 3, 'Active', NULL, NULL, 1, '127.0.0.1', '2017-01-23 23:51:51', '2017-01-27 07:42:23'),

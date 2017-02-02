@@ -3,7 +3,7 @@
 namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Application extends Authenticatable
+class Project extends Authenticatable
 {
     /**
      * The attributes that are mass assignable.
