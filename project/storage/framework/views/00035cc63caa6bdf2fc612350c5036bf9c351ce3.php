@@ -2,6 +2,9 @@
   Translation Order
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
+<?php $dataUrl=url('/');                
+      $url=explode('index.php',$dataUrl); 
+?>
     <section class="odering-process-1">
       <div class="eqho-container">
         <div class="eqho-clear-fix translator-wrap">
@@ -86,65 +89,83 @@
               <div class="btn-wrap">
                 <a href="<?php echo e(url('/translation-application/step-two')); ?>" class="btn_ctrl back-btn no-margin"> Back to: Choose Languages </a>
               </div>
-              <?php if($latestOrderId != 0): ?>
+
               <div class="existing-customer">
                 <h4>Are you an existing customer?</h4>
                 <p>If so, you can select:</p>
+                 <?php $projectTranslator =  ($projectTranslator!=null)?($projectTranslator->translator_id):'';
+                 if($projectTranslator){
+                    $checked='checked';
+                 }else{
+                    $checked='';
+                 }
+                 ?>
                 <div class="custom-radio">
                   <ul class="existing-option">
                     <li>
-                      <input type="radio" id="ex-radio-1" name="existing-customer">
+                      <input type="radio" id="ex-radio-1" <?php echo e($checked); ?> name="existing-customer">
                       <label for="ex-radio-1">A translator you worked with previously</label>
                       <div class="check"></div>
                     </li>
-                    <div id='previous_translators'>
-                      <div class="form-group">
+                    <div id='previous_translators'> 
+                   
+                      <div class="form-group previous_data">
                         <label>Translators</label>
                         <select name="previous_translator" class="option-select previous_translator" > 
                           <option value=''>-- Select your Translator --</option>
                           <?php if(count($previousTranslators)): ?>
                             <?php foreach($previousTranslators as $previousTranslator): ?>
-                              <option value='<?php echo e($previousTranslator->translator_id); ?>'><?php echo e($previousTranslator->translatorEmail); ?></option>
+                              <option value='<?php echo e($previousTranslator->translator_id); ?>' <?php if($projectTranslator==$previousTranslator->translator_id){echo "selected";} ?>><?php echo e($previousTranslator->translatorEmail); ?></option>
                             <?php endforeach; ?>
                           <?php endif; ?>
                         </select>
                       </div>
                     </div>
+                    <?php $gloosary =  ($projectGloosaries!=null)?($projectGloosaries->file_name):'';
+                          $brief =  ($projectBriefs!=null)?($projectBriefs->file_name):'';
+                          $style =  ($projectStyles!=null)?($projectStyles->file_name):'';
+                          if($gloosary || $brief || $style){
+                            $checkedAsset='checked';
+                          }else{
+                            $checkedAsset='';
+                          }
+                    ?>
                     <li>
-                      <input type="radio" id="ex-radio-2" name="existing-assets">
+                      <input type="radio" id="ex-radio-2" <?php echo e($checkedAsset); ?> name="existing-assets">
                       <label for="ex-radio-2">An existing translation asset (e.g. Glossary) stored in your account</label>
                       <div class="check"><div class="inside"></div></div>
                     </li>
                     <div id='assets'>
-                      <div class="form-group">
+
+                      <div class="form-group previous_data">
                         <label>Gloosaries</label>
                         <select name="previous_gloosary" class="option-select previous_gloosary" > 
                           <option value=''>-- Select your Gloosary --</option>
                           <?php if(count($previousGloosaries)): ?>
                             <?php foreach($previousGloosaries as $previousGloosary): ?>
-                              <option value='<?php echo e($previousGloosary->file_name); ?>'><?php echo e($previousGloosary->file_name); ?></option>
+                              <option value='<?php echo e($previousGloosary->file_name); ?>' <?php if($gloosary==$previousGloosary->file_name){echo "selected";} ?> ><?php echo e($previousGloosary->file_name); ?></option>
                             <?php endforeach; ?>
                           <?php endif; ?>
                         </select>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group previous_data">
                         <label>Briefs</label>
                         <select name="previous_brief" class="option-select previous_brief" >  
                           <option value=''>-- Select your Brief --</option>
                            <?php if(count($previousBriefs)): ?>
                             <?php foreach($previousBriefs as $previousBrief): ?>
-                              <option value='<?php echo e($previousBrief->file_name); ?>'><?php echo e($previousBrief->file_name); ?></option>
+                              <option value='<?php echo e($previousBrief->file_name); ?>'<?php if($brief==$previousBrief->file_name){echo "selected";} ?> ><?php echo e($previousBrief->file_name); ?></option>
                             <?php endforeach; ?>
                           <?php endif; ?>
                         </select>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group previous_data">
                         <label>Styles</label>
                         <select name="previous_style" class="option-select previous_style">  
                           <option value=''>-- Select your style --</option>
                            <?php if(count($previousStyles)): ?>
                             <?php foreach($previousStyles as $previousStyle): ?>
-                              <option value='<?php echo e($previousStyle->file_name); ?>'><?php echo e($previousStyle->file_name); ?></option>
+                              <option value='<?php echo e($previousStyle->file_name); ?>' <?php if($style==$previousStyle->file_name){echo "selected";} ?> ><?php echo e($previousStyle->file_name); ?></option>
                             <?php endforeach; ?>
                           <?php endif; ?>
                         </select>
@@ -154,28 +175,30 @@
                 </div>
                 <div class="existing-login">
                 <?php if(!Auth::user()): ?>
-                  <input type="button" value="Login" name="" class="btn_ctrl" />
+                  <input type="button" value="Login" name="" class="btn_ctrl login_pop" />
                 <?php else: ?>  
                   <input type="button" value="Save" name="" onclick="saveOptionalData('previous');" class="btn_ctrl" />
+                   <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
                 <?php endif; ?>
                 </div>
               </div> <!-- existing-customer -->
-              <?php endif; ?>
+
               <div class="instructions">
                 <h4>Instructions for translator  <span>(Optional)</span></h4>
                 <div class="form-group">
+                <?php $tone =  ($projectInstructions!=null)?($projectInstructions->tone):'';?>
                   <label>What tone you are looking for in your translation?</label>
-                  <select name="tone" class="option-select" onchange="saveOptionalData('instruction');" >                    
-                    <option value=''>-- Select your option --</option>
-                    <option>Formal</option>
-                    <option>Informal</option>
-                    <option>Friendly</option>
-                    <option>Business</option>
+                  <select name="tone" class="option-select tone" onchange="saveOptionalData('instruction');" >   <option value=''>-- Select your option --</option>
+                    <option value='Formal' <?php if($tone=='Formal'){ echo 'selected'; } ?> >Formal</option>
+                    <option value='Informal' <?php if($tone=='Informal'){ echo 'selected'; } ?>>Informal</option>
+                    <option value='Friendly' <?php if($tone=='Friendly'){ echo 'selected'; } ?>>Friendly</option>
+                    <option value='Business' <?php if($tone=='Business'){ echo 'selected'; } ?>>Business</option>
                   </select>
                  </div>
+                 <?php $instruction =  ($projectInstructions!=null)?($projectInstructions->instruction):'';?>
                 <div class="form-group">
                   <label>Instructions for the translator</label>
-                  <textarea onblur="saveOptionalData('instruction');" name="instruction" class="instruction" placeholder="Write your instructions here..."></textarea>                  
+                  <textarea onblur="saveOptionalData('instruction');" name="instruction" class="instruction" placeholder="Write your instructions here..."><?php echo e($instruction); ?></textarea>                  
                 </div>
                 <div class="upload-files">
                   <span class="lable-text">Upload your brief</span>
@@ -186,6 +209,15 @@
                         </span>
                     </div>
                     <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
+                    <div class="file-information">
+                      <ul>
+                        <?php if(count($allProjectBriefs)): ?>
+                            <?php foreach($allProjectBriefs as $allProjectBrief): ?>
+                             <li> <?php echo e($allProjectBrief->file_name); ?></li>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                      </ul>
+                    </div>
                 </div> <!-- upload-files -->
                 <div class="upload-files">
                   <span class="lable-text">Upload a glossary</span>
@@ -195,7 +227,16 @@
                           <input name="file" multiple="multiple" name="gloosary" class="gloosary" onchange="saveOptionalData('gloosary');" size="1" type="file">
                         </span>
                     </div>
+                    
                     <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
+                    <div class="file-information">
+                      <ul><?php if(count($allProjectGloosaries)): ?>
+                            <?php foreach($allProjectGloosaries as $allProjectGloosary): ?>
+                             <li> <?php echo e($allProjectGloosary->file_name); ?></li> 
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        </ul>
+                    </div>
                 </div> <!-- upload-files -->
                 <div class="upload-files">
                   <span class="lable-text">Upload brand/ style guide</span>
@@ -205,7 +246,16 @@
                               <input name="file" multiple="multiple" name="style" class="style" onchange="saveOptionalData('style');" size="1" type="file">
                         </span>
                     </div>
+
                     <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
+                    
+                     <div class="file-information">
+                      <ul><?php if(count($allProjectStyles)): ?>
+                            <?php foreach($allProjectStyles as $allProjectStyle): ?>
+                             <li> <?php echo e($allProjectStyle->file_name); ?></li>
+                            <?php endforeach; ?>
+                        <?php endif; ?></ul>
+                    </div>
                 </div> <!-- upload-files -->
               </div><!-- instructions -->
             </form>
@@ -243,28 +293,61 @@
                       <div class="check"><div class="inside"></div></div>
                     </li>
                   </ul>
-                </div> <!-- custom-radio -->
+                </div> <!-- custom-radio<script src="https://checkout.stripe.com/checkout.js"></script>
+
+                      <button id="customButton">Purchase</button>-->
                 <div class="btn-wrap pay-now">
                   <input value="Pay Now" name="" class="btn_ctrl pay_button" type="button">
                   <form action="<?php echo e(url('/translation-application/step-three')); ?>" class="payment_form" method="POST">
                     <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
                     <input type="hidden" name="final_amount" class="final_amount" value="">
                     <script
-                      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                      src="https://checkout.stripe.com/checkout.js" id="stripeForm" class="stripe-button"
                       data-key="pk_test_r4CeAbcQPVt8E2CMepdZOz3l"
-                      data-image="http://localhost/eqho/uploads/header-image_Y1thKMaaDZWL0OUuDlDY.png" data-name="eqho.com"
+                      data-image="<?php echo $url[0]; ?>uploads/header-image_Y1thKMaaDZWL0OUuDlDY.png" data-name="eqho.com"
                       data-description="Payment of translations"
-                      data-amount="34343">
+                      >
+                     
                     </script>
                   </form>
                 </div>
               </div>
             </div><!--  your-result-inner -->
-            <div class="btn-wrap view-full">
-              <input value="View Full Quote" name="" class="btn_ctrl" type="button" onclick="myFunction()" />
-            </div>
+            <?php if(count($getCartItems)): ?>
+              <div class="btn-wrap view-full">
+                <input value="View Full Quote" name="" class="btn_ctrl" type="button" onclick="getQuote()" />
+              </div>
+            <?php endif; ?>
           </div> <!-- your-order -->
         </div> <!-- translator-wrap -->
+      </div>
+
+      <div class="eqho-container">
+        <div class="over-lay">
+          <div class="sign-in-popup">
+            <h1>Sign In <span class="close_login"><i class="fa fa-times-circle-o" aria-hidden="true"></i></span></h1>
+            <form action="<?php echo e(url('/auth/login')); ?>" method="post">
+            <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
+            <div class="popup-text">
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" placeholder="Email">
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Password">
+              </div>
+              <div class="sign-btn-wrap">
+                <input class="btn-ctrl" type="submit" name="" value="Sign In" />
+              </div>
+              </form>
+              <div class="popup-error-msg">
+                <p class="error">Error Message</p>
+                <p><a href="#">Forgot Password ?</a> <a href="#">Not Yet Registered ?</a></p>
+              </div>
+            </div>  
+          </div> <!-- sign-in-popup -->
+        </div>
       </div>
     </section>
 

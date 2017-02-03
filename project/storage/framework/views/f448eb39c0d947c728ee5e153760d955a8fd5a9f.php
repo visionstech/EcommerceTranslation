@@ -35,7 +35,12 @@
                   <li><a href="#" title="Order Translation">Order Translation</a></li>
                   <li><a href="#" title="HOME">Contact Sales</a></li>
                 <?php endif; ?>
-                <li><a href="<?php echo e(url('/auth/login')); ?>" title="SIGN IN">SIGN IN</a></li>
+                <?php if(Auth::user()): ?>
+               <li><a href="<?php echo e(url('/auth/logout')); ?>" title="SIGN OUT">SIGN OUT</a></li>  
+                <?php else: ?>
+                 <li><a href="<?php echo e(url('/auth/login')); ?>" title="SIGN IN">SIGN IN</a></li>
+                              
+                <?php endif; ?>
               </ul>
             </nav>
             <div class="menu-toggle-wrap"><i id="menu-toggle" class="fa fa-bars" aria-hidden="true"></i></div>

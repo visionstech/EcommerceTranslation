@@ -1111,6 +1111,7 @@ span.close a:hover, span.close i:hover{
   top: 0;
   width: 100%;
   display: none;
+  z-index:999;
 }
 .unsupported-popup {
   background: #ffffff none repeat scroll 0 0;
@@ -1839,6 +1840,93 @@ table.language tr:last-of-type td{
   border: 1px solid #f5b12e;
 }
 
+/*----------------------------- Sign in PopUp ----------------------------*/
+.sign-in-popup {
+  background: #ffffff none repeat scroll 0 0;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #f5b12e;
+  left: 0;
+  margin: 0px auto;
+  position: absolute;
+  right: 0;
+  top: 30%;
+  max-width: 450px;
+  width: 100%;
+  z-index: 99;
+}
+.popup-text{
+  padding: 20px;
+}
+.sign-in-popup h1 {
+  background-color: #f5b12e;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #ffffff;
+  padding: 10px 20px;
+  position: relative;
+}
+.sign-in-popup h1 span {
+  position: absolute;
+  right: 20px;
+  cursor: pointer;
+}
+.sign-in-popup h1 span:hover {
+  color: #424242;
+}
+.sign-in-popup .form-group {
+  margin: 0 0 15px;
+}
+.sign-in-popup label {
+  color: #424242;
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 5px;
+}
+.sign-in-popup .form-group input {
+  border: 1px solid #e9e9e9;
+  border-radius: 3px;
+  color: #3d3d3d;
+  font-size: 12px;
+  padding: 10px 15px;
+  width: 100%;
+}
+.sign-btn-wrap .btn-ctrl {
+  background-color: #f5b12e;
+  border:1px solid transparent;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 10px 15px;
+  text-align: center;
+  width: 145px;
+}
+.sign-btn-wrap .btn-ctrl:hover {
+  color: #424242;
+  border: 1px solid #424242;
+  background-color: transparent;
+}
+.popup-error-msg {
+  margin: 15px 0 0;
+  display: none;
+}
+.popup-error-msg .error {
+  color: #fc0000;
+  margin: 0 0 10px;
+}
+.popup-error-msg p {
+  color: #3d3d3d;
+  font-size: 14px;
+}
+.popup-error-msg a {
+  display: inline-block;
+  margin: 0 10px 0 0;
+  font-weight: 600;
+}
+.popup-error-msg a:hover {
+  color: #000;
+  text-decoration: underline;
+}
 
 /*.............................. Dynamic deleted element step1 27 jan 2017........................*/
 .progress 
@@ -1979,4 +2067,22 @@ span.complete {
   margin: 0 0 0 5px;
   padding: 5px;
   display: none;
+}
+.existing-option .previous_data label {
+  color: #787878;
+  font-size: 14px;
+  padding: 10px 0;
+  font-weight: 500;
+}
+.file-information > ul {
+  margin: 15px 0;
+}
+.file-information li {
+  border: 1px solid #E5E5E5;
+  color: #808080;
+  display: inline-block;
+  font-size: 14px;
+  margin: 3px 1px;
+  padding: 10px;
+  width: 28%;
 }

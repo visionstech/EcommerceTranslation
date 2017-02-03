@@ -280,7 +280,17 @@ function editContent(){
 $(document).ready(function(){
   var baseUrl='<?php echo url('/'); ?>';
   //$('.complete').hide();
-
+  //$('.over-lay').show();
+  $('.purpose-type').hide();
+  $('#previous_translators').hide();
+  $('#assets').hide(); 
+  $(".close_login").click(function(){
+      $('.over-lay').hide();
+  });
+  $(".login_pop").click(function(){
+      $('.over-lay').show();
+  });
+  
   if($('#checkbox-1'). prop("checked") == false){
       $('.payment_form').hide();
       $('.pay_button').show();      
@@ -304,6 +314,7 @@ $(document).ready(function(){
   
   $(document).on('click','.package_li  p',function() {
     $('#purpose').val($(this).html());
+    $('.purpose-btn').html($(this).html());    
   });
   // ----------Step 3 -------------
   $(document).on('click',".package_li",function() {
@@ -332,10 +343,12 @@ $(document).ready(function(){
           },
           success: function(res) {
             var data = $.parseJSON(res);
+            $('.purpose-type').show();
             $('.total_words').html(data[0]);
             $('.language_count').html(data[1]);
             $('.final_price').html(data[2]);
             $('.final_price').html(data[2]);
+            $('#stripeForm').attr('data-amount',data[2]);            
             $('.final_amount').val(data[2]);            
             $('.package_name').html(data[3]);
             $('.package_purpose').html(data[4]);
@@ -344,9 +357,7 @@ $(document).ready(function(){
     });
   });
   //Get step 3 Data on Page Load
-  $('.purpose-type').hide();
-  $('#previous_translators').hide();
-  $('#assets').hide(); 
+  
   $("#ex-radio-2").click(function(){
     if($(this).is(':checked')){
       $('#assets').show();    
@@ -361,7 +372,7 @@ $(document).ready(function(){
       $('#previous_translators').hide();
     }    
   });
-  
+   
   $.ajax({        
           url: baseUrl+'/translation-application/cart-packages',
           type:'get',
@@ -377,6 +388,7 @@ $(document).ready(function(){
             $('.language_count').html(data[1]);
             $('.final_price').html(data[2]);
             $('.final_price').html(data[2]);
+            $('#stripeForm').attr('data-amount',data[2]);
             $('.final_amount').val(data[2]);
             if(data[3]){
               $('.purpose-type').show();
@@ -390,9 +402,12 @@ $(document).ready(function(){
               $( ".words-price>td:eq( "+(Id[2]-1)+" )" ).addClass('select-word');
             }
             $('.package_name').html(data[3]);
-            $('.package_purpose').html(data[4]);            
+            $('.package_purpose').html(data[4]);
+            $('.purpose-btn').html(data[4]);    
+
           }
     });
+   
 
   //End Page load step 3 Data
   
@@ -634,7 +649,7 @@ function restoreTranslation(value){
           var baseUrl='<?php echo url('/'); ?>';
           var data = new FormData();
           data.append('_token',$('#token').val());
-          data.append('tone',$('.option-select').val());
+          data.append('tone',$('.tone').val());
           data.append('instruction',$('.instruction').val());
           data.append('type',type);
 
@@ -709,7 +724,7 @@ function restoreTranslation(value){
           }); 
     }
 
-    function getOptionalData(){
+    /*function getOptionalData(){
 
         $.ajax({
 
@@ -722,8 +737,27 @@ function restoreTranslation(value){
           }
         }); 
 
+    }*/
+    function getQuote() {
+      var myWindow = window.open("http://localhost/eqho/index.php/translation-application/quote", "", "width=800,height=700");
     }
-
-
+    function saveUserCompany(element){
+          var baseUrl='<?php echo url('/'); ?>';
+          var data = new FormData();
+          data.append('_token',$('#token').val());
+          data.append('company',$('.company').val());
+          data.append('address',$('.address').val());
+          $.ajax({
+            url: baseUrl+'/translation-application/user-company',
+            type:'post',
+            data: data,
+            processData: false,
+            contentType: false,          
+            success: function(res) {          
+              $(element).next().show();
+              $(element).next().fadeOut(1500);
+            }
+          }); 
+    }
   //END INSTRUCTIONS
 </script>

@@ -21,6 +21,7 @@ use App\ProjectBrief;
 use App\ProjectGloosary;
 use App\ProjectStyle;
 use App\ProjectTranslator;
+use App\Company;
 use File;
 
 class TranslationApplicationController extends Controller {
@@ -36,6 +37,7 @@ class TranslationApplicationController extends Controller {
 
     public function __construct()
     {
+       $defaultCurrency= \Config::get('app.currency');
         /*$this->middleware('auth', ['except' => 'index']);
         $this->auth = $auth;*/
     }
@@ -50,7 +52,7 @@ class TranslationApplicationController extends Controller {
     public function getStepOne()
     {
       try {
-          $sections=Section::get();
+          $sections=Section::where('status','Active')->get();
           return view('customer.translation-application.step-one',compact('sections'));
         }
         catch (\Exception $e) 
@@ -82,18 +84,9 @@ class TranslationApplicationController extends Controller {
           $filenames=array();
           $fileWords=array();
           $sessionId =Session::getId();
-          if(Auth::user()){
-              $whereColumn='user_id';
-              $whereValue=Auth::user()->id;
-          }else{
-              $whereColumn='session_id';
-              $whereValue=$sessionId;
-          }        
-            
+          $userId=(Auth::user())?Auth::user()->id:0;           
           if($file){
-            foreach ($file as $key => $value){
-
-                
+            foreach ($file as $key => $value){                
                 $validFiles=array('ppt','pptx','doc','docx','xls','xlsm','xlsx','rtf','odt','txt','pdf');
                 $dummypath = $value->getClientOriginalName();
                 $extention = pathinfo($dummypath, PATHINFO_EXTENSION);
@@ -115,11 +108,16 @@ class TranslationApplicationController extends Controller {
                   $CountedWords  += $number_of_words;
                 }
             }
-          }                  
-
+          }
           //Cart Update Data
-          $getContentCart=CartItem::where($whereColumn,$whereValue)->where('file',null)->first();
-          $getFileCart=CartItem::where($whereColumn,$whereValue)->where('file','!=',null)->get();
+          $getContentCart=CartItem::where('file',null)->where(function($query) use($userId,$sessionId) {
+                                                                  $query->where('user_id', $userId)
+                                                                  ->orWhere('session_id', $sessionId);
+                                                          })->first();
+          $getFileCart=CartItem::where('file','!=',null)->where(function($query) use($userId,$sessionId) {
+                                                              $query->where('user_id', $userId)
+                                                              ->orWhere('session_id', $sessionId);
+                                                          })->get();
           
           $CartDataFinal=array();
           
@@ -160,11 +158,17 @@ class TranslationApplicationController extends Controller {
                         'session_id'=>$sessionId
                       ]);
                 }
-            }
-          
-          $getContentCartUpdated=CartItem::where($whereColumn,$whereValue)->where('file',null)->where('status','Active')->first();
-          $getFileCartUpdated=CartItem::where($whereColumn,$whereValue)->where('file','!=',null)->where('status','Active')->get();
-          
+            }          
+          $getContentCartUpdated=CartItem::where('file',null)->where('status','Active')
+                                                            ->where(function($query) use($userId,$sessionId) {
+                                                                $query->where('user_id', $userId)
+                                                                ->orWhere('session_id', $sessionId);
+                                                              })->first();
+          $getFileCartUpdated=CartItem::where('file','!=',null)->where('status','Active')
+                                                            ->where(function($query) use($userId,$sessionId) {
+                                                                $query->where('user_id', $userId)
+                                                                ->orWhere('session_id', $sessionId);
+                                                            })->get();          
           
           $totalWordsCounted=0;
           $cartHtml='<table border="0">';
@@ -225,7 +229,7 @@ class TranslationApplicationController extends Controller {
                 }
                
                 $cartHtml .='<tr>
-                        <td class="type"><img src="'.$url[0].'/customer/img/'.$imageLogo.'" title="acrobat" alt="acrobat" /></td>
+                        <td class="type"><img src="'.$url[0].'/customer/img/'.$imageLogo.'" title="'.$getExtensionGet.'" alt="'.$getExtensionGet.'" /></td>
                         <td class="perview">'.$file->file.'</td>
                         <td class="switch"><span class="words">'.$file->content_words.' words</span><span class="close"><i class="fa fa-times-circle-o" onclick="trashElement('.$file->id.');" aria-hidden="true"></i></span></td>
                       </tr>';
@@ -241,8 +245,16 @@ class TranslationApplicationController extends Controller {
           $cartHtml .='</table>';
 
           // Get Trashed Items Of The Cart And Update It In Trashed Div
-          $getContentCartTrashed=CartItem::where($whereColumn,$whereValue)->where('file',null)->where('status','Trashed')->first();
-          $getFileCartTrashed=CartItem::where($whereColumn,$whereValue)->where('file','!=',null)->where('status','Trashed')->get();
+          $getContentCartTrashed=CartItem::where('file',null)->where('status','Trashed')
+                                                            ->where(function($query) use($userId,$sessionId) {
+                                                                      $query->where('user_id', $userId)
+                                                                            ->orWhere('session_id', $sessionId);
+                                                            })->first();
+          $getFileCartTrashed=CartItem::where('file','!=',null)->where('status','Trashed')
+                                                            ->where(function($query) use($userId,$sessionId) {
+                                                                      $query->where('user_id', $userId)
+                                                                            ->orWhere('session_id', $sessionId);
+                                                              })->get();
           
           $totalWordsCountedTrashed=0;
           $cartHtmlTrashed='';
@@ -349,27 +361,29 @@ class TranslationApplicationController extends Controller {
         $dataUrl=url('/');                
         $url=explode('index.php',$dataUrl);
         $sessionId =Session::getId();
-        if(Auth::user()){
-            $whereColumn='user_id';
-            $whereValue=Auth::user()->id;
-        }else{
-            $whereColumn='session_id';
-            $whereValue=$sessionId;
-        }
+        $userId=(Auth::user())?Auth::user()->id:0;
         if(($restore) && !($itemId)){
             if($restore=='delete_permanently'){
-              $deletePermanent=CartItem::where($whereColumn,$whereValue)->where('status','Trashed')->delete(); 
+              $deletePermanent=CartItem::where('status','Trashed')->where('user_id', $userId)->orWhere('session_id',$sessionId)->delete(); 
             }else{
-              $deleteAll=CartItem::where($whereColumn,$whereValue)->delete();  
+              $deleteAll=CartItem::where('user_id', $userId)->orWhere('session_id',$sessionId)->delete();  
             }
         }
         if(($itemId) && ($restore)){
-          $UpdateStatus=CartItem::where('id',$itemId )->update(['status'=>$restore]);
+          $UpdateStatus=CartItem::where('id',$itemId)->update(['status'=>$restore]);
         }
 
-        $getContentCartUpdated=CartItem::where($whereColumn,$whereValue)->where('file',null)->where('status','Active')->first();
-        $getFileCartUpdated=CartItem::where($whereColumn,$whereValue)->where('file','!=',null)->where('status','Active')->get();
-
+        $getContentCartUpdated=CartItem::where('file',null)->where('status','Active')
+                                        ->where(function($query) use($userId,$sessionId) {
+                                                $query->where('user_id', $userId)
+                                                ->orWhere('session_id', $sessionId);
+                                          })->first();
+        $getFileCartUpdated=CartItem::where('file','!=',null)->where('status','Active')
+                                                          ->where(function($query) use($userId,$sessionId) {
+                                                              $query->where('user_id', $userId)
+                                                              ->orWhere('session_id', $sessionId);
+                                                          })->get();
+          //echo "<pre>";print_r($getFileCartUpdated);exit;
           $totalWordsCounted=0;
           $cartHtml='';
           if($getContentCartUpdated != null || count($getFileCartUpdated)){
@@ -448,8 +462,17 @@ class TranslationApplicationController extends Controller {
         }
           // Get Trashed Items Of The Cart And Update It In Trashed Div
           
-          $getContentCartTrashed=CartItem::where($whereColumn,$whereValue)->where('file',null)->where('status','Trashed')->first();
-          $getFileCartTrashed=CartItem::where($whereColumn,$whereValue)->where('file','!=',null)->where('status','Trashed')->get();
+          $getContentCartTrashed=CartItem::where('file',null)->where('status','Trashed')
+                                    ->where(function($query) use($userId,$sessionId) {
+                                      $query->where('user_id', $userId)
+                                            ->orWhere('session_id', $sessionId);
+                                    })->first();
+          $getFileCartTrashed=CartItem::where('file','!=',null)->where('status','Trashed')
+                                  ->where(function($query) use($userId,$sessionId) {
+                                      $query->where('user_id', $userId)
+                                            ->orWhere('session_id', $sessionId);
+                                    })->get();
+
           
           $totalWordsCountedTrashed=0;
           $cartHtmlTrashed='';
@@ -585,18 +608,14 @@ class TranslationApplicationController extends Controller {
             $filenames=array();
             $fileWords=array();
             $sessionId =Session::getId();
-            if(Auth::user()){
-                $whereColumn='user_id';
-                $whereValue=Auth::user()->id;
-            }else{
-                $whereColumn='session_id';
-                $whereValue=$sessionId;
-            }
-            
+            $userId=(Auth::user())?Auth::user()->id:0;            
             if(isset($data['to_language_id'])){
               foreach($data['to_language_id'] as $toLanguage){
 
-                $getLanguagesCart=CartLanguage::where($whereColumn,$whereValue)->where('from_language_id',$data['from_language_id'])->where('to_language_id',$toLanguage)->get();
+                $getLanguagesCart=CartLanguage::where('from_language_id',$data['from_language_id'])->where('to_language_id',$toLanguage)->where(function($query) use($userId,$sessionId) {
+                                                        $query->where('user_id', $userId)
+                                                        ->orWhere('session_id', $sessionId);
+                                                })->get();
                 if(!count($getLanguagesCart)){
                   $insertCart= CartLanguage::Create([
                           'user_id' => (Auth::user())?Auth::user()->id:0,
@@ -607,9 +626,14 @@ class TranslationApplicationController extends Controller {
                 }
               }
             }
-
-            $getLanguagesCartUpdated=CartLanguage::where($whereColumn,$whereValue)->get();
-            $getWordsCount=CartItem::where($whereColumn,$whereValue)->sum('content_words');
+            $getLanguagesCartUpdated=CartLanguage::where(function($query) use($userId,$sessionId) {
+                                                        $query->where('user_id', $userId)
+                                                        ->orWhere('session_id', $sessionId);
+                                                  })->get();
+            $getWordsCount=CartItem::where(function($query) use($userId,$sessionId) {
+                                                        $query->where('user_id', $userId)
+                                                        ->orWhere('session_id', $sessionId);
+                                      })->sum('content_words');
             //echo $getWordsCount;exit;
             $languageCartHtml='';
             $count=1;
@@ -670,23 +694,30 @@ class TranslationApplicationController extends Controller {
             $dataUrl=url('/');                
             $url=explode('index.php',$dataUrl); 
             $sessionId =Session::getId();
-            if(Auth::user()){
-                $whereColumn='user_id';
-                $whereValue=Auth::user()->id;
-            }else{
-                $whereColumn='session_id';
-                $whereValue=$sessionId;
-            }
+            $userId=(Auth::user())?Auth::user()->id:0;
             if($status=='Deleted'){
-              $deleteCart=CartLanguage::where($whereColumn,$whereValue)->delete();
+              $deleteCart=CartLanguage::where(function($query) use($userId,$sessionId) {
+                                                        $query->where('user_id', $userId)
+                                                        ->orWhere('session_id', $sessionId);
+                                      })->delete();
             }
             if(($status=='Trashed') || ($status=='Active')){
               $trashCart=CartLanguage::where('id',$cartLangId)->update(['status'=>$status]);
             }
             
-            $getLanguagesCartUpdated=CartLanguage::where($whereColumn,$whereValue)->get();
-            $getWordsCount=CartItem::where($whereColumn,$whereValue)->sum('content_words');
-            $CountCartActive=CartLanguage::where($whereColumn,$whereValue)->where('status','Active')->count();
+            $getLanguagesCartUpdated=CartLanguage::where(function($query) use($userId,$sessionId) {
+                                                        $query->where('user_id', $userId)
+                                                        ->orWhere('session_id', $sessionId);
+                                                  })->get();
+            $getWordsCount=CartItem::where(function($query) use($userId,$sessionId) {
+                                                        $query->where('user_id', $userId)
+                                                        ->orWhere('session_id', $sessionId);
+                                    })->sum('content_words');
+            $CountCartActive=CartLanguage::where('status','Active')
+                                          ->where(function($query) use($userId,$sessionId) {
+                                                        $query->where('user_id', $userId)
+                                                        ->orWhere('session_id', $sessionId);
+                                          })->count();
 
             $languageCartHtml='';
             $count=1;
@@ -783,14 +814,25 @@ class TranslationApplicationController extends Controller {
     public function getStepThree()
     {
       try {
-          $currency_input = 2;
+          //$currency_input = 2;
           //currency codes : http://en.wikipedia.org/wiki/ISO_4217
-          $currency_from = "USD";
-          $currency_to = "INR";
+          //$currency_from = "USD";
+          //$currency_to = "INR";
           //$this->getConvertedCurrency($currency_from,$currency_to,$currency_input);
+          $currentUrl = Session::put('currentUrl',url('/translation-application/step-three'));
+          if(Auth::user()){
+            Session::put('currentUrl','');
+          }
+
           $sections=Section::where('status','Active')->get();
           $userId=(Auth::user())?Auth::user()->id:0;
-          $previousTranslators=ProjectTranslator::join('users','users.id','=','project_translators.translator_id')->select('project_translators.*','users.email as translatorEmail')->where('user_id',$userId)->get();
+          $sessionId =Session::getId();
+          $getCartItems=CartItem::where('status','Active')
+                                  ->where(function($query) use($userId,$sessionId) {
+                                          $query->where('user_id', $userId)
+                                          ->orWhere('session_id', $sessionId);
+                                    })->count();
+          $previousTranslators=ProjectTranslator::join('users','users.id','=','project_translators.translator_id')->select('project_translators.*','users.email as translatorEmail')->where('user_id',$userId)->groupBy('translator_id')->get();
           $previousGloosaries=ProjectGloosary::where('user_id',$userId)->get();
           $previousStyles=ProjectStyle::where('user_id',$userId)->get();
           $previousBriefs=ProjectBrief::where('user_id',$userId)->get();
@@ -800,9 +842,19 @@ class TranslationApplicationController extends Controller {
             $latestOrder=Order::where('user_id',$userId)->orderBy('id','desc')->first();
             $latestOrderId=($latestOrder!=null)?$latestOrder->id:0;
           }
+          $projectInstructions=ProjectInstruction::where('order_id',$latestOrderId)->first();
+          $projectStyles=ProjectStyle::where('order_id',$latestOrderId)->first();
+          $projectGloosaries=ProjectGloosary::where('order_id',$latestOrderId)->first();
+          $projectBriefs=ProjectBrief::where('order_id',$latestOrderId)->first();
+          $projectTranslator=ProjectTranslator::where('order_id',$latestOrderId)->first();
+
+          $allProjectStyles=ProjectStyle::where('order_id',$latestOrderId)->get();
+          $allProjectGloosaries=ProjectGloosary::where('order_id',$latestOrderId)->get();
+          $allProjectBriefs=ProjectBrief::where('order_id',$latestOrderId)->get();
+
           $languages=Language::where('status','Active')->get();
           $languagePackages=LanguagePackage::all();
-          return view('customer.translation-application.step-three',compact('sections','languages','languagePackages','previousTranslators','previousGloosaries','previousStyles','previousBriefs','latestOrderId'));
+          return view('customer.translation-application.step-three',compact('sections','languages','languagePackages','previousTranslators','previousGloosaries','previousStyles','previousBriefs','latestOrderId','projectInstructions','projectStyles','projectGloosaries','projectBriefs','projectTranslator','allProjectStyles','allProjectGloosaries','allProjectBriefs','getCartItems'));
         }
         catch (\Exception $e) 
         {   
@@ -849,6 +901,8 @@ class TranslationApplicationController extends Controller {
        $amount=explode('$', $data['final_amount']);
        
        try {
+            $sessionId =Session::getId();
+            
             $InsertPayment=\Stripe\Charge::create ( array (
                     "amount" => ($amount[1]*100),
                     "currency" => "usd",
@@ -866,9 +920,11 @@ class TranslationApplicationController extends Controller {
                     'role_id' => 3,
                     'status' => 'Paused'
                 ]);
+                //Login User Automatically
                 //Here email to user with this password below:
 
             }
+            $userId=(Auth::user())?Auth::user()->id:0;
           //payment insertion
             $status='success';
             $insertOrder= Order::Create([
@@ -881,21 +937,24 @@ class TranslationApplicationController extends Controller {
             $orderId = $insertOrder->id;
             Session::put('orderId', $orderId);
           //Below Save whole data in Order Table for user to view in Dashboard and Empty Cart Tables.
-            $sessionId =Session::getId();
             
             $getLanguagesCartUpdated=CartLanguage::join('language_packages','cart_languages.language_package','=','language_packages.id')
                             ->select('cart_languages.*','language_packages.name as packageName','language_packages.id as packageId','language_packages.price_per_word as packagePrice')
-                            ->where('cart_languages.user_id', Auth::user()->id)
-                            ->orWhere('cart_languages.session_id',$sessionId)
-                            ->where('cart_languages.status','Active')->get();
-            $getWordsCount=CartItem::where('user_id', Auth::user()->id)
-                            ->orWhere('session_id',$sessionId)
-                            ->where('status','Active')
-                            ->sum('content_words');
-            $getCartItems=CartItem::where('user_id', Auth::user()->id)
-                            ->orWhere('session_id',$sessionId)
-                            ->where('status','Active')
-                            ->get();
+                            ->where('cart_languages.status','Active')
+                            ->where(function($query) use($userId,$sessionId) {
+                                          $query->where('cart_languages.user_id', $userId)
+                                          ->orWhere('cart_languages.session_id', $sessionId);
+                                    })->get();
+            $getWordsCount=CartItem::where('status','Active')
+                                  ->where(function($query) use($userId,$sessionId) {
+                                          $query->where('user_id', $userId)
+                                          ->orWhere('session_id', $sessionId);
+                                    })->sum('content_words');
+            $getCartItems=CartItem::where('status','Active')
+                                  ->where(function($query) use($userId,$sessionId) {
+                                          $query->where('user_id', $userId)
+                                          ->orWhere('session_id', $sessionId);
+                                    })->get();
             $totalPrice=0;
             $packagePrice=0;
             $packageName='';
@@ -913,7 +972,8 @@ class TranslationApplicationController extends Controller {
               $packageName=$getLanguagesCartUpdated[0]->packageName;
               $packageId=$getLanguagesCartUpdated[0]->packageId;
               $purpose=$getLanguagesCartUpdated[0]->purpose;
-              $packagePrice=$getLanguagesCartUpdated[0]->packagePrice;              
+              //$packagePrice=$getLanguagesCartUpdated[0]->packagePrice;
+              $packagePrice=($getWordsCount*$getLanguagesCartUpdated[0]->packagePrice);            
               $totalPrice=($totalPrice+$packagePrice);
             }
 
@@ -958,8 +1018,14 @@ class TranslationApplicationController extends Controller {
               
             //Delete Languages Cart Values After insertion in final application tables
               
-              //$getLanguagesCartUpdated=CartLanguage::where('user_id', Auth::user()->id)->orWhere('session_id',$sessionId)->delete();
-              //$getCartItemsUpdated=CartItem::where('user_id', Auth::user()->id)->orWhere('session_id',$sessionId)->delete();
+          /*$getLanguagesCartUpdated=CartLanguage::where(function($query) use($userId,$sessionId) {
+                                          $query->where('user_id', $userId)
+                                          ->orWhere('session_id', $sessionId);
+                                    })->update(['status'=>'Deleted']);
+          $getCartItemsUpdated=CartItem::where(function($query) use($userId,$sessionId) {
+                                          $query->where('user_id', $userId)
+                                          ->orWhere('session_id', $sessionId);
+                                    })->update(['status'=>'Deleted']);*/
             }
            return redirect('/translation-application/step-three')->with('success', 'Payment  done successfully.');
         } catch ( \Exception $e ) {
@@ -980,17 +1046,16 @@ class TranslationApplicationController extends Controller {
             $dataUrl=url('/');                
             $url=explode('index.php',$dataUrl); 
             $sessionId =Session::getId();
-            if(Auth::user()){
-                $whereColumn='user_id';
-                $whereValue=Auth::user()->id;
-            }else{
-                $whereColumn='session_id';
-                $whereValue=$sessionId;
-            }
-            
-            $getLanguagesCartUpdated=CartLanguage::join('language_packages','cart_languages.language_package','=','language_packages.id')->select('cart_languages.*','language_packages.name as packageName','language_packages.price_per_word as packagePrice')->where('cart_languages.'.$whereColumn,$whereValue)->where('cart_languages.status','Active')->get();
+            $userId=(Auth::user())?Auth::user()->id:0;            
+            $getLanguagesCartUpdated=CartLanguage::join('language_packages','cart_languages.language_package','=','language_packages.id')->select('cart_languages.*','language_packages.name as packageName','language_packages.price_per_word as packagePrice')->where('cart_languages.status','Active')->where(function($query) use($userId,$sessionId) {
+                  $query->where('cart_languages.user_id', $userId)
+                  ->orWhere('cart_languages.session_id', $sessionId);
+                })->get();
 
-            $getWordsCount=CartItem::where($whereColumn,$whereValue)->sum('content_words');
+            $getWordsCount=CartItem::where(function($query) use($userId,$sessionId) {
+                                          $query->where('user_id', $userId)
+                                          ->orWhere('session_id', $sessionId);
+                                    })->sum('content_words');
             
             $languageCartHtml='';
             $totalPrice=0;
@@ -1007,8 +1072,8 @@ class TranslationApplicationController extends Controller {
               }
               $packageName=$getLanguagesCartUpdated[0]->packageName;
               $purpose=$getLanguagesCartUpdated[0]->purpose;
-              $packagePrice=$getLanguagesCartUpdated[0]->packagePrice;              
-              $totalPrice=($totalPrice+$packagePrice);
+              $packagePriceTotal=($getWordsCount*$getLanguagesCartUpdated[0]->packagePrice);         
+              $totalPrice=($totalPrice+$packagePriceTotal);
             }
             $returnData=array($getWordsCount,$totalLanguages,'$'.$totalPrice,$packageName,$purpose);
             echo json_encode($returnData);exit;   
@@ -1035,20 +1100,24 @@ class TranslationApplicationController extends Controller {
             $url=explode('index.php',$dataUrl); 
             $data=$request->all();
             $sessionId =Session::getId();
-            if(Auth::user()){
-                $whereColumn='user_id';
-                $whereValue=Auth::user()->id;
-            }else{
-                $whereColumn='session_id';
-                $whereValue=$sessionId;
-            }
+            $userId=(Auth::user())?Auth::user()->id:0;
             //Update Cart Languages with package and purpose now.
-            $CartPackagesUpdate=CartLanguage::where($whereColumn,$whereValue)->update(['purpose'=>$data['purpose'],'language_package'=>$data['package']]);
+            $CartPackagesUpdate=CartLanguage::where(function($query) use($userId,$sessionId) {
+                  $query->where('cart_languages.user_id', $userId)
+                  ->orWhere('cart_languages.session_id', $sessionId);
+                })->update(['purpose'=>$data['purpose'],'language_package'=>$data['package']]);
               
 
-            $getLanguagesCartUpdated=CartLanguage::join('language_packages','cart_languages.language_package','=','language_packages.id')->select('cart_languages.*','language_packages.name as packageName','language_packages.price_per_word as packagePrice')->where('cart_languages.'.$whereColumn,$whereValue)->where('cart_languages.status','Active')->get();
+            $getLanguagesCartUpdated=CartLanguage::join('language_packages','cart_languages.language_package','=','language_packages.id')->select('cart_languages.*','language_packages.name as packageName','language_packages.price_per_word as packagePrice')->where('cart_languages.status','Active')
+              ->where(function($query) use($userId,$sessionId) {
+                  $query->where('cart_languages.user_id', $userId)
+                  ->orWhere('cart_languages.session_id', $sessionId);
+                })->get();
             
-            $getWordsCount=CartItem::where($whereColumn,$whereValue)->sum('content_words');
+            $getWordsCount=CartItem::where(function($query) use($userId,$sessionId) {
+                                    $query->where('user_id', $userId)
+                                    ->orWhere('session_id', $sessionId);
+                                  })->sum('content_words');
             
             $languageCartHtml='';
             $totalPrice=0;
@@ -1067,8 +1136,9 @@ class TranslationApplicationController extends Controller {
               }
               $packageName=$getLanguagesCartUpdated[0]->packageName;
               $purpose=$getLanguagesCartUpdated[0]->purpose;
-              $packagePrice=$getLanguagesCartUpdated[0]->packagePrice;          
-              $totalPrice=($totalPrice+$packagePrice);
+              $packagePricePerWord=$getLanguagesCartUpdated[0]->packagePrice;
+              $packagePriceTotal=($getWordsCount*$getLanguagesCartUpdated[0]->packagePrice);         
+              $totalPrice=($totalPrice+$packagePriceTotal);
             }
             $returnData=array($getWordsCount,$totalLanguages,'$'.$totalPrice,$packageName,$purpose);
             echo json_encode($returnData);exit;   
@@ -1090,7 +1160,8 @@ class TranslationApplicationController extends Controller {
     **/
     
     public function postOptionalData(Request $request){
-
+      
+      try {
         $orderId = Session::get('orderId');
         $userId=(Auth::user())?Auth::user()->id:0;
         if(!$orderId){
@@ -1105,8 +1176,10 @@ class TranslationApplicationController extends Controller {
         if($data['type']=='instruction'){
           //Save Data in project_instruction table          
           $checkInstruction=ProjectInstruction::where('order_id',$orderId)->first();
+
           if($checkInstruction != null){
             //Update Row
+            //echo $data['tone'].'<br/>'.$data['instruction'];exit;
             $updateInstruction= ProjectInstruction::where('order_id',$orderId)
                                                 ->update([
                                                           'tone'=>  $data['tone'],
@@ -1139,7 +1212,6 @@ class TranslationApplicationController extends Controller {
               }
             }
           }
-          return $fileUploadedData;
         }
         //Gloosaries
         if($data['type']=='gloosary'){
@@ -1158,7 +1230,6 @@ class TranslationApplicationController extends Controller {
               }
             }
           }
-          return $fileUploadedData;
         }
         //Styles
         if($data['type']=='style'){
@@ -1177,12 +1248,12 @@ class TranslationApplicationController extends Controller {
               }
             }
           }
-          return $fileUploadedData;
         }
 
         if($data['type']=='previous'){
           //Insert Row
             //$checkStyle=ProjectStyle::where('order_id',$orderId)->where('user_id',Auth::user()->id)->get();
+            
             $createPrevious= ProjectStyle::Create([
                                   'user_id' => Auth::user()->id,
                                   'order_id' => $orderId,
@@ -1209,6 +1280,14 @@ class TranslationApplicationController extends Controller {
    
 
         }
+        $response=array('success');
+        echo json_encode($response);exit;
+      } catch (\Exception $e) {   
+          $result = [
+                      'exception_message' => $e->getMessage()
+               ];
+          return view('errors.error', $result);
+      }
 
   }
   public function uploadAssets($file){
@@ -1235,4 +1314,107 @@ class TranslationApplicationController extends Controller {
     $fileUploadedData=array($filenames,$fileUrl);
     return $fileUploadedData;
   }
+
+    /**
+      * Step one will Get Quote Info
+      * @param null      
+      * @return Response
+      * Created on: 03/02/2017
+      * Updated on: 03/02/2017
+    **/
+    public function getQuote()
+    {
+      try {
+          $sessionId =Session::getId();
+          $userId=(Auth::user())?Auth::user()->id:0;  
+          $checkCompany=Company::where(function($query) use($userId,$sessionId) {
+                                    $query->where('user_id', $userId)
+                                    ->orWhere('session_id', $sessionId);
+                                  })->first();
+          $sections=Section::where('status','Active')->get();
+          //Get Quote Data
+          $sessionId =Session::getId();
+          $userId=(Auth::user())?Auth::user()->id:0;  
+          $getCartItems=CartItem::where('status','Active')
+                                ->where(function($query) use($userId,$sessionId) {
+                                    $query->where('user_id', $userId)
+                                    ->orWhere('session_id', $sessionId);
+                                  })->get();
+          $getWordsCount=CartItem::where('status','Active')
+                                    ->where(function($query) use($userId,$sessionId) {
+                                                        $query->where('user_id', $userId)
+                                                        ->orWhere('session_id', $sessionId);
+                                      })->sum('content_words');
+
+          $getLanguagesCartUpdated=CartLanguage::join('language_packages','cart_languages.language_package','=','language_packages.id')->join('languages','languages.id','=','cart_languages.to_language_id')->select('cart_languages.*','language_packages.name as packageName','language_packages.price_per_word as packagePrice','languages.name as destinationLanguage')->where('cart_languages.status','Active')->where(function($query) use($userId,$sessionId) {
+                                    $query->where('cart_languages.user_id', $userId)
+                                    ->orWhere('cart_languages.session_id', $sessionId);
+                                  })->get();
+          $languagesData=array();
+          $count=1;
+          if(count($getLanguagesCartUpdated)){
+            foreach($getLanguagesCartUpdated as $key=>$getLanguagesCartUpdate){
+
+               $getLanguageData=LanguagePrice::join('languages','languages.id','=','language_prices.source')->select('languages.name as sourceLanguage','language_prices.*')->where('language_prices.source',$getLanguagesCartUpdate->from_language_id)->where('language_prices.destination',$getLanguagesCartUpdate->to_language_id)->get();
+                $sourceLanguage=(count($getLanguageData))?$getLanguageData[0]->sourceLanguage:'';    
+                $price=(count($getLanguageData))?$getLanguageData[0]->price_per_word:0;
+                
+                $totalPriceCalculated=($getWordsCount*$price);
+                $languagesData[$key]['fromLanguage']=$sourceLanguage;
+                $languagesData[$key]['destinationLanguage']=$getLanguagesCartUpdate->destinationLanguage;      
+                $languagesData[$key]['perWordLanguagePrice']=$price;
+                $languagesData[$key]['LanguagePrice']=$totalPriceCalculated;
+                $count++;
+              }
+          }           
+          return view('customer.translation-application.quote',compact('sections','getCartItems','languagesData','checkCompany'));
+        }
+        catch (\Exception $e) 
+        {   
+            $result = [
+                    'exception_message' => $e->getMessage()
+             ];
+            return view('errors.error', $result);
+        }
+    }
+    public function postUserCompany(Request $request){
+      
+      try {
+          $data=$request->all();
+          $sessionId =Session::getId();
+          $userId=(Auth::user())?Auth::user()->id:0;  
+          $checkCompany=Company::where(function($query) use($userId,$sessionId) {
+                                    $query->where('user_id', $userId)
+                                    ->orWhere('session_id', $sessionId);
+                                  })->first();
+
+          if($checkCompany != null){
+            //Update Row
+            $updateInstruction= Company::where(function($query) use($userId,$sessionId) {
+                                                  $query->where('user_id', $userId)
+                                                  ->orWhere('session_id', $sessionId);
+                                                })->update([
+                                                          'company'=>  $data['company'],
+                                                          'address'=>$data['address'],
+                                                        ]);
+          }else{
+            //Insert Row
+            $createInstruction= Company::Create([
+                                  'user_id' => $userId,
+                                  'session_id' => $sessionId,
+                                  'company'=>  $data['company'],
+                                  'address'=>$data['address'],
+                                ]);
+          }
+          echo json_encode(array('success'));exit;
+          
+      }
+      catch (\Exception $e) 
+      {   
+            $result = [
+                    'exception_message' => $e->getMessage()
+             ];
+            return view('errors.error', $result);
+      }
+    }
 }

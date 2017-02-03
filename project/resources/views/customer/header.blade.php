@@ -35,7 +35,12 @@
                   <li><a href="#" title="Order Translation">Order Translation</a></li>
                   <li><a href="#" title="HOME">Contact Sales</a></li>
                 @endif
-                <li><a href="{{ url('/auth/login') }}" title="SIGN IN">SIGN IN</a></li>
+                @if(Auth::user())
+               <li><a href="{{ url('/auth/logout') }}" title="SIGN OUT">SIGN OUT</a></li>  
+                @else
+                 <li><a href="{{ url('/auth/login') }}" title="SIGN IN">SIGN IN</a></li>
+                              
+                @endif
               </ul>
             </nav>
             <div class="menu-toggle-wrap"><i id="menu-toggle" class="fa fa-bars" aria-hidden="true"></i></div>

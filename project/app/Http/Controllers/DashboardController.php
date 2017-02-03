@@ -45,6 +45,11 @@ class DashboardController extends Controller {
     {
         try { 
             //Redirect to dashboard according to roles
+          if(Session::get('currentUrl')){
+            
+            return redirect(Session::get('currentUrl'));
+
+          }else{
             switch(Auth::user()->role_id){
               case 1:
                 $theme='backend/';
@@ -68,6 +73,7 @@ class DashboardController extends Controller {
               break;
             }
             return view($theme.'dashboard/'.$usertype.'/dashboard');
+          }            
         }
         catch (\Exception $e) 
         {   
