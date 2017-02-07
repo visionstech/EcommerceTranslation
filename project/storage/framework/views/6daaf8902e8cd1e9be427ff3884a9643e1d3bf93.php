@@ -13,6 +13,7 @@ $(document).ready(function(){
     $("#menu-toggle").toggleClass("menu-active");
   });
 
+  
 // ....... Add class-function to header.........
   var url      = window.location.href; 
   var Homepage='<?php echo url('/');?>';
@@ -87,6 +88,37 @@ $(document).ready(function(){
   });
   var validFiles=['ppt','pptx','doc','docx','xls','xlsm','xlsx','rtf','odt','txt','pdf'];
 
+  $(document).on('blur','#content',function(){
+    var data = new FormData();
+    data.append('_token',$('#token').val());
+    data.append('content',$('#content').val());
+    $.ajax({
+        
+        url: baseUrl+'/translation-application/cart-item',
+        type:'post',
+        data: data,
+        processData: false,
+        contentType: false,
+        success: function(res) {
+          var data = $.parseJSON(res);
+          $('.item-to-translate').html(data[1]);
+          var TotalWords= $('.switch_total').html();
+          
+          if(data[0]){
+            $('#content').val(data[0]);
+            $('#content').hide();
+          }
+          if(data[2]){
+            $('#trashedItems').html(data[2]);
+            $('.deleted_count').html(data[4]);
+            $('.del-arrow').show();
+            $('.del-permanent').show();
+          }  
+          $('.total_words').html(TotalWords);
+        }
+      });
+  });
+  
   $('#myForm input[class=file]').change(function(){
       var bar = $('#bar1');
       var percent = $('#percent1');
@@ -288,7 +320,7 @@ $(document).ready(function(){
       $('.over-lay').hide();
   });
   $(".login_pop").click(function(){
-      $('.over-lay').show();
+      $('.login_popup').show();
   });
   
   if($('#checkbox-1'). prop("checked") == false){
@@ -309,7 +341,9 @@ $(document).ready(function(){
     }
   });
   $(".pay_button").click(function(){
-      alert('Please agree terms and conditions.');
+      //alert('Please agree terms and conditions.');
+      $('.terms_popup').show();
+
   });
   
   $(document).on('click','.package_li  p',function() {
@@ -403,8 +437,7 @@ $(document).ready(function(){
             }
             $('.package_name').html(data[3]);
             $('.package_purpose').html(data[4]);
-            $('.purpose-btn').html(data[4]);    
-
+            $('.purpose-btn').html(data[4]);
           }
     });
    
@@ -415,6 +448,29 @@ $(document).ready(function(){
   $(".purpose-btn").click(function(){
       $(".purpose-list").toggle();
   });
+
+  $(document).mouseup(function (e)
+  {
+      var container = $(".purpose-list");
+
+      if (!container.is(e.target) // if the target of the click isn't the container...
+          && container.has(e.target).length === 0) // ... nor a descendant of the container
+      {
+          container.hide();
+      }
+  });
+
+  $(document).mouseup(function (e)
+  {
+      var container = $(".show-1");
+
+      if (!container.is(e.target) // if the target of the click isn't the container...
+          && container.has(e.target).length === 0) // ... nor a descendant of the container
+      {
+          container.hide();
+      }
+  });
+  
   $(".option-btn").click(function(){
       $(".option-list").toggle();
   });

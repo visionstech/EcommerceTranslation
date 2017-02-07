@@ -249,11 +249,13 @@ class HomepageSectionController extends Controller {
 
                   $imgName = $sectionType.'_'.$this->getRandomString(20).'.'.$imageType[1];
                   $destinationPath = url('/').'/uploads';
-                  $file->move('/var/www/html/eqho/uploads/', $imgName);
-                  chmod('/var/www/html/eqho/uploads/'.$imgName, 0777);
+                  $projectPath=base_path();
+                  $projectPath=explode('/project', $projectPath);
+                  $file->move($projectPath[0].'/uploads/', $imgName);
+                  chmod($projectPath[0].'/uploads/'.$imgName, 0777);
                   $dataUrl=url('/');                
                   $url=explode('index.php',$dataUrl);
-                  $dimentions=list($width, $height) = getimagesize($url[0].'uploads/'.$imgName);
+                  $dimentions=list($width, $height) = getimagesize($url[0].'/uploads/'.$imgName);
                   $actualWidth=$dimentions[0];
                   $actualHeight=$dimentions[1];
                   if(($actualWidth>$validWidth) || ($actualHeight>$validHeight)){

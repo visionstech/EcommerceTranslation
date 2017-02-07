@@ -1,4 +1,4 @@
-<section class="our-promise">
+<section class="our-promise" id="our-promise">
   <div class="eqho-container">
     <div class="promise-content">
       <h3>Our <span>Promise</span></h3>

@@ -10,5 +10,5 @@ class ProjectFile extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['id','user_id','order_id','project_id','file_name','file_path','status','translated_file'];
+    protected $fillable = ['id','user_id','order_id','project_id','file_name','file_path','status','translated_file','content_words'];
 }

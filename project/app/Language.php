@@ -11,5 +11,5 @@ class Language extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['id','name','short'];
+    protected $fillable = ['id','name','short','image','image_path'];
 }

@@ -165,7 +165,24 @@ class AuthController extends Controller
                  
                   if($this->auth->attempt($credentials))
                   { 
-                      return redirect('/dashboard');
+                      switch(Auth::user()->role_id){
+                        case 1:
+                          $redirect='/dashboard';
+                        break;
+                        case 2:
+                          $redirect='/dashboard';
+                        break;
+                        case 3:
+                          $redirect='/customer/dashboard';
+                        break;
+                        case 4:
+                          $redirect='/dashboard';
+                        break;
+                        default:
+                         $redirect='/dashboard';
+                        break;
+                      }
+                      return redirect($redirect);
                   }
                   else
                   {

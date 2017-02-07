@@ -44,7 +44,7 @@
                     <tr>
                     @if($getCartItem->file==null)
                      <?php echo '<td class="type"><img src="'.$url[0].'/customer/img/plain-text.png" title="text" alt="text" /></td>';
-
+                     $totalWords=$totalWords+$getCartItem->content_words;
                      $length=strlen($getCartItem->content);
                      $dots=($length>100)?'...':'';
                     ?>
@@ -133,8 +133,8 @@
                     @if($counter==1)
                       <td rowspan="{{count($languagesData)}}">{{ $languagesDat['fromLanguage'] }}</td>
                     @endif
-                    <td>
-                    <img src="{{ $url[0] }}customer/img/chines-flag.png" title="{{ $languagesDat['destinationLanguage'] }}" alt="{{ $languagesDat['destinationLanguage'] }}" /> {{ $languagesDat['destinationLanguage'] }}</td>
+                    <td>                    
+                    <img src="{{ $languagesDat['imagePath'] }}" title="{{ $languagesDat['destinationLanguage'] }}" alt="{{ $languagesDat['destinationLanguage'] }}" /> {{ $languagesDat['destinationLanguage'] }}</td>
                     <td>${{ $languagesDat['perWordLanguagePrice']}} / word</td>
                     @if($counter==1)
                       <td rowspan="{{count($languagesData)}}">{{ $totalWords }} Word</td>

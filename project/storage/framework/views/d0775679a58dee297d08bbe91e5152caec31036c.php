@@ -1,4 +1,4 @@
-<section class="how-it-work-wrap">
+<section class="how-it-work-wrap" id="how-it-works">
       <div class="eqho-container">
         <h3>How it <span> Works</span></h3>
         <div class="how-it-work-container">

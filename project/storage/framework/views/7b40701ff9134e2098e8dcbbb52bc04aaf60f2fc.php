@@ -46,7 +46,7 @@
                 </div>
                 <?php $image = ((!empty($section)) ? $section->image : ''); 
                         if($image){
-                            echo "<img src='".$url[0].'uploads/'.$section->image."' alt='".$section->image_title."' width='250'>";
+                            echo "<img src='".$dataUrl.'/uploads/'.$section->image."' alt='".$section->image_title."' width='250'>";
                         } 
                 ?>
                 <div class="box-footer">

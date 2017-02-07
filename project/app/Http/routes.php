@@ -34,9 +34,10 @@ Route::group(['middleware' => ['web']], function () {
    	Route::controller('role', 'RoleController');
    	Route::controller('homepage-section','HomepageSectionController');
    	Route::controller('language-management','LanguageManagementController');
-      Route::controller('language-price','LanguagePriceController');
-      Route::controller('language-package','LanguagePackageController');
+    Route::controller('language-price','LanguagePriceController');
+    Route::controller('language-package','LanguagePackageController');
    	Route::controller('translation-application','TranslationApplicationController');
+    Route::controller('customer','CustomerController');
    	Route::controllers([
    		'auth' => 'Auth\AuthController',
    		'password' => 'Auth\PasswordController',

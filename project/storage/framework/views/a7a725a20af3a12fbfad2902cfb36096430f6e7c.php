@@ -132,8 +132,8 @@
                     <?php if($counter==1): ?>
                       <td rowspan="<?php echo e(count($languagesData)); ?>"><?php echo e($languagesDat['fromLanguage']); ?></td>
                     <?php endif; ?>
-                    <td>
-                    <img src="<?php echo e($url[0]); ?>customer/img/chines-flag.png" title="<?php echo e($languagesDat['destinationLanguage']); ?>" alt="<?php echo e($languagesDat['destinationLanguage']); ?>" /> <?php echo e($languagesDat['destinationLanguage']); ?></td>
+                    <td>                    
+                    <img src="<?php echo e($languagesDat['imagePath']); ?>" title="<?php echo e($languagesDat['destinationLanguage']); ?>" alt="<?php echo e($languagesDat['destinationLanguage']); ?>" /> <?php echo e($languagesDat['destinationLanguage']); ?></td>
                     <td>$<?php echo e($languagesDat['perWordLanguagePrice']); ?> / word</td>
                     <?php if($counter==1): ?>
                       <td rowspan="<?php echo e(count($languagesData)); ?>"><?php echo e($totalWords); ?> Word</td>
@@ -154,7 +154,7 @@
               </table>
             </div> <!-- quote-tables-erap -->
             <div class="btn-wrap download">
-              <a href="" class="btn_ctrl" download>Download</a>
+              <a href="http://localhost/eqho/index.php/translation-application/quote" class="btn_ctrl" download>Download</a>
             </div>
           </div><!-- quote-content -->
         

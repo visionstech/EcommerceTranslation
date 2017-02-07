@@ -51,7 +51,7 @@
                                     <?php
                                     $dataUrl=url('/');                
                                     $url=explode('index.php',$dataUrl);
-                                    echo "<img src='".$url[0].'uploads/'.$section->image."' alt='".$section->image_title."' width='100'>";
+                                    echo "<img src='".$dataUrl.'/uploads/'.$section->image."' alt='".$section->image_title."' width='100'>";
                                     ?>
                                    </td>
                                     <td>{{ $section->created_at }}</td>

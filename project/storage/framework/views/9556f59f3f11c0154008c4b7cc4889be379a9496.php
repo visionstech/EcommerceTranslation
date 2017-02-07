@@ -2,6 +2,10 @@
   Translation Order
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
+<?php 
+  $dataUrl=url('/');                
+  $url=explode('index.php',$dataUrl);
+?>
     <section class="odering-process-1">
       <div class="eqho-container">
         <div class="eqho-clear-fix translator-wrap">
@@ -53,7 +57,17 @@
                         <p class="select-langs"  data-id=""><span id="selected_lang" data-id="<?php echo e($languages[0]->id); ?>"><img src="<?php echo e(asset('/customer/img/english-lang.jpg')); ?>" alt="english" title="english"><?php echo e($languages[0]->name); ?></span><span class="list-caret-down"><i class="fa fa-caret-down" aria-hidden="true"></i></span></p>
                         <ul class="show-1">
                           <?php foreach($languages as $language): ?>
-                            <li id="<?php echo e($language->id); ?>" class="from_lang_li"><img src="<?php echo e(asset('/customer/img/chines-flag.png')); ?>" alt="english" title="english"> <?php echo e($language->name); ?> </li>
+                            <li id="<?php echo e($language->id); ?>" class="from_lang_li">
+                            <?php   
+                              $image = ((!empty($language)) ? $language->image : ''); 
+                              if($image){
+                                  echo "<img src='".$url[0].'/uploads/'.$language->image."' alt='".$language->image."'>";
+                              }else{
+                            ?><img src="<?php echo e(asset('/customer/img/english-lang.jpg')); ?>" alt="<?php echo e($language->name); ?> " title="<?php echo e($language->name); ?> ">
+
+                           <?php  } ?>
+                            <?php echo e($language->name); ?> 
+                            </li>
                           <?php endforeach; ?>       
                           
                         </ul>
@@ -66,7 +80,19 @@
                     <div class="all-languages">
                       <ul class="eqho-clear-fix">
                        <?php foreach($languages as $language): ?>
-                          <li id="<?php echo e('selectedLangs_'.$language->id); ?>" data-id="<?php echo e($language->id); ?>"><img src="<?php echo e(asset('/customer/img/english-lang.jpg')); ?>" alt="english" title="english"> <?php echo e($language->name); ?> </li>
+                          <li id="<?php echo e('selectedLangs_'.$language->id); ?>" data-id="<?php echo e($language->id); ?>">
+                          <?php   
+                              $image = ((!empty($language)) ? $language->image : ''); 
+                              if($image){
+                                //echo "sdfsdfsf";exit;
+                                  echo "<img src='".$url[0].'uploads/'.$language->image."' alt='".$language->name."'>";
+                              }else{
+                          ?>
+                                  <img src="<?php echo e(asset('/customer/img/english-lang.jpg')); ?>" alt="<?php echo e($language->name); ?> " title="<?php echo e($language->name); ?> ">
+
+                      <?php  } ?> 
+                          <?php echo e($language->name); ?> 
+                          </li>
                         <?php endforeach; ?>
                       </ul>
                     </div> <!-- all-languages -->

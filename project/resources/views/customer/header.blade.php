@@ -1,9 +1,9 @@
 <header class="main-header">
-    <div class="eqho-container ">
+    <div class="eqho-container">
       <div class="eqho-clear-fix top-menu-bar">
         <div class="eqho-logo">
-          <a href="#" rel="home" title="EQHO">
-            <?php 
+          <a href="{{ url('/') }}" rel="home" title="EQHO">
+          <?php 
             $dataUrl=url('/');                
             $url=explode('index.php',$dataUrl);
           ?>  <!-- Header Image -->
@@ -27,12 +27,17 @@
                   @if(count($sections))
                     @foreach($sections as $section)
                       @if($section->section_type=='header-menus')
-                        <li><a href="#" title="{{ $section->title }}">{{ $section->title }}</a></li>
+                        @if($section->description=='#home')
+                          <li><a href="{{ url('/') }}" title="{{ $section->title }}">{{ $section->title }}</a></li>
+                        @else
+                        <li><a href="{{ $section->description }}" title="{{ $section->title }}">{{ $section->title }}</a></li>
+                        @endif
+                        
                       @endif
                     @endforeach
                   @endif
                 @else
-                  <li><a href="#" title="Order Translation">Order Translation</a></li>
+                  <li><a href="{{ url('/') }}" title="Order Translation">Order Translation</a></li>
                   <li><a href="#" title="HOME">Contact Sales</a></li>
                 @endif
                 @if(Auth::user())

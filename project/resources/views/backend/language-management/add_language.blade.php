@@ -26,7 +26,7 @@
                 </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form action="{{ url('/language-management/add-language') }}" method="post" class="form-horizontal form-label-left">
+            <form action="{{ url('/language-management/add-language') }}" method="post" class="form-horizontal form-label-left" enctype='multipart/form-data'>
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="languageId" value="{{ $languageId }}">
                 <input type="hidden" name="method" value="{{ ($languageId)?'update':'create'}}">
@@ -44,6 +44,22 @@
                       <label for="language">Short Name</label>
                       <input type="text" placeholder="Language" class="form-control" name="short" value="{{ $short }}">
                   </div>
+                  <?php $image = ((!empty($languageDetail)) ? $languageDetail[0]['image'] : ''); 
+                    if($image){
+                        $dataUrl=url('/');                
+                        $url=explode('index.php',$dataUrl);
+                        echo "<input type='hidden' name='image' value='".$languageDetail[0]['image']."'>";
+                    } 
+                ?>
+                <div class="form-group">
+                   <label for="image">Flag Image<span class="required">*</span></label>
+                    <input type="file" placeholder="image" class="form-control" name="image">
+                </div>
+                <?php $image = ((!empty($languageDetail)) ? $languageDetail[0]['image'] : ''); 
+                        if($image){
+                            echo "<div class='form-group'><img src='".$dataUrl.'/uploads/'.$languageDetail[0]['image']."' alt='".$languageDetail[0]['image']."' width='30'></div>";
+                        } 
+                ?>
                     <?php $Status = (old('status')) ? old('status') : ((!empty($languageDetail)) ? $languageDetail[0]['status'] : 'Active');  
                     ?>
                   <div class="form-group">

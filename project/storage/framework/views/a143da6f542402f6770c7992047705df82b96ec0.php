@@ -1,4 +1,4 @@
-<section class="faq-wrap">
+<section class="faq-wrap" id="faq">
       <div class="eqho-container">
         <h3>Frequently Asked <span>Questions</span></h3>
         <div class="faq-inner">

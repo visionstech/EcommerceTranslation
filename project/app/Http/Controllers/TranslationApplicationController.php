@@ -784,12 +784,19 @@ class TranslationApplicationController extends Controller {
         $dataUrl=url('/');                
         $url=explode('index.php',$dataUrl); 
         
-        $getLanguageData=LanguagePrice::join('languages','languages.id','=','language_prices.destination')->select('languages.name as destinationLang','language_prices.*')->where('language_prices.source',$from_language_id)->get();
+        $getLanguageData=LanguagePrice::join('languages','languages.id','=','language_prices.destination')->select('languages.name as destinationLang','languages.image','language_prices.*')->where('language_prices.source',$from_language_id)->get();
 
         $validHtml='<ul class="eqho-clear-fix">';
         if(count($getLanguageData)){
           foreach($getLanguageData as $getLanguageDat){
-              $validHtml .='<li id="selectedLangs_'.$getLanguageDat->destination.'" data-id="'.$getLanguageDat->destination.'"><img src="'.$url[0].'/customer/img/chines-flag.png" alt="'.$getLanguageDat->destinationLang.'" title="'.$getLanguageDat->destinationLang.'"> '.$getLanguageDat->destinationLang.'</li>';
+              $image = ((!empty($getLanguageDat)) ? $getLanguageDat->image : ''); 
+              if($image){
+                $img="/uploads/".$getLanguageDat->image;
+              }else{
+                $img = "/customer/img/english-lang.jpg";
+              } 
+              $validHtml .='<li id="selectedLangs_'.$getLanguageDat->destination.'" data-id="'.$getLanguageDat->destination.'">
+              <img src="'.$url[0].$img.'" alt="'.$getLanguageDat->destinationLang.'" title="'.$getLanguageDat->destinationLang.'"> '.$getLanguageDat->destinationLang.'</li>';
           } 
         }
         $validHtml .='</ul>';
@@ -1326,7 +1333,9 @@ class TranslationApplicationController extends Controller {
     {
       try {
           $sessionId =Session::getId();
-          $userId=(Auth::user())?Auth::user()->id:0;  
+          $userId=(Auth::user())?Auth::user()->id:0;
+          $dataUrl=url('/');                
+          $url=explode('index.php',$dataUrl); 
           $checkCompany=Company::where(function($query) use($userId,$sessionId) {
                                     $query->where('user_id', $userId)
                                     ->orWhere('session_id', $sessionId);
@@ -1346,15 +1355,22 @@ class TranslationApplicationController extends Controller {
                                                         ->orWhere('session_id', $sessionId);
                                       })->sum('content_words');
 
-          $getLanguagesCartUpdated=CartLanguage::join('language_packages','cart_languages.language_package','=','language_packages.id')->join('languages','languages.id','=','cart_languages.to_language_id')->select('cart_languages.*','language_packages.name as packageName','language_packages.price_per_word as packagePrice','languages.name as destinationLanguage')->where('cart_languages.status','Active')->where(function($query) use($userId,$sessionId) {
+          $getLanguagesCartUpdated=CartLanguage::leftJoin('language_packages','cart_languages.language_package','=','language_packages.id')->join('languages','languages.id','=','cart_languages.to_language_id')->select('cart_languages.*','language_packages.name as packageName','language_packages.price_per_word as packagePrice','languages.name as destinationLanguage','languages.image as image')->where('cart_languages.status','Active')->where(function($query) use($userId,$sessionId) {
                                     $query->where('cart_languages.user_id', $userId)
                                     ->orWhere('cart_languages.session_id', $sessionId);
                                   })->get();
+//echo "<pre>";print_r($getLanguagesCartUpdated);exit;
+          //echo count($getLanguagesCartUpdated);exit;
           $languagesData=array();
           $count=1;
           if(count($getLanguagesCartUpdated)){
             foreach($getLanguagesCartUpdated as $key=>$getLanguagesCartUpdate){
-
+              $image = ((!empty($getLanguagesCartUpdate)) ? $getLanguagesCartUpdate->image : ''); 
+              if($image){
+                $img=$url[0]."/uploads/".$getLanguagesCartUpdate->image;
+              }else{
+                $img = $url[0]."/customer/img/english-lang.jpg";
+              } 
                $getLanguageData=LanguagePrice::join('languages','languages.id','=','language_prices.source')->select('languages.name as sourceLanguage','language_prices.*')->where('language_prices.source',$getLanguagesCartUpdate->from_language_id)->where('language_prices.destination',$getLanguagesCartUpdate->to_language_id)->get();
                 $sourceLanguage=(count($getLanguageData))?$getLanguageData[0]->sourceLanguage:'';    
                 $price=(count($getLanguageData))?$getLanguageData[0]->price_per_word:0;
@@ -1364,6 +1380,7 @@ class TranslationApplicationController extends Controller {
                 $languagesData[$key]['destinationLanguage']=$getLanguagesCartUpdate->destinationLanguage;      
                 $languagesData[$key]['perWordLanguagePrice']=$price;
                 $languagesData[$key]['LanguagePrice']=$totalPriceCalculated;
+                $languagesData[$key]['imagePath']=$img;
                 $count++;
               }
           }           

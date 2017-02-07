@@ -27,7 +27,7 @@
         @endforeach
       @endif
       <div class="slider-link">
-        <a href="#" title="Get a quotation">Get a quotation</a>
+        <a href="{{url('/translation-application/step-one')}}" title="Get a quotation">Get a quotation</a>
         <a href="#" title="Contact sales">Contact sales</a>
       </div>
     </div>

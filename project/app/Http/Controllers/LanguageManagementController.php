@@ -85,18 +85,50 @@ class LanguageManagementController extends Controller {
     {
       try {
             $data = $request->all();
+            $file  =  $request->file('image');
+            if($file){
+              $validWidth=30;
+              $validHeight=20;
+              $imageType=explode('image/',$file->getMimeType());
+              $imageTitle=explode('.'.$imageType[1],$file->getClientOriginalName());
+              $imageTitle=$imageTitle[0];
+              $random = app('App\Http\Controllers\HomepageSectionController')->getRandomString(20);
+              $imgName = 'flag_'.$random.'.'.$imageType[1];
+              $destinationPath = url('/').'/uploads';
+              $projectPath=base_path();
+              $projectPath=explode('/project', $projectPath);
+              $file->move($projectPath[0].'/uploads/', $imgName);
+              chmod($projectPath[0].'/uploads/'.$imgName, 0777);
+              $dataUrl=url('/');                
+              $url=explode('index.php',$dataUrl);
+              $dimentions=list($width, $height) = getimagesize($url[0].'uploads/'.$imgName);
+              $actualWidth=$dimentions[0];
+              $actualHeight=$dimentions[1];
+              if(($actualWidth>$validWidth) || ($actualHeight>$validHeight)){
+                //Invalid Size For How It Works Section
+                return redirect('language-management/add-language/'.$data['languageId'])->withErrors('Image width and height should be less then '.$validWidth.' pixels.');
+              }
+            }
             if($data['languageId']==''){
                 // Create new role
                 $create_language = Language::create([
                     'name' => $data['name'],
-                    'short' => $data['short']
+                    'short' => $data['short'],
+                    'image'=>$imgName,
+                    'image_path'=>'/uploads'
                 ]);
                 $action='added';
             }else{
                 $GetData = Language::where('id',decrypt($data['languageId']))->get();
+                $file  =  $request->file('image');
+                if(!$file){
+                  $imgName=$GetData[0]->image;
+                }
                 $language = Language::find(decrypt($data['languageId']));
                 $language->name = $data['name'];
-                $language->short = $data['short'];       
+                $language->short = $data['short']; 
+                $language->image = $imgName;    
+                $language->image_path = '/uploads';          
                 $language->status = $data['status'];       
                 $language->updated_by = Auth::user()->id;
                 $language->updated_ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];

@@ -50,7 +50,7 @@
                                     <?php
                                     $dataUrl=url('/');                
                                     $url=explode('index.php',$dataUrl);
-                                    echo "<img src='".$url[0].'uploads/'.$section->image."' alt='".$section->image_title."' width='250'>";
+                                    echo "<img src='".$dataUrl.'/uploads/'.$section->image."' alt='".$section->image_title."' width='250'>";
                                     ?>
                                    </td>
                                     <td><?php echo e($section->created_at); ?></td>

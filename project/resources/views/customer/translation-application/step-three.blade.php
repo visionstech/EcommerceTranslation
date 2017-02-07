@@ -324,7 +324,7 @@
       </div>
 
       <div class="eqho-container">
-        <div class="over-lay">
+        <div class="over-lay login_popup">
           <div class="sign-in-popup">
             <h1>Sign In <span class="close_login"><i class="fa fa-times-circle-o" aria-hidden="true"></i></span></h1>
             <form action="{{ url('/auth/login') }}" method="post">
@@ -351,6 +351,15 @@
         </div>
       </div>
     </section>
+    <!-- Error Popup --> 
+      <div class="over-lay terms_popup">
+          <div class="unsupported-popup">
+            <h1>Please Accept terms and conditions first<span class="close-icon"><i class="fa fa-times popup-close" aria-hidden="true"></i></span></h1>
+            <div class="popup-close-btn">
+              <input type="submit" name="" value="Close" class="popup-close" />
+            </div>
+          </div> <!-- unsupported-popup -->
+      </div> <!-- over-lay --> 
 
  <section class="odering-process-1">
       <div class="eqho-container">

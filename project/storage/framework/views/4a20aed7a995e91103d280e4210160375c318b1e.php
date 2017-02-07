@@ -1,4 +1,4 @@
-<section class="our-client">
+<section class="our-client" id="clients">
       <div class="eqho-container">
         <h3>Our <span>Clients</span></h3>
         <div class="client-inner">

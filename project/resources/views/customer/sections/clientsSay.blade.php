@@ -1,4 +1,4 @@
-<section class="clients-say-wrap">
+<section class="clients-say-wrap" id="testimonials">  
       <div class="eqho-container">
         <h3>What our <span>clients say</span></h3>
         <div class="clients-say">
