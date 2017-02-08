@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Contracts\Auth\Guard;
 use Auth;
+use App\Section;
 
 class HomeController extends Controller {
 	
@@ -27,20 +28,14 @@ class HomeController extends Controller {
       * By default controller calls this method.
       * @param int $id            
       * @return Response
-      * Created on: 17/01/2016
-      * Updated on: 17/01/2016
+      * Created on: 17/01/2017
+      * Updated on: 17/01/2017
     **/
     public function index()
     {
       try {
-            if(Auth::user())
-            {  
-                return redirect('/index.php/dashboard');
-            }
-            else 
-            {  
-                return redirect('/index.php/auth/login');
-            }
+          $sections=Section::where('status','Active')->get();
+          return view('customer.homepage',compact('sections'));
         }
         catch (\Exception $e) 
         {   

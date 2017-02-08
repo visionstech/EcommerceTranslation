@@ -49,7 +49,7 @@ class UserController extends Controller {
     {     
       try {
         $users=User::where('role_id','!=',1)->get();
-        return view('user.users', compact('users'));
+        return view('backend.user.users', compact('users'));
       }catch (\Exception $e){   
         $result = ['exception_message' => $e->getMessage()];
         return view('errors.error', $result);
@@ -67,12 +67,11 @@ class UserController extends Controller {
     {
       try {
         $userDetail=array();
-        $publisherDetail=array();
         if($userId !=''){
             $userDetail=User::where('id',decrypt($userId))->get()->toArray(); 
         }
         $roles=Role::all();
-        return view('user/add_user',compact('roles','userDetail','userId'));
+        return view('backend/user/add_user',compact('roles','userDetail','userId'));
       }catch (\Exception $e) 
       {
         $result = ['exception_message' => $e->getMessage()];
@@ -97,11 +96,12 @@ class UserController extends Controller {
                 $create_user = User::create([
                     'email' => $data['email'],
                     'password' => bcrypt($randomPassword),
-                    'role_id' => $data['role']
+                    'role_id' => $data['role'],
+                    'status' => $data['status']
                 ]);
                 
                 //event(new UserManageAction($emailData));
-                $action='Added';
+                $action='added';
             }else{
                 $GetData = User::where('id',decrypt($data['userId']))->get();
                 $user = User::find(decrypt($data['userId']));
@@ -111,7 +111,7 @@ class UserController extends Controller {
                 $user->updated_by = Auth::user()->id;
                 $user->updated_ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'];
                 $user->save();
-                $action='Updated';
+                $action='updated';
             }
             return redirect()->back()->with('success', 'User '.$action.' Successfully.');
         }
@@ -135,9 +135,10 @@ class UserController extends Controller {
         if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
             return redirect('user')->with('error', 'You are not autorize to delete this user.');
         }
+        $msg=($status=='Active')?'Activated':'Deleted';
         //Soft Delete Users
         $updateUser=User::where('id',decrypt($userId))->update(array('status'=>$status));
-        return redirect('user')->with('success', 'User '.$status.' Successfully.');
+        return redirect('user')->with('success', 'User '.$msg.' Successfully.');
       }catch (\Exception $e){   
         $result = ['exception_message' => $e->getMessage()];
         return view('errors.error', $result);

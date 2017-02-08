@@ -3,7 +3,7 @@
 use App;
 
 
-class ManageRole extends Request {
+class ManageUser extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.

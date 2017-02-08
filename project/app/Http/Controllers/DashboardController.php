@@ -45,24 +45,35 @@ class DashboardController extends Controller {
     {
         try { 
             //Redirect to dashboard according to roles
+          if(Session::get('currentUrl')){
+            
+            return redirect(Session::get('currentUrl'));
+
+          }else{
             switch(Auth::user()->role_id){
               case 1:
+                $theme='backend/';
                 $usertype='superadmin';
               break;
               case 2:
+                $theme='backend/';
                 $usertype='management';
               break;
               case 3:
+                $theme='customer/';
                 $usertype='customer';
               break;
               case 4:
+                $theme='backend/';
                 $usertype='translator';
               break;
               default:
+                $theme='customer/';
                 $usertype='customer';
               break;
             }
-            return view('dashboard/'.$usertype.'/dashboard');
+            return view($theme.'dashboard/'.$usertype.'/dashboard');
+          }            
         }
         catch (\Exception $e) 
         {   

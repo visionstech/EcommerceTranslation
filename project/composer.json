@@ -8,7 +8,9 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
         "laravel/socialite": "^2.0",
-        "maatwebsite/excel": "~2.1.0"
+        "maatwebsite/excel": "~2.1.0",
+	    "stripe/stripe-php": "^4.0",
+        "pulkitjalan/google-apiclient": "2.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

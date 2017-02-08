@@ -210,4 +210,9 @@ return [
         'Excel' => 'Maatwebsite\Excel\Facades\Excel',
     ],
 
+
+
+    
+   'currency' => 'usd',
+
 ];

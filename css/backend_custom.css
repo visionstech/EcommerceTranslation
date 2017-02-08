@@ -1,0 +1,10 @@
+.form-horizontal .box-body .form-group{
+    margin-right: 0;
+    margin-left: 0;
+}
+.dataTables_filter label input.input-sm {
+  margin: 0 0 0 5px;
+}
+.dataTables_filter label {
+  margin: 0 0 0 40%;
+}
