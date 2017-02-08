@@ -103,7 +103,10 @@ $(document).ready(function(){
         }
       });
   });
-  
-});
 
+    //Download link on translation review page
+    $(document).on('click','.download_file',function(){
+      $(this).next().find('a').attr('href',$(this).find(":selected").attr('data-link'));
+    });  
+});
 </script>

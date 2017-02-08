@@ -73,10 +73,7 @@
 					</table>
 				</div>
 			</div> <!-- common-dashtext-wrap -->
-
 		</div> <!-- dashboard-content -->
-
-
 	</div><!-- dashboard-content-wrap -->
 	<?php $__env->stopSection(); ?>
 <?php echo $__env->make('customer.front-app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

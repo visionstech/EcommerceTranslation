@@ -28,11 +28,10 @@
                     @foreach($sections as $section)
                       @if($section->section_type=='header-menus')
                         @if($section->description=='#home')
-                          <li><a href="{{ url('/') }}" title="{{ $section->title }}">{{ $section->title }}</a></li>
+                          <li><a class="menusClick" href="{{ url('/') }}" title="{{ $section->title }}">{{ $section->title }}</a></li>
                         @else
-                        <li><a href="{{ $section->description }}" title="{{ $section->title }}">{{ $section->title }}</a></li>
-                        @endif
-                        
+                        <li><a class="menusClick" href="{{ $section->description }}" title="{{ $section->title }}">{{ $section->title }}</a></li>
+                        @endif                        
                       @endif
                     @endforeach
                   @endif

@@ -250,7 +250,7 @@ class HomepageSectionController extends Controller {
                   $imgName = $sectionType.'_'.$this->getRandomString(20).'.'.$imageType[1];
                   $destinationPath = url('/').'/uploads';
                   $projectPath=base_path();
-                  $projectPath=explode('/project', $projectPath);
+                  $projectPath=explode('project', $projectPath);
                   $file->move($projectPath[0].'/uploads/', $imgName);
                   chmod($projectPath[0].'/uploads/'.$imgName, 0777);
                   $dataUrl=url('/');                

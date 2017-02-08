@@ -74,9 +74,6 @@
 					</table>
 				</div>
 			</div> <!-- common-dashtext-wrap -->
-
 		</div> <!-- dashboard-content -->
-
-
 	</div><!-- dashboard-content-wrap -->
 	@endsection

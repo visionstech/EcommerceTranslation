@@ -18,7 +18,7 @@ use App\Project;
 use App\ProjectFile;
 use App\ProjectInstruction;
 use App\ProjectBrief;
-use App\ProjectGloosary;
+use App\ProjectGlossary;
 use App\ProjectStyle;
 use App\ProjectTranslator;
 use App\Company;
@@ -840,7 +840,7 @@ class TranslationApplicationController extends Controller {
                                           ->orWhere('session_id', $sessionId);
                                     })->count();
           $previousTranslators=ProjectTranslator::join('users','users.id','=','project_translators.translator_id')->select('project_translators.*','users.email as translatorEmail')->where('user_id',$userId)->groupBy('translator_id')->get();
-          $previousGloosaries=ProjectGloosary::where('user_id',$userId)->get();
+          $previousGloosaries=ProjectGlossary::where('user_id',$userId)->get();
           $previousStyles=ProjectStyle::where('user_id',$userId)->get();
           $previousBriefs=ProjectBrief::where('user_id',$userId)->get();
 
@@ -851,12 +851,12 @@ class TranslationApplicationController extends Controller {
           }
           $projectInstructions=ProjectInstruction::where('order_id',$latestOrderId)->first();
           $projectStyles=ProjectStyle::where('order_id',$latestOrderId)->first();
-          $projectGloosaries=ProjectGloosary::where('order_id',$latestOrderId)->first();
+          $projectGloosaries=ProjectGlossary::where('order_id',$latestOrderId)->first();
           $projectBriefs=ProjectBrief::where('order_id',$latestOrderId)->first();
           $projectTranslator=ProjectTranslator::where('order_id',$latestOrderId)->first();
 
           $allProjectStyles=ProjectStyle::where('order_id',$latestOrderId)->get();
-          $allProjectGloosaries=ProjectGloosary::where('order_id',$latestOrderId)->get();
+          $allProjectGloosaries=ProjectGlossary::where('order_id',$latestOrderId)->get();
           $allProjectBriefs=ProjectBrief::where('order_id',$latestOrderId)->get();
 
           $languages=Language::where('status','Active')->get();
@@ -1228,7 +1228,7 @@ class TranslationApplicationController extends Controller {
             $fileUploadedData =$this->uploadAssets($file);
             if(!empty($fileUploadedData[0])){
               foreach($fileUploadedData[0] as $filename){
-                $createInstruction= ProjectGloosary::Create([
+                $createInstruction= ProjectGlossary::Create([
                                       'user_id' => Auth::user()->id,
                                       'order_id' => $orderId,
                                       'file_name'=>  $filename,
@@ -1267,7 +1267,7 @@ class TranslationApplicationController extends Controller {
                                   'file_name'=>  $data['previous_style'],
                                   'file_path'=>'uploads/files/'
                                 ]);
-            $createPrevious= ProjectGloosary::Create([
+            $createPrevious= ProjectGlossary::Create([
                                       'user_id' => Auth::user()->id,
                                       'order_id' => $orderId,
                                       'file_name'=>  $data['previous_gloosary'],
@@ -1302,7 +1302,6 @@ class TranslationApplicationController extends Controller {
     $filenames=array();
     $fileUrl=array();
     foreach ($file as $key => $value){
-                
       $validFiles=array('ppt','pptx','doc','docx','xls','xlsm','xlsx','rtf','odt','txt','pdf');
       $dummypath = $value->getClientOriginalName();
       $extention = pathinfo($dummypath, PATHINFO_EXTENSION);
@@ -1311,11 +1310,13 @@ class TranslationApplicationController extends Controller {
         $random=app('App\Http\Controllers\HomepageSectionController')->getRandomString(10);
         $fileName= $random.'_'.$value->getClientOriginalName();
         $filenames[]=$fileName;
-        $value->move('/var/www/html/eqho/uploads/files/',$fileName);
-        chmod('/var/www/html/eqho/uploads/files/'.$fileName, 0777);
+        $projectPath=base_path();
+        $projectPath=explode('project', $projectPath);
+        $value->move($projectPath[0].'/uploads/files/',$fileName);
+        chmod($projectPath[0].'/uploads/files/'.$fileName, 0777);
         $dataUrl=url('/');                
         $url=explode('index.php',$dataUrl);
-        $fileUrl[]=$url[0].'uploads/files/'.$fileName;
+        $fileUrl[]=$url[0].'/uploads/files/'.$fileName;
       }
     }
     $fileUploadedData=array($filenames,$fileUrl);

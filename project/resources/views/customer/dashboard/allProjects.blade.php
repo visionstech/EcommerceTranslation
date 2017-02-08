@@ -50,7 +50,7 @@
                 <td>{{ $allProject['destinationLanguage'] }}</td>
                 <td>Translating (1/4)</td>
                 <td>${{ $allProject['finalPrice'] }}</td>
-                <td><a href="{{ url('customer/view-order/'.encrypt($allProject['order_id'])) }}" title="view"><i class="fa fa-eye" aria-hidden="true"></i> View </a></td>
+                <td><a href="{{ url('customer/view-order/view/'.encrypt($allProject['order_id'])) }}" title="view"><i class="fa fa-eye" aria-hidden="true"></i> View </a><a href="{{ url('customer/view-order/review/'.encrypt($allProject['order_id'])) }}" title="view"><i class="fa fa-eye" aria-hidden="true"></i> Review </a></td>
               </tr>
             <?php $s++; ?>
             @endforeach

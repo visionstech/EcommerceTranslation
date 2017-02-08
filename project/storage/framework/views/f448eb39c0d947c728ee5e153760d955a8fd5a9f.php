@@ -28,11 +28,10 @@
                     <?php foreach($sections as $section): ?>
                       <?php if($section->section_type=='header-menus'): ?>
                         <?php if($section->description=='#home'): ?>
-                          <li><a href="<?php echo e(url('/')); ?>" title="<?php echo e($section->title); ?>"><?php echo e($section->title); ?></a></li>
+                          <li><a class="menusClick" href="<?php echo e(url('/')); ?>" title="<?php echo e($section->title); ?>"><?php echo e($section->title); ?></a></li>
                         <?php else: ?>
-                        <li><a href="<?php echo e($section->description); ?>" title="<?php echo e($section->title); ?>"><?php echo e($section->title); ?></a></li>
-                        <?php endif; ?>
-                        
+                        <li><a class="menusClick" href="<?php echo e($section->description); ?>" title="<?php echo e($section->title); ?>"><?php echo e($section->title); ?></a></li>
+                        <?php endif; ?>                        
                       <?php endif; ?>
                     <?php endforeach; ?>
                   <?php endif; ?>

@@ -88,24 +88,24 @@
           <div class='progress' id="progress_div">
               <div class='bar' id='bar1'></div>
               <div class='percent' id='percent1'>0%</div>
-            </div>
-            <br/>
-        <div class="dash-btn-wrap glossy-btns">
-          <!--<a href="#" class="btn-ctrl">Update</a>-->           
-            <input type="hidden" name="_token" id='token' value="{{ csrf_token() }}">
-            <input type="hidden" name="asset_id" id='asset_id' value="{{ $asset->id }}">
-            <input type="hidden" name="asset_type" id='asset_type' value="{{ $type }}">            
-            <div class="upload-files btn-ctrl">
-                <div class="upload-files-btn">
-                  <span type="button" class="fileinput-button">
-                      <span class="">Update</span>
-                      <input name="file" class="file" type="file" />       
-                    </span>                      
-                </div>
-            </div> <!-- upload-file -->
+          </div>
+          <br/>
+          <div class="dash-btn-wrap glossy-btns">
+            <!--<a href="#" class="btn-ctrl">Update</a>-->           
+              <input type="hidden" name="_token" id='token' value="{{ csrf_token() }}">
+              <input type="hidden" name="asset_id" id='asset_id' value="{{ $asset->id }}">
+              <input type="hidden" name="asset_type" id='asset_type' value="{{ $type }}">            
+              <div class="upload-files update-file">
+                  <div class="upload-files-btn">
+                    <span type="button" class="fileinput-button btn-ctrl">
+                        <span class="">Update</span>
+                        <input name="file" class="file" type="file" />       
+                      </span>                      
+                  </div>
+              </div> <!-- upload-file -->
 
-          <a href="#" class="btn-ctrl btn-gray"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
-        </div>
+            <a href="#" class="btn-ctrl btn-gray"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+          </div>
       </div> <!-- common-dashtext-wrap -->
 
     </div> <!-- dashboard-content -->

@@ -9,12 +9,12 @@ $(document).ready(function(){
     $("#menu-toggle").toggleClass("menu-active");
   });
   //..................Menu Toggle END..................
-  $(" a").click(function (e) {
+  $("a.menusClick").click(function (e) {
      e.preventDefault();
       $temphref = $(this).attr("href");
       $('html, body').animate({
           scrollTop: $($temphref).offset().top - 50  }, 2000);
-  });
+  }); 
   // ......... Banner Slider .............
   $('.header-slider').slick({
     dots: false,

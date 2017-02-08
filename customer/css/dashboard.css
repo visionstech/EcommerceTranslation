@@ -622,3 +622,33 @@ a.view-reject:hover{
   max-width: 90%;
   min-width: 140px;
 }
+.glossaries-table table th, .glossaries-table table td {
+  max-width: 180px;
+  word-wrap: break-word;
+}
+.upload-files.update-file {
+  padding: 0;
+  border: 0;
+  margin: 0;
+  text-align: center;
+  display: inline-block;
+}
+/* Custom pagination laravel links */
+.pagination {
+  text-align: right;
+}
+.pagination li {
+  background-color: #424242;
+  color: #FFFFFF;
+  display: inline-block;
+  margin: 0 5px 0 0;
+}
+.pagination li:last-of-type{margin: 0;}
+.pagination li:hover, .pagination li.active {
+  background-color: #F5B12E;
+}
+.pagination li span, .pagination li a  {
+  display: inline-block;
+  padding: 5px 12px 8px;
+  vertical-align: middle;
+}
