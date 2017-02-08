@@ -49,7 +49,6 @@
                 </tr>
                 <?php $s++; ?>
               @endforeach
-
             @endif
             </tbody>
           </table>
