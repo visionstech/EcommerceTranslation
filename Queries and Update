@@ -1,0 +1,25 @@
+Need tor ready mockups then HTML then functionality will be implemented on these:
+
+1) "Upload a translation assets button" mockup is not ready yet.
+2) Customer's accounts and setting pages mockups are not yet.
+3) View rejection form Mockup on translation view page. 
+
+Queries:
+1) Query: In review translation page of an order where will be link of that ?
+Suggestion: it can be placed in orders where we have view order button.
+
+2) Query: Translator tab in customer dashbaord will indicate the previous worked translators of that user.
+
+As we know in customer dashboard many things are related to traslator dashboard.
+So yet translator dashboard is not started to work so this customer dashboard will reflect dynamically as we will work on translato's dashboard.
+
+3) What is notes in assets detail page section? 
+
+4) Query: Estimated Days on step 3 manageable in which manner ? These should not be static.
+
+5) Query : On Customer Dashboard pages Assets(Glossaries ,style guide,briefs ) should be deleted permanently?
+Suggestion:  i think these should be deleted permanently as per mock-up. As there is no restore or activate button in mock-ups.
+
+6) Query:  "Upload a translation assets button" in listing page of all assets(gloosaries,styles and briefs) in customer dashboard pages?
+ As we know each asset belongs to a perticular order id. As we have saved in step 3 assets we uploads are based on order id. So here what order id will be saved in this listing page.
+Suggestion : It can be latest booked order id of the user?? Mockup is not yet.

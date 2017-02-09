@@ -59,7 +59,7 @@
                 <td><img src="<?php echo e(asset('/customer/img/pending-icon.png')); ?>" alt="pending-icon" title="pending-icon"> 
                 <?php echo e($pendingProject['languageStatus']); ?></td>
                 <td>$<?php echo e($pendingProject['finalPrice']); ?></td>
-                <td><a href="<?php echo e(url('customer/view-order/'.encrypt($pendingProject['order_id']))); ?>" title="view"><i class="fa fa-eye" aria-hidden="true"></i> View </a></td>
+                <td><a href="<?php echo e(url('customer/view-order/view/'.encrypt($pendingProject['order_id']))); ?>" title="view"><i class="fa fa-eye" aria-hidden="true"></i> View </a><a href="<?php echo e(url('customer/view-order/review/'.encrypt($pendingProject['order_id']))); ?>" title="view"><i class="fa fa-eye" aria-hidden="true"></i> Review </a></td>
               </tr>
               <?php $s++; ?>
             <?php endforeach; ?>
