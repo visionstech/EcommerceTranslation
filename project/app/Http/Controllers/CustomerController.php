@@ -15,12 +15,12 @@ use App\ProjectGlossary;
 use App\ProjectStyle;
 use App\ProjectBrief;
 use App\TranslationCorrection;
+use App\ProjectFeedback;
 use Illuminate\Contracts\Auth\Guard;
 use Session;
 use Auth;
 use DB;
 use File;
-use Socialite;
 
 class CustomerController extends Controller {
     /*
@@ -663,17 +663,33 @@ class CustomerController extends Controller {
       * Updated on: 08/02/2017
     **/
 
-    public function postCustomerFeedback(Request $request)
+    public function postCustomerFeedback(Requests\ManageFeedback $request)
     {
       try {
         $data  =  $request->all();
-        //echo "<pre>";print_r($data);exit;
-        $file[]=$data['requested_file'];
+        $file  =  $request->file('requested_file');
+        $feedback=ProjectFeedback::where('file_id',$data['translated_file'])->get();
+        $filename='';
         if($file){
-          $returnFileData=app('App\Http\Controllers\TranslationApplicationController')->uploadAssets($file); 
-          echo "<pre>";print_r($returnFileData);exit;
+          $files[]=$file;
+          $returnFileData=app('App\Http\Controllers\TranslationApplicationController')->uploadAssets($files);
+          $filename=$returnFileData[0];
         }
-              
+        if($data['submit']=='Approve translation'){
+          $status='Approved'; 
+        }else{
+          $status='Changes';
+        }
+        echo $status;exit;
+        if(count($feedback)){
+          //Update
+          $feedback=ProjectFeedback::where('id',$data['translated_file'])->update(['corrections'=>serialize($data['corrections']),'comment'=>$data['comment'],'feedback_file'=>$filename,'status'=>$status]);
+        }else{
+          //Insert
+          $feedback=ProjectFeedback::insert(['file_id'=>$data['translated_file'],'corrections'=>serialize($data['corrections']),'comment'=>$data['comment'],'feedback_file'=>$filename,'project_id'=>$data['project_id'],'status'=>$status]);
+        }
+        return redirect()->back()->with('success', 'Request feedback sent Successfully.');
+
       }
       catch (\Exception $e) 
       {   

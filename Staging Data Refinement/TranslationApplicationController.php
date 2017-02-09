@@ -14,7 +14,6 @@ use App\CartLanguage;
 use App\LanguagePrice;
 use App\Order;
 use App\Role;
-use App\User;
 use App\Project;
 use App\ProjectFile;
 use App\ProjectInstruction;
@@ -105,6 +104,7 @@ class TranslationApplicationController extends Controller {
                   $dataUrl=url('/');                
                   $url=explode('index.php',$dataUrl);
                   $fileUrl=$url[0].'uploads/'.$fileName;
+
                   $contents = File::get('uploads/files/'.$fileName);
                   $number_of_words=count(explode(' ', $contents));
                   $fileWords[]=$number_of_words;

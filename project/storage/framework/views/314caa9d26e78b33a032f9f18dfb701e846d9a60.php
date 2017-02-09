@@ -11,6 +11,7 @@
 				<div class="translation-review request-changes-wrap">
 					<div class="translated-files">
 						<h2>Translation <span class="trans-lang">(<?php echo e($singleProject['language']['destination']); ?>)</span></h2>
+						<?php echo $__env->make('errors.frontend_errors', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 						<form  action="<?php echo e(url('/customer/customer-feedback')); ?>" method="post" enctype="multipart/form-data">
 							<input type="hidden" name="_token" id='token' value="<?php echo e(csrf_token()); ?>" />
 							<input type="hidden" name="project_id" value="<?php echo e($singleProject['project_id']); ?>" />
@@ -18,7 +19,7 @@
 							<div class="form-group">
 								<label>File Name</label>
 								<select class="download_file" name="translated_file">
-									<option>-- Select your file name --</option>
+									<option value="">-- Select your file name --</option>
 									<?php if($singleProject['files']): ?>
 										<?php foreach($singleProject['files'] as $file): ?>
 											<option data-link="<?php echo e($dataUrl.$file['upload_path'].'/'.$file['name']); ?>" value="<?php echo e($file['id']); ?>"><?php echo e($file['name']); ?></option>
@@ -57,6 +58,7 @@
 
 								<div class="dash-btn-wrap">
 									<input type="submit" name="submit" value="Request changes" class="btn-ctrl"/>
+									<input type="submit" name="submit" value="Approve translation" class="btn-ctrl btn-gray"/>
 									<a href="#" class="btn-ctrl btn-gray" title="Approve translation">Approve translation</a>
 								</div>
 							</div>

@@ -161,6 +161,7 @@ return [
          */
         Laravel\Socialite\SocialiteServiceProvider::class,
         'Maatwebsite\Excel\ExcelServiceProvider',
+        RobbieP\CloudConvertLaravel\CloudConvertLaravelServiceProvider::class
     ],
 
     /*

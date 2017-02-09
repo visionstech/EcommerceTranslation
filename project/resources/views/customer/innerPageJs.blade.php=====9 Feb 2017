@@ -74,7 +74,7 @@ $(document).ready(function(){
             $('.del-arrow').show();
           }  
          
-          $('.total_words').html(data[5]);
+          $('.total_words').html(TotalWords);
         }
       });
   //End Get Cart Data on Page load
@@ -114,8 +114,7 @@ $(document).ready(function(){
             $('.del-arrow').show();
             $('.del-permanent').show();
           }  
-          //alert(data[5])
-          $('.total_words').html(data[5]);
+          $('.total_words').html(TotalWords);
         }
       });
   });
@@ -186,7 +185,7 @@ $(document).ready(function(){
             $('.del-arrow').show();
             $('.del-permanent').show();
           }  
-          $('.total_words').html(data[5]);
+          $('.total_words').html(TotalWords);
           setTimeout(function(){ $('#progress_div').hide(); }, 900);
           
         }
@@ -217,7 +216,7 @@ function trashElement(value){
             $('.del-arrow').show();
             $('.del-permanent').hide();
           }
-          $('.total_words').html(data[5]);
+          $('.total_words').html(TotalWords);
         }
       });
 
@@ -248,7 +247,7 @@ function restoreElement(value){
             $('.deleted_count').html(0);
             $('.del-arrow').hide();
           }
-          $('.total_words').html(data[5]);
+          $('.total_words').html(TotalWords);
         }
       });
 

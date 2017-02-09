@@ -14,7 +14,6 @@ use App\CartLanguage;
 use App\LanguagePrice;
 use App\Order;
 use App\Role;
-use App\User;
 use App\Project;
 use App\ProjectFile;
 use App\ProjectInstruction;
@@ -53,7 +52,6 @@ class TranslationApplicationController extends Controller {
     public function getStepOne()
     {
       try {
-        //echo $sessionId =Session::getId();exit;
           $sections=Section::where('status','Active')->get();
           return view('customer.translation-application.step-one',compact('sections'));
         }
@@ -97,14 +95,13 @@ class TranslationApplicationController extends Controller {
                   $random=app('App\Http\Controllers\HomepageSectionController')->getRandomString(10);
                   $fileName= $random.'_'.$value->getClientOriginalName();
                   $filenames[]=$fileName;
-                  $projectPath=base_path();
-                  $projectPath=explode('project', $projectPath);
-                  $value->move($projectPath[0].'/uploads/files/', $fileName);
-                  chmod($projectPath[0].'/uploads/files/'.$fileName, 0777);
+                  $value->move('/var/www/html/eqho/uploads/files/',$fileName);
+                  chmod('/var/www/html/eqho/uploads/files/'.$fileName, 0777);
 
                   $dataUrl=url('/');                
                   $url=explode('index.php',$dataUrl);
                   $fileUrl=$url[0].'uploads/'.$fileName;
+
                   $contents = File::get('uploads/files/'.$fileName);
                   $number_of_words=count(explode(' ', $contents));
                   $fileWords[]=$number_of_words;
@@ -113,30 +110,26 @@ class TranslationApplicationController extends Controller {
             }
           }
           //Cart Update Data
-        if($userId==0){
-          $whereValue=$sessionId;
-          $whereCondition='session_id';
-          $getContentCart=CartItem::where('file',null)->where($whereCondition,$whereValue)->first();
-          $getFileCart=CartItem::where('file','!=',null)->where($whereCondition,$whereValue)->get();
-        }else{
-            $getContentCart=CartItem::where('file',null)->where(function($query) use($userId,$sessionId) {
+          $getContentCart=CartItem::where('file',null)->where(function($query) use($userId,$sessionId) {
                                                                   $query->where('user_id', $userId)
                                                                   ->orWhere('session_id', $sessionId);
                                                           })->first();
-            $getFileCart=CartItem::where('file','!=',null)->where(function($query) use($userId,$sessionId) {
+          $getFileCart=CartItem::where('file','!=',null)->where(function($query) use($userId,$sessionId) {
                                                               $query->where('user_id', $userId)
                                                               ->orWhere('session_id', $sessionId);
                                                           })->get();
-        }
-         
+          
           $CartDataFinal=array();
           
-          $content_words=(isset($data['content']))?(str_word_count($data['content'])):'';
+          $content_words=(isset($data['content']))?(str_word_count($data['content'])):0;
             
-            if($content_words != '' ){
+            if($content_words!=0){
+
               if($getContentCart != null){
                 //Update textarea content
-                  $cartUpdate = CartItem::where('id',$getContentCart->id)->update(['content'=>$data['content'],'content_words'=>$content_words]);
+                  $cartUpdate = CartItem::find($getContentCart->id);
+                  $cartUpdate->content = (isset($data['content']))?$data['content']:'';
+                  $cartUpdate->save();
 
               }else{
                 //insert textarea content
@@ -165,25 +158,17 @@ class TranslationApplicationController extends Controller {
                         'session_id'=>$sessionId
                       ]);
                 }
-            }
-          if($userId==0){
-            $whereValue=$sessionId;
-            $whereCondition='session_id';
-            $getContentCartUpdated=CartItem::where('file',null)->where('status','Active')->where($whereCondition,$whereValue)->first();
-            $getFileCartUpdated=CartItem::where('file','!=',null)->where('status','Active')->where($whereCondition,$whereValue)->get(); 
-          }else{
-              $getContentCartUpdated=CartItem::where('file',null)->where('status','Active')
+            }          
+          $getContentCartUpdated=CartItem::where('file',null)->where('status','Active')
                                                             ->where(function($query) use($userId,$sessionId) {
                                                                 $query->where('user_id', $userId)
                                                                 ->orWhere('session_id', $sessionId);
                                                               })->first();
-              $getFileCartUpdated=CartItem::where('file','!=',null)->where('status','Active')
+          $getFileCartUpdated=CartItem::where('file','!=',null)->where('status','Active')
                                                             ->where(function($query) use($userId,$sessionId) {
                                                                 $query->where('user_id', $userId)
                                                                 ->orWhere('session_id', $sessionId);
-                                                            })->get();        
-          }            
-            
+                                                            })->get();          
           
           $totalWordsCounted=0;
           $cartHtml='<table border="0">';
@@ -192,7 +177,7 @@ class TranslationApplicationController extends Controller {
               $cartHtml .='<tr>
                         <td class="type"><img src="'.$url[0].'/customer/img/plain-text.png" title="plain-text" alt="plain-text"></td>
                         <td class="perview">text...</td>
-                        <td class="switch"><span class="words">'.$getContentCartUpdated->content_words.' words</span><span class="close"><a href="#" onclick="editContent();" title="Edit">Edit</a> <i class="fa fa-times-circle-o" onclick="trashElement('.$getContentCartUpdated->id.');" aria-hidden="true"></i></span></td>
+                        <td class="switch"><span class="words">'.$getContentCartUpdated->content_words.' words</span><span class="close"><a href="#" onclick="editContent();" title="Edit">Edit</a><i class="fa fa-times-circle-o" onclick="trashElement('.$getContentCartUpdated->id.');" aria-hidden="true"></i></span></td>
                       </tr>';
               $totalWordsCounted=($totalWordsCounted+$getContentCartUpdated->content_words);
             }
@@ -260,24 +245,16 @@ class TranslationApplicationController extends Controller {
           $cartHtml .='</table>';
 
           // Get Trashed Items Of The Cart And Update It In Trashed Div
-          if($userId==0){
-            $whereValue=$sessionId;
-            $whereCondition='session_id';
-            $getContentCartTrashed=CartItem::where('file',null)->where('status','Trashed')->where($whereCondition,$whereValue)->first();
-            $getFileCartTrashed=CartItem::where('file','!=',null)->where('status','Trashed')->where($whereCondition,$whereValue)->get(); 
-          }else{
-              $getContentCartTrashed=CartItem::where('file',null)->where('status','Trashed')
+          $getContentCartTrashed=CartItem::where('file',null)->where('status','Trashed')
                                                             ->where(function($query) use($userId,$sessionId) {
                                                                       $query->where('user_id', $userId)
                                                                             ->orWhere('session_id', $sessionId);
                                                             })->first();
-              $getFileCartTrashed=CartItem::where('file','!=',null)->where('status','Trashed')
+          $getFileCartTrashed=CartItem::where('file','!=',null)->where('status','Trashed')
                                                             ->where(function($query) use($userId,$sessionId) {
                                                                       $query->where('user_id', $userId)
                                                                             ->orWhere('session_id', $sessionId);
-                                                              })->get();       
-          }
-          
+                                                              })->get();
           
           $totalWordsCountedTrashed=0;
           $cartHtmlTrashed='';
@@ -358,7 +335,7 @@ class TranslationApplicationController extends Controller {
           }else{
             $totalDeletedItems=''; 
           }
-          $returnData=array($content_words,$cartHtml,$cartHtmlTrashed,$content_wordsTrashed,$totalDeletedItems,$totalWordsCounted);
+          $returnData=array($content_words,$cartHtml,$cartHtmlTrashed,$content_wordsTrashed,$totalDeletedItems);
           echo json_encode($returnData);exit;
 
       }catch (\Exception $e){   
@@ -395,23 +372,18 @@ class TranslationApplicationController extends Controller {
         if(($itemId) && ($restore)){
           $UpdateStatus=CartItem::where('id',$itemId)->update(['status'=>$restore]);
         }
-        if($userId==0){
-          $whereValue=$sessionId;
-          $whereCondition='session_id';
-          $getContentCartUpdated=CartItem::where('file',null)->where('status','Active')->where($whereCondition,$whereValue)->first();
-          $getFileCartUpdated=CartItem::where('file','!=',null)->where('status','Active')->where($whereCondition,$whereValue)->get();
-        }else{
-            $getContentCartUpdated=CartItem::where('file',null)->where('status','Active')
-                                          ->where(function($query) use($userId,$sessionId) {
-                                                  $query->where('user_id', $userId)
-                                                  ->orWhere('session_id', $sessionId);
-                                            })->first();
-            $getFileCartUpdated=CartItem::where('file','!=',null)->where('status','Active')
-                                                            ->where(function($query) use($userId,$sessionId) {
-                                                                $query->where('user_id', $userId)
-                                                                ->orWhere('session_id', $sessionId);
-                                                            })->get();
-        }
+
+        $getContentCartUpdated=CartItem::where('file',null)->where('status','Active')
+                                        ->where(function($query) use($userId,$sessionId) {
+                                                $query->where('user_id', $userId)
+                                                ->orWhere('session_id', $sessionId);
+                                          })->first();
+        $getFileCartUpdated=CartItem::where('file','!=',null)->where('status','Active')
+                                                          ->where(function($query) use($userId,$sessionId) {
+                                                              $query->where('user_id', $userId)
+                                                              ->orWhere('session_id', $sessionId);
+                                                          })->get();
+          //echo "<pre>";print_r($getFileCartUpdated);exit;
           $totalWordsCounted=0;
           $cartHtml='';
           if($getContentCartUpdated != null || count($getFileCartUpdated)){
@@ -487,27 +459,21 @@ class TranslationApplicationController extends Controller {
                       <td class="switch"><span class="switch_total">'.$totalWordsCounted.'</span> words</td>
                     </tr>';
           $cartHtml .='</table>';
-        } 
+        }
           // Get Trashed Items Of The Cart And Update It In Trashed Div
-          if($userId==0){
-            $whereValue=$sessionId;
-            $whereCondition='session_id';
-            $getContentCartTrashed=CartItem::where('file',null)->where('status','Trashed')->where($whereCondition,$whereValue)->first();
-           
-            $getFileCartTrashed=CartItem::where('file','!=',null)->where('status','Trashed')->where($whereCondition,$whereValue)->get(); 
-          }else{
-              $getContentCartTrashed=CartItem::where('file',null)->where('status','Trashed')
+          
+          $getContentCartTrashed=CartItem::where('file',null)->where('status','Trashed')
                                     ->where(function($query) use($userId,$sessionId) {
                                       $query->where('user_id', $userId)
                                             ->orWhere('session_id', $sessionId);
                                     })->first();
-              $getFileCartTrashed=CartItem::where('file','!=',null)->where('status','Trashed')
+          $getFileCartTrashed=CartItem::where('file','!=',null)->where('status','Trashed')
                                   ->where(function($query) use($userId,$sessionId) {
                                       $query->where('user_id', $userId)
                                             ->orWhere('session_id', $sessionId);
-                                    })->get();      
-          }      
+                                    })->get();
 
+          
           $totalWordsCountedTrashed=0;
           $cartHtmlTrashed='';
           if($getContentCartTrashed != null || count($getFileCartTrashed)){
@@ -587,7 +553,8 @@ class TranslationApplicationController extends Controller {
           }else{
             $totalDeletedItems='';
           }
-          $returnData=array($content_words,$cartHtml,$cartHtmlTrashed,$content_wordsTrashed,$totalDeletedItems,$totalWordsCounted);
+          
+          $returnData=array($content_words,$cartHtml,$cartHtmlTrashed,$content_wordsTrashed,$totalDeletedItems);
           echo json_encode($returnData);exit;
 
       }catch (\Exception $e){   
@@ -659,21 +626,15 @@ class TranslationApplicationController extends Controller {
                 }
               }
             }
-            if($userId==0){
-              $whereValue=$sessionId;
-              $whereCondition='session_id'; 
-              $getLanguagesCartUpdated=CartLanguage::where($whereCondition,$whereValue)->get();
-              $getWordsCount=CartItem::where('status','Active')->where($whereCondition,$whereValue)->sum('content_words');
-            }else{
-                $getLanguagesCartUpdated=CartLanguage::where(function($query) use($userId,$sessionId) {
+            $getLanguagesCartUpdated=CartLanguage::where(function($query) use($userId,$sessionId) {
                                                         $query->where('user_id', $userId)
                                                         ->orWhere('session_id', $sessionId);
                                                   })->get();
-                $getWordsCount=CartItem::where('status','Active')->where(function($query) use($userId,$sessionId) {
+            $getWordsCount=CartItem::where(function($query) use($userId,$sessionId) {
                                                         $query->where('user_id', $userId)
                                                         ->orWhere('session_id', $sessionId);
-                                      })->sum('content_words');     
-            }
+                                      })->sum('content_words');
+            //echo $getWordsCount;exit;
             $languageCartHtml='';
             $count=1;
             $totalPrice=0;
@@ -743,28 +704,20 @@ class TranslationApplicationController extends Controller {
             if(($status=='Trashed') || ($status=='Active')){
               $trashCart=CartLanguage::where('id',$cartLangId)->update(['status'=>$status]);
             }
-            if($userId==0){
-              $whereValue=$sessionId;
-              $whereCondition='session_id';
-              $getLanguagesCartUpdated=CartLanguage::where($whereCondition,$whereValue)->get();
-              $getWordsCount=CartItem::where('status','Active')->where($whereCondition,$whereValue)->sum('content_words');
-              $CountCartActive=CartLanguage::where($whereCondition,$whereValue)->count();
-            }else{
-                $getLanguagesCartUpdated=CartLanguage::where(function($query) use($userId,$sessionId) {
+            
+            $getLanguagesCartUpdated=CartLanguage::where(function($query) use($userId,$sessionId) {
                                                         $query->where('user_id', $userId)
                                                         ->orWhere('session_id', $sessionId);
                                                   })->get();
-                $getWordsCount=CartItem::where('status','Active')->where(function($query) use($userId,$sessionId) {
-                                                            $query->where('user_id', $userId)
-                                                            ->orWhere('session_id', $sessionId);
-                                        })->sum('content_words');
-                $CountCartActive=CartLanguage::where('status','Active')
-                                              ->where(function($query) use($userId,$sessionId) {
-                                                            $query->where('user_id', $userId)
-                                                            ->orWhere('session_id', $sessionId);
-                                              })->count();    
-            }
-            
+            $getWordsCount=CartItem::where(function($query) use($userId,$sessionId) {
+                                                        $query->where('user_id', $userId)
+                                                        ->orWhere('session_id', $sessionId);
+                                    })->sum('content_words');
+            $CountCartActive=CartLanguage::where('status','Active')
+                                          ->where(function($query) use($userId,$sessionId) {
+                                                        $query->where('user_id', $userId)
+                                                        ->orWhere('session_id', $sessionId);
+                                          })->count();
 
             $languageCartHtml='';
             $count=1;
@@ -1054,10 +1007,8 @@ class TranslationApplicationController extends Controller {
                     
                     if($getCartItem->file==null){
                       $fileName= $sessionId.(Auth::user()->id).'_text.txt';
-                      $projectPath=base_path();
-                      $projectPath=explode('project', $projectPath);
-                      File::put($projectPath[0].'/uploads/files/'.$fileName,$getCartItem->content);
-                      chmod($projectPath[0]."/uploads/files/".$fileName, 0777);
+                      File::put('/var/www/html/eqho/uploads/files/'.$fileName,$getCartItem->content);
+                      chmod("/var/www/html/eqho/uploads/files/".$fileName, 0777);
                     }else{
                       $fileName=$getCartItem->file;
                     }

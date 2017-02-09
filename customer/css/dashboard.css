@@ -652,3 +652,36 @@ a.view-reject:hover{
   padding: 5px 12px 8px;
   vertical-align: middle;
 }
+.org-file-info {
+  height: 116px;
+  overflow-y: auto;
+}
+.org-file-info ul {
+  margin: 0 0 10px;
+}
+.front_errors {
+  margin: 0 0 30px;
+  border: 1px solid #ff0000;
+  padding: 15px;
+  width: 90%;
+}
+.front_errors p {
+  color: #ff0000;
+  font-size: 15px;
+}
+.front_errors ul li {
+  padding: 3px 3px 0px 15px;
+  list-style: none;
+  color: #ff0000;
+  font-size: 12px;
+}
+.front_success{
+  margin: 0 0 30px;
+  border: 1px solid #95bd36;
+  padding: 15px;
+  width: 90%
+}
+.front_success {
+  color: #95bd36;
+  font-size: 15px;
+}

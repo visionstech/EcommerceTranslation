@@ -12,6 +12,7 @@
 				<div class="translation-review request-changes-wrap">
 					<div class="translated-files">
 						<h2>Translation <span class="trans-lang">({{ $singleProject['language']['destination'] }})</span></h2>
+						@include('errors.frontend_errors')
 						<form  action="{{ url('/customer/customer-feedback') }}" method="post" enctype="multipart/form-data">
 							<input type="hidden" name="_token" id='token' value="{{ csrf_token() }}" />
 							<input type="hidden" name="project_id" value="{{ $singleProject['project_id'] }}" />
@@ -19,7 +20,7 @@
 							<div class="form-group">
 								<label>File Name</label>
 								<select class="download_file" name="translated_file">
-									<option>-- Select your file name --</option>
+									<option value="">-- Select your file name --</option>
 									@if($singleProject['files'])
 										@foreach($singleProject['files'] as $file)
 											<option data-link="{{ $dataUrl.$file['upload_path'].'/'.$file['name'] }}" value="{{ $file['id'] }}">{{ $file['name'] }}</option>
@@ -58,6 +59,7 @@
 
 								<div class="dash-btn-wrap">
 									<input type="submit" name="submit" value="Request changes" class="btn-ctrl"/>
+									<input type="submit" name="submit" value="Approve translation" class="btn-ctrl btn-gray"/>
 									<a href="#" class="btn-ctrl btn-gray" title="Approve translation">Approve translation</a>
 								</div>
 							</div>

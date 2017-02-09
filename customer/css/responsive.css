@@ -6,6 +6,13 @@
 	.dashboard-content {
 	  margin-left: 270px;padding: 0 15px 0 15px;
 	}
+	.translated-files select {
+	  font-size: 12px;
+	}
+	.request-changes .custom-checkbox label {
+	  font-size: 12px;
+	}
+
 }
 @media only screen and (max-width: 1279px) {
 	.voiceover {
@@ -29,6 +36,7 @@
 	  margin: 0 5px;
 	  padding: 12px 5px;
 	  width: 170px;
+	  font-size: 11px;
 	}
 	.translation-review .dash-btn-wrap .btn-ctrl {
 	  font-size: 12px;
@@ -49,6 +57,7 @@
 	.avg-sprite, .wg-sprite, .net-sprite, .bp-sprite, .true-sprite, .uber-sprite {
 	  background-size: 66% auto;
 	}
+
 }
 @media only screen and (max-width: 1170px) {
     .features-content li h2 {
