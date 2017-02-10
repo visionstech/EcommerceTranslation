@@ -132,10 +132,10 @@ class UserController extends Controller {
     public function getDeleteUser($userId=null,$status=null)
     {
       try {
-        if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
+        if(($status=='') || (($status !='Deleted') && ($status !='Active') && ($status !='Deactive'))){
             return redirect('user')->with('error', 'You are not autorize to delete this user.');
         }
-        $msg=($status=='Active')?'Activated':'Deleted';
+        $msg=($status=='Active')?'Activated':'Deactivated';
         //Soft Delete Users
         $updateUser=User::where('id',decrypt($userId))->update(array('status'=>$status));
         return redirect('user')->with('success', 'User '.$msg.' Successfully.');

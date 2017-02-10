@@ -41,9 +41,9 @@ return [
         'redirect' => url('/').'/dashboard/callback',
     ],
     
-    'google' => [
-        'client_id' => '929571555917-qbd0e7sntl7e4un8lr2u7pbh4r86k7ql.apps.googleusercontent.com',
-        'client_secret' => '6OYWPXhFLVhZF9P0uHFs18tt-p',
-        'redirect' => url('/').'/dashboard/callback',
-    ],
+    /*'google' => [
+        'client_id' => '929571555917-t4l7ane764lng3cs059j2001e0qv7ntr.apps.googleusercontent.com',
+        'client_secret' => 'uovIv5r0AoGNgy_fo9jRAnxa',
+        'redirect' => 'http://staging.visionsdemo.com/eqho/dashboard/callback/callback/google',
+    ],*/
 ];

@@ -124,11 +124,11 @@ class LanguagePackageController extends Controller {
     public function getDeletePackage($packageId=null,$status=null)
     {
       try {
-        if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
+        if(($status=='') || (($status !='Deleted') && ($status !='Active') && ($status !='Deactive'))){
             return redirect('language-management')->with('error', 'You are not autorize to delete this role.');
         }
         //Soft Delete Language Package
-        $msg=($status=='Active')?'Activated':'Deleted';
+        $msg=($status=='Active')?'Activated':'Deactivated';
         $updateUser=LanguagePackage::where('id',decrypt($packageId))->update(array('status'=>$status));
         return redirect('language-package')->with('success', 'Language package '.$msg.' Successfully.');
       }catch (\Exception $e){   

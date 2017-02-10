@@ -1,4 +1,4 @@
-<header class="main-header">
+<header class="main-header header-with-bg">
     <div class="eqho-container">
       <div class="eqho-clear-fix top-menu-bar">
         <div class="eqho-logo">

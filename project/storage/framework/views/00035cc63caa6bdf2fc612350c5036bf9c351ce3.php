@@ -5,11 +5,14 @@
 <?php $dataUrl=url('/');                
       $url=explode('index.php',$dataUrl); 
 ?>
+
     <section class="odering-process-1">
       <div class="eqho-container">
         <div class="eqho-clear-fix translator-wrap">
           <div class="like-to-translate">
+
               <form>
+              <?php echo $__env->make('errors.frontend_errors', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
               <div class="purpose">
                 <h2>What will you use the translation for?</h2>
                 <input type="hidden" name="_token" id='token' value="<?php echo e(csrf_token()); ?>">
@@ -353,7 +356,7 @@
     <!-- Error Popup --> 
       <div class="over-lay terms_popup">
           <div class="unsupported-popup">
-            <h1>Please Accept terms and conditions first<span class="close-icon"><i class="fa fa-times popup-close" aria-hidden="true"></i></span></h1>
+            <h1>Please Accept terms and conditions first<span class="close-icon popup-close"><i class="fa fa-times popup-close" aria-hidden="true"></i></span></h1>
             <div class="popup-close-btn">
               <input type="submit" name="" value="Close" class="popup-close" />
             </div>

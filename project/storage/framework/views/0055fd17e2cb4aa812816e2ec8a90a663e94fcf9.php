@@ -50,14 +50,14 @@
                                     <?php
                                     $dataUrl=url('/');                
                                     $url=explode('index.php',$dataUrl);
-                                    echo "<img src='".$url[0].'uploads/'.$section->image."' alt='".$section->image_title."' width='250'>";
+                                    echo "<img src='".$dataUrl.'/uploads/'.$section->image."' alt='".$section->image_title."' width='250'>";
                                     ?>
                                    </td>
                                     <td><?php echo e($section->created_at); ?></td>
                                     <td><?php echo e($section->status); ?></td>
                                    <td>
-                                    <?php if($section->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($section->id)); ?>" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                    <?php if($section->status != 'Deactive'){ ?>
+                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($section->id)); ?>" data-status="Deactive" data-statusDiv="Deactive">Deactive</a>
                                     <?php }else{ ?>
                                             <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($section->id)); ?>" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>

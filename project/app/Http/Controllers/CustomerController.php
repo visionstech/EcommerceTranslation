@@ -698,5 +698,36 @@ class CustomerController extends Controller {
              ];
         return view('errors.error', $result);
       }
-    }    
+    } 
+
+    /**
+      * post feedback form
+      * @param  Request
+      * @return Response
+      * Created on: 08/02/2017
+      * Updated on: 08/02/2017
+    **/
+
+    public function getDeleteSingleAsset($type=null,$id=null)
+    {
+      try {
+          if($type=='glossaries'){
+              $asset=ProjectGlossary::where('id',decrypt($id))->delete();
+            }
+            if($type=='styles'){
+              $asset=ProjectStyle::where('id',decrypt($id))->delete();
+            }
+            if($type=='briefs'){
+              $asset=ProjectBrief::where('id',decrypt($id))->delete();
+            }
+          return redirect()->back()->with('success', 'Asset deleted successfully.');
+      }
+      catch (\Exception $e) 
+      {   
+        $result = [
+                  'exception_message' => $e->getMessage()
+             ];
+        return view('errors.error', $result);
+      }
+    }      
 }

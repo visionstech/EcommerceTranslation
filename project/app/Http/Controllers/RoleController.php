@@ -122,11 +122,11 @@ class RoleController extends Controller {
     public function getDeleteRole($roleId=null,$status=null)
     {
       try {
-        if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
+        if(($status=='') || (($status !='Deleted') && ($status !='Active') && ($status !='Deactive'))){
             return redirect('role')->with('error', 'You are not autorize to delete this role.');
         }
         //Soft Delete User's Role
-        $msg=($status=='Active')?'Activated':'Deleted';
+        $msg=($status=='Active')?'Activated':'Deactivated';
         $updateUser=Role::where('id',decrypt($roleId))->update(array('status'=>$status));
         return redirect('role')->with('success', 'Role '.$msg.' Successfully.');
       }catch (\Exception $e){   

@@ -48,8 +48,8 @@
                                     <td>{{ $language->created_at }}</td>
                                     <td>{{ $language->status }}</td>
                                    <td>
-                                    <?php if($language->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary" data-target="{{ '.bs-example-modal-dm_'.$language->id }}" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($language->id) }}" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                    <?php if($language->status != 'Deactive'){ ?>
+                                            <a class="btn btn-primary" data-target="{{ '.bs-example-modal-dm_'.$language->id }}" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($language->id) }}" data-status="Deactive" data-statusDiv="Deactive">Deactive</a>
                                     <?php }else{ ?>
                                             <a class="btn btn-primary" data-target="{{ '.bs-example-modal-dm_'.$language->id }}" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($language->id) }}" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>
@@ -67,9 +67,9 @@
         </div>
     </section>
     @foreach($languages as $language)
-        @if($language->status != 'Deleted')
-            <?php $status='Delete';
-                  $dataStatus="Deleted";
+        @if($language->status != 'Deactive')
+            <?php $status='Deactive';
+                  $dataStatus="Deactive";
             ?>
         @else
             <?php $status='Active';

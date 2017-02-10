@@ -6,11 +6,14 @@
 <?php $dataUrl=url('/');                
       $url=explode('index.php',$dataUrl); 
 ?>
+
     <section class="odering-process-1">
       <div class="eqho-container">
         <div class="eqho-clear-fix translator-wrap">
           <div class="like-to-translate">
+
               <form>
+              @include('errors.frontend_errors')
               <div class="purpose">
                 <h2>What will you use the translation for?</h2>
                 <input type="hidden" name="_token" id='token' value="{{ csrf_token() }}">
@@ -354,7 +357,7 @@
     <!-- Error Popup --> 
       <div class="over-lay terms_popup">
           <div class="unsupported-popup">
-            <h1>Please Accept terms and conditions first<span class="close-icon"><i class="fa fa-times popup-close" aria-hidden="true"></i></span></h1>
+            <h1>Please Accept terms and conditions first<span class="close-icon popup-close"><i class="fa fa-times popup-close" aria-hidden="true"></i></span></h1>
             <div class="popup-close-btn">
               <input type="submit" name="" value="Close" class="popup-close" />
             </div>

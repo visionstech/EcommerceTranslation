@@ -107,6 +107,18 @@ $(document).ready(function(){
     //Download link on translation review page
     $(document).on('click','.download_file',function(){
       $(this).next().find('a').attr('href',$(this).find(":selected").attr('data-link'));
-    });  
+    });
+
+    $(document).on('click','.delete_asset',function(){
+      $('.asset_popup').show();
+      //alert($(this).attr('data-url'));
+      $('.data_link').val($(this).attr('data-url'));
+    });
+    $(document).on('click','.delete_asset_confirm',function(){
+      window.location.href=$('.data_link').val();
+    });
+    
+
+     
 });
 </script>

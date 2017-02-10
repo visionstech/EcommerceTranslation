@@ -2399,6 +2399,178 @@ section.pricing-context{
   text-decoration: underline;
 }
 
+
+
+/*----------------------------- Signin / Register ----------------------------*/
+
+.signin-header{
+  background: url("../img/signin-bg.png")no-repeat scroll center center / cover ;
+  padding: 55px 0;
+  margin-top: 90px;
+}
+.signin-header h1{
+  font-size: 30px;
+  color:#ffffff;
+  font-weight: 400;
+  text-align: center;
+}
+.signin-register-wrap{padding: 60px 0;}
+.signin-wrap {
+  display: inline-block;
+  width: 48%;
+  padding: 0 60px 0 0;
+  vertical-align: top;
+}
+.register-wrap::before {
+  background: #777777;
+  content: "";
+  height: 100%;
+  position: absolute;
+  left: 0;
+  width: 1px;
+}
+.register-wrap {
+  display: inline-block;
+  width: 48%;
+  padding: 0 0px 0 60px;
+  vertical-align: top;
+  position: relative;
+}
+.signin-register-wrap h2 {
+  border-bottom: 1px solid #e3e3e3;
+  color:#f5b12e;
+  font-size: 26px;
+  font-weight: 400;
+  padding: 0 0 15px;
+  margin: 0 0 3px;
+}
+.signin-register-wrap p {
+  color: #858585;
+  font-size: 15px;
+  font-family:'Open Sans', sans-serif;
+}
+.signin-register-wrap p:first-of-type {
+  margin: 0 0 20px;
+}
+.signin-register-wrap .form-group {
+  display: block;
+  margin: 0 0 25px;
+}
+.signin-register-wrap label {
+  color: #615f5c;
+  display: block;
+  font-weight: 700;
+  margin: 0 0 7px;
+}
+.signin-register-wrap input {
+  border: 1px solid #cccccc;
+  color: #a3a3a3;
+  font-size: 13px;
+  padding: 15px 10px;
+  width: 100%;
+  font-family:'Open Sans', sans-serif;
+}
+.forgot-pwd {
+  margin: 40px 0 22px;
+}
+.forgot-pwd .btn-ctrl {
+  float: left;
+}
+.forgot-pwd a {
+  color: #a2a2a2;
+  float: right;
+  font-size: 15px;
+  margin: 14px 0;
+}
+.forgot-pwd a:hover {
+  color: #f5b12e;
+}
+.forgot-pwd span {
+  border-bottom: 1px solid #a2a2a2;
+  display: inline-block;
+  font-weight: 700;
+}
+.forgot-pwd a:hover span {
+  border-bottom: 1px solid #f5b12e;
+}
+.social-icon {
+  margin: 20px 0;
+}
+.social-icon .fb {
+  background-color: #3b5998;
+  margin: 0 22px 0 0;
+}
+.social-icon .gplus {
+  background-color: #dc483b;
+}
+.social-icon a{
+  color: #ffffff;
+  font-size: 15px;
+  font-family:'Open Sans', sans-serif;
+  display: inline-block;
+  width: 230px;
+  max-width: 100%;
+}
+.social-icon .fa {
+  font-size: 24px;
+  padding: 14px 0;
+  text-align: center;
+  width: 50px;
+}
+.social-icon span {
+  display: inline-block;
+  padding: 15px 8px;
+  vertical-align: top;
+}
+.social-icon .fa-facebook {
+  background-color:#344f88;
+}
+.social-icon .fa-google-plus {
+  background-color:#bd3c32;
+}
+.name-info .form-group {
+  display: inline-block;
+  width: 48%;
+}
+.name-info .form-group:first-of-type {
+  margin: 0 15px 0 0;
+}
+.signin-register-wrap select {
+  border: 1px solid #cccccc;
+  color: #a3a3a3;
+  font-size: 13px;
+  padding: 15px 10px;
+  width: 100%;
+  font-family:'Open Sans', sans-serif;
+}
+.term-condition label {
+  color: #858585;
+  font-size: 15px;
+  font-family:'Open Sans', sans-serif;
+  font-weight: 400;
+}
+.term-condition label span {
+  color: #f5b12e;
+}
+.register-btn{
+  margin: 40px 0 0;
+}
+span.devider {
+  background: #ffffff none repeat scroll 0 0;
+  border: 1px solid #777777;
+  border-radius: 100%;
+  color: #424242;
+  display: inline-block;
+  font-size: 17px;
+  height: 35px;
+  left: -17px;
+  padding: 3px;
+  position: absolute;
+  text-align: center;
+  top: 45%;
+  width: 35px;
+  font-family:'Open Sans', sans-serif;
+}
 /*.............................. Dynamic deleted element step1 27 jan 2017........................*/
 .progress 
 {
@@ -2563,3 +2735,30 @@ span.complete {
 .project-details table td span.translated i, .project-details table td span.translating i{margin: 0;}
 .project-details table td span.translated{color: #96BD35;}
 .project-details table td span.translating{color: #f5b12e;}
+
+.front_errors {
+  margin: 0 0 30px;
+  border: 1px solid #ff0000;
+  padding: 15px;
+  width: 90%;
+}
+.front_errors p {
+  color: #ff0000;
+  font-size: 15px;
+}
+.front_errors ul li {
+  padding: 3px 3px 0px 15px;
+  list-style: none;
+  color: #ff0000;
+  font-size: 12px;
+}
+.front_success{
+  margin: 0 0 30px;
+  border: 1px solid #95bd36;
+  padding: 15px;
+  width: 90%
+}
+.front_success {
+  color: #95bd36;
+  font-size: 15px;
+}

@@ -47,8 +47,8 @@
                                     <td><?php echo e($role->created_at); ?></td>
                                     <td><?php echo e($role->status); ?></td>
                                    <td>
-                                    <?php if($role->status != 'Deleted'){ ?>
-                                          <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($role->id)); ?>" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                    <?php if($role->status != 'Deactive'){ ?>
+                                          <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($role->id)); ?>" data-status="Deactive" data-statusDiv="Deactive">Deactive</a>
                                     <?php }else{ ?>
                                     <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="<?php echo e(encrypt($role->id)); ?>" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>

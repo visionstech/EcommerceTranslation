@@ -51,8 +51,8 @@
                                     <td>{{ $section->description }}</td>
                                     <td>{{ $section->created_at }}</td>
                                    <td>
-                                    <?php if($section->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                    <?php if($section->status != 'Deactive'){ ?>
+                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Deactive" data-statusDiv="Deactive">Deactive</a>
                                     <?php }else{ ?>
                                             <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($section->id) }}" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>

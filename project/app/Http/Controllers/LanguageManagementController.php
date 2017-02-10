@@ -154,11 +154,11 @@ class LanguageManagementController extends Controller {
     public function getDeleteLanguage($languageId=null,$status=null)
     {
       try {
-        if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
+        if(($status=='') || (($status !='Deleted') && ($status !='Active') && ($status !='Deactive'))){
             return redirect('language-management')->with('error', 'You are not autorize to delete this language.');
         }
         //Soft Delete Language
-        $msg=($status=='Active')?'Activated':'Deleted';
+        $msg=($status=='Active')?'Activated':'Deactivated';
         $updateUser=Language::where('id',decrypt($languageId))->update(array('status'=>$status));
         return redirect('language-management')->with('success', 'Language '.$msg.' Successfully.');
       }catch (\Exception $e){   

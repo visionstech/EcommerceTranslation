@@ -110,9 +110,11 @@ class AuthController extends Controller
         try {
             //Register Customer User
             $create_user = User::create([
+                  'first_name' => $request->first_name,
+                  'last_name' => $request->last_name,
                   'email' => $request->email,
                   'password' => bcrypt($request->password),
-                  'role' => $request->usertype
+                  'role_id' => $request->usertype
               ]);
             //Login Automatically User Functionality
             $credentials = array(
@@ -122,13 +124,13 @@ class AuthController extends Controller
 
             if($this->auth->attempt($credentials))
             {
-                if((Auth::user()->role == 3) || (Auth::user()->role == 4))
+                if((Auth::user()->role_id == 3))
                 {
-                    return redirect('/dashboard');
+                    return redirect('/customer/dashboard');
                 }
                 else 
                 {
-                    return redirect('/');
+                    return redirect('/dashboard');
                 }
             }
             Session::put('message', 'User Registered Successfully!');

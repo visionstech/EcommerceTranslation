@@ -317,14 +317,14 @@ class HomepageSectionController extends Controller {
     public function getDeleteSection($Id=null,$status=null,$sectionType=null)
     {
       try {
-        if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
+        if(($status=='') || (($status !='Deleted') && ($status !='Active') && ($status !='Deactive'))){
             return redirect('user')->with('error', 'You are not autorize to delete this user.');
         }
         if(($sectionType !='how-it-works') && ($sectionType !='our-promises') && ($sectionType !='faqs') && ($sectionType !='features') && ($sectionType !='eqho-by-numbers') && ($sectionType !='clients') && ($sectionType !='banner-image') && ($sectionType !='banner-bottom-logos') && ($sectionType !='banner-info') && ($sectionType !='header-menus') && ($sectionType !='what-we-translate') && ($sectionType !='header-image')){
             return view('errors.404');
         }
         //Soft Delete Sections
-        $msg=($status=='Active')?'Activated':'Deleted';
+        $msg=($status=='Active')?'Activated':'Deactivated';
         $updateSection=Section::where('id',decrypt($Id))->update(array('status'=>$status));
         return redirect('homepage-section/view-sections/'.$sectionType)->with('success', 'Section '.$msg.' Successfully.');
       }catch (\Exception $e){   

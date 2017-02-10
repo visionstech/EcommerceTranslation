@@ -52,8 +52,8 @@
                                     <td>{{ $language_price->created_at }}</td>
                                     <td>{{ $language_price->status }}</td>
                                    <td>
-                                    <?php if($language_price->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($language_price->id) }}" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                    <?php if($language_price->status != 'Deactive'){ ?>
+                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($language_price->id) }}" data-status="Deactive" data-statusDiv="Deactive">Deactive</a>
                                     <?php }else{ ?>
                                             <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($language_price->id) }}" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>

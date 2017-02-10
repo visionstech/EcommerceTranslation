@@ -139,11 +139,11 @@ class LanguagePriceController extends Controller {
     public function getDeleteLanguagePrice($languageId=null,$status=null)
     {
       try {
-        if(($status=='') || (($status !='Deleted') && ($status !='Active'))){
+        if(($status=='') || (($status !='Deleted') && ($status !='Active') && ($status !='Deactive'))){
             return redirect('language-price')->with('error', 'You are not autorize to delete this role.');
         }
         //Soft Delete Language Prices
-        $msg=($status=='Active')?'Activated':'Deleted';
+        $msg=($status=='Active')?'Activated':'Deactivated';
         $updateUser=LanguagePrice::where('id',decrypt($languageId))->update(array('status'=>$status));
         return redirect('language-price')->with('success', 'Language Price '.$msg.' Successfully.');
       }catch (\Exception $e){   

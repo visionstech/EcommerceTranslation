@@ -67,10 +67,10 @@
                                     <td>{{ $user->created_at }}</td>
                                     <td>{{ $user->status }}</td>
                                    <td>
-                                    <?php if($user->status != 'Deleted'){ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($user->id) }}" data-status="Deleted" data-statusDiv="Delete">Delete</a>
+                                    <?php if($user->status != 'Deactive'){ ?>
+                                            <a class="btn btn-primary actionAnchor" data-target="{{ '.bs-example-modal-dm_'.$user->id }}" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($user->id) }}" data-status="Deactive" data-statusDiv="Deactive">Deactive</a>
                                     <?php }else{ ?>
-                                            <a class="btn btn-primary actionAnchor" data-target=".bs-example-modal-dm" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($user->id) }}" data-status="Active" data-statusDiv="Active">Active</a>
+                                            <a class="btn btn-primary actionAnchor" data-target="{{ '.bs-example-modal-dm_'.$user->id }}" data-toggle="modal" href="javascript:void(0);" data-did="{{ encrypt($user->id) }}" data-status="Active" data-statusDiv="Active">Active</a>
                                     <?php } ?>
                                     <a class="btn btn-primary actionedit" href="{{ url('/user/add-user/'.encrypt($user->id)) }}">Edit</a>
                                    </td>
@@ -85,27 +85,37 @@
         </div>
     </section>
 <!-- Popup Model For Delete action -->
-
-<div class="modal fade bs-example-modal-dm" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">   <div class="modal-dialog modal-sm">
+@foreach($users as $user)
+        @if($user->status != 'Deactive')
+            <?php $status='Deactive';
+                  $dataStatus="Deactive";
+            ?>
+        @else
+            <?php $status='Active';
+                  $dataStatus="Active";
+            ?>
+        @endif
+      <div class="modal fade {{ 'bs-example-modal-dm_'.$user->id  }}" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">   <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel2"><span class="statusDiv"></span> User</h4>
+                <h4 class="modal-title" id="myModalLabel2">{{ $status }} Language</h4>
             </div>
             <div class="modal-body">
                 <h4></h4>
-                <p>Are you sure you want to <span class="statusDiv"></span> this user ? </p>
+                <p>Are you sure you want to {{ $status }} this user ? </p>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="UserId" class="UserId" />
-                <input type="hidden" name="status" class="status" />
+                <input type="hidden" name="UserId" value="{{ encrypt($user->id) }}"  class="UserId" />
+                <input type="hidden" name="status" value="{{ $dataStatus }}" class="status" />
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary delete_confirm"><span class="statusDiv"></span></button>
+                <button type="button" class="btn btn-primary delete_confirm">{{ $status }}</button>
             </div>
         </div>
     </div>
 </div>
+@endforeach
 <!-- End Popup Model -->
 @endsection
 @section('js')
@@ -135,6 +145,26 @@
         $('.delete_confirm').click(function(){
             var UserId=$('.UserId').val();
             var Status=$('.status').val();
+            window.location.href=baseUrl+'/user/delete-user/'+UserId+'/'+Status;
+        });        
+    });
+
+    $(document).ready(function(){
+        $("#example1").dataTable();
+        var baseUrl='<?php echo URL::to('/'); ?>';
+        $('.actionAnchor').click(function(){
+            var LanguageId=$(this).attr('data-did');
+            var status=$(this).attr('data-status');
+            var statusDiv=$(this).attr('data-statusDiv');
+            $('.status').val(status);
+            $('.statusDiv').html(statusDiv);
+            $('.UserId').val(LanguageId);
+        });
+        
+        $('.delete_confirm').click(function(){
+
+            var UserId= $(this).prev().prev().prev().val();
+            var Status= $(this).prev().prev().val();
             window.location.href=baseUrl+'/user/delete-user/'+UserId+'/'+Status;
         });        
     });
