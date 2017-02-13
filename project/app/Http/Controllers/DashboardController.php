@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Input;
 use App\User;
+use App\Order;
+use App\Project;
 use Illuminate\Contracts\Auth\Guard;
 use Session;
 use Auth;
@@ -72,7 +74,53 @@ class DashboardController extends Controller {
                 $usertype='customer';
               break;
             }
-            return view($theme.'dashboard/'.$usertype.'/dashboard');
+            $paymentsCount=Order::count();
+            $usersCount=User::where('role_id' ,'!=',1)->count();
+            $pendingsCount=Project::where('status','Pending')->count();
+            $approvedCount=Project::where('status','Approved')->count();
+            
+            $usersGraph=User::get();
+            $u_2016=0;  $u_2017=0;  $u_2018=0;  $u_2019=0;  $u_2020=0;
+            foreach($usersGraph as $users){
+              if(date('Y', strtotime($users->created_at))==2016){
+                  $u_2016=$u_2016+1;
+              }
+              if(date('Y', strtotime($users->created_at))==2017){
+                  $u_2017=$u_2017+1;
+              }
+              if(date('Y', strtotime($users->created_at))==2018){
+                  $u_2018=$u_2018+1;
+              }
+              if(date('Y', strtotime($users->created_at))==2019){
+                  $u_2019=$u_2019+1;
+              }
+              if(date('Y', strtotime($users->created_at))==2020){
+                  $u_2020=$u_2020+1;
+              }
+            }
+            $ordersGraph=Order::get();
+            $o_2016=0;  $o_2017=0;  $o_2018=0;  $o_2019=0;  $o_2020=0;
+            foreach($ordersGraph as $orders){
+              if(date('Y', strtotime($orders->created_at))==2016){
+                  $o_2016=$o_2016+1;
+              }
+              if(date('Y', strtotime($orders->created_at))==2017){
+                  $o_2017=$o_2017+1;
+              }
+              if(date('Y', strtotime($orders->created_at))==2018){
+                  $o_2018=$o_2018+1;
+              }
+              if(date('Y', strtotime($orders->created_at))==2019){
+                  $o_2019=$o_2019+1;
+              }
+              if(date('Y', strtotime($orders->created_at))==2020){
+                  $o_2020=$o_2020+1;
+              }
+            }
+            $userGraphCount=array($u_2016,$u_2017,$u_2018,$u_2019,$u_2020);
+            $orderGraphCount=array($o_2016,$o_2017,$o_2018,$o_2019,$o_2020);
+            //echo "<pre>";print_r($userGraphCount);exit;
+            return view($theme.'dashboard/'.$usertype.'/dashboard',compact('paymentsCount','usersCount','pendingsCount','approvedCount','usersGrapData','userGraphCount','orderGraphCount'));
           }            
         }
         catch (\Exception $e) 

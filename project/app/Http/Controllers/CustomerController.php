@@ -142,7 +142,10 @@ class CustomerController extends Controller {
                   $filenames=implode(',', $filenames);
                   $pendingProjects[$key]['files']=$filenames;
 
-              }            
+              }else{
+                  $allProjects[$key]['fileTypes']=array();
+                  $allProjects[$key]['files']=array();
+              }                 
           }
           return view('customer/dashboard/dashboard',compact('sections','pendingProjects'));
         }
@@ -167,95 +170,104 @@ class CustomerController extends Controller {
     {
       try {
           $sections=Section::where('status','Active')->get();
-          $orders=Order::where('orders.user_id',Auth::user()->id)->where('orders.payment_status','success')->get();
+          if(Auth::user()->role_id==1){
+            $orders=Order::get();  
+          }else{
+            $orders=Order::where('orders.user_id',Auth::user()->id)->where('orders.payment_status','success')->get();  
+          }
           $allProjects=array();
-          foreach($orders as $key=>$order){
+          if(count($orders)){
+            foreach($orders as $key=>$order){
 
-              $allProjects[$key]['order_id']=$order->id;
-              $allProjects[$key]['orderDate']=$order->created_at;
-              //Get all Projects per order wise
-              $projects=Project::join('languages','languages.id','=','projects.to_lang_id')
-                  ->select('projects.*','languages.name as destinationLanguage')
-                  ->where('projects.order_id',$order->id)->get();
-              
-              if(count($projects)){
-                  $fromLang=$projects[0]->from_lang_id;
-                  $allProjects[$key]['languagePackage']=$projects[0]->language_package;
-                  $allProjects[$key]['languagePurpose']=$projects[0]->translation_purpose;
-                  $sourceLang=Language::where('id',$fromLang)->first();
-                  $sourceLang=($sourceLang!=null)?$sourceLang->name:'';
-                  $allProjects[$key]['sourceLang']=$sourceLang;
-                  $allProjects[$key]['finalPrice']=$projects[0]->final_price;
-                  $toLangs=array();
-                  foreach($projects as $pkey=>$projects){
-                      $toLangs[]=$projects->destinationLanguage;
-                      
-                      $allProjects[$key]['languagePrice']=($projects->language_price + $projects->package_price);
-                      $allProjects[$key]['languageStatus']=ucfirst($projects->status);
-                  }
-                  $toLangs=implode(',', $toLangs);
-                  $allProjects[$key]['destinationLanguage']=$toLangs;
-              }
-              //Get all Projects Files Information as per order wise
-              $projectFiles=ProjectFile::where('order_id',$order->id)->groupBy('file_name')->get();
-              $allProjects[$key]['totalWords']=0;
-              if(count($projectFiles)){
-                  $totalWords=0;
-                  $filenames=array();
-                  $fileTypes=array();
-                  foreach($projectFiles as $fkey=>$projectFile){                   
-                     $totalWords=$totalWords+$projectFile->content_words;
-                     $filenames[]=$projectFile->file_name;
-                     $filetype=explode('.', $projectFile->file_name);
-                     $getExtensionGet=$filetype[sizeof($filetype)-1];
-                     switch($getExtensionGet){
-                        case 'ppt':
-                        $imageLogo='power-point.png';
-                        break;
-                        case 'pptx':
-                        $imageLogo='power-point.png';
-                        break;
-                        case 'doc':
-                        $imageLogo='word.png';
-                        break;
-                        case 'docx':
-                        $imageLogo='word.png';
-                        break;
-                        case 'xls':
-                        $imageLogo='excel.png';
-                        break;
-                        case 'xlsm':
-                        $imageLogo='excel.png';
-                        break;
-                        case 'xlsx':
-                        $imageLogo='excel.png';
-                        break;
-                        case 'rtf':
-                        $imageLogo='rich-text-format.png';
-                        break;
-                        case 'odt':
-                        $imageLogo='open-office.png';
-                        break;
-                        case 'txt':
-                        $imageLogo='plain-text.png';
-                        break;
-                        case 'pdf':
-                        $imageLogo='acrobat.png';
-                        break;
-                        default:
-                        $imageLogo='acrobat.png';
-                        break;
-                      }
-                      if(!in_array($imageLogo, $fileTypes)){
-                          $fileTypes[]=$imageLogo;
-                      }
-                  }
-                  $allProjects[$key]['totalWords']=$totalWords;
-                  $allProjects[$key]['fileTypes']=$fileTypes;
-                  $filenames=implode(',', $filenames);
-                  $allProjects[$key]['files']=$filenames;
+                $allProjects[$key]['order_id']=$order->id;
+                $allProjects[$key]['orderDate']=$order->created_at;
+                //Get all Projects per order wise
+                $projects=Project::join('languages','languages.id','=','projects.to_lang_id')
+                    ->select('projects.*','languages.name as destinationLanguage')
+                    ->where('projects.order_id',$order->id)->get();
+                
+                if(count($projects)){
+                    $fromLang=$projects[0]->from_lang_id;
+                    $allProjects[$key]['languagePackage']=$projects[0]->language_package;
+                    $allProjects[$key]['languagePurpose']=$projects[0]->translation_purpose;
+                    $sourceLang=Language::where('id',$fromLang)->first();
+                    $sourceLang=($sourceLang!=null)?$sourceLang->name:'';
+                    $allProjects[$key]['sourceLang']=$sourceLang;
+                    $allProjects[$key]['finalPrice']=$projects[0]->final_price;
+                    $toLangs=array();
+                    foreach($projects as $pkey=>$projects){
+                        $toLangs[]=$projects->destinationLanguage;
+                        
+                        $allProjects[$key]['languagePrice']=($projects->language_price + $projects->package_price);
+                        $allProjects[$key]['languageStatus']=ucfirst($projects->status);
+                    }
+                    $toLangs=implode(',', $toLangs);
+                    $allProjects[$key]['destinationLanguage']=$toLangs;
+                }
+                //Get all Projects Files Information as per order wise
+                $projectFiles=ProjectFile::where('order_id',$order->id)->groupBy('file_name')->get();
+                $allProjects[$key]['totalWords']=0;
+                if(count($projectFiles)){
+                    $totalWords=0;
+                    $filenames=array();
+                    $fileTypes=array();
+                    foreach($projectFiles as $fkey=>$projectFile){                   
+                       $totalWords=$totalWords+$projectFile->content_words;
+                       $filenames[]=$projectFile->file_name;
+                       $filetype=explode('.', $projectFile->file_name);
+                       $getExtensionGet=$filetype[sizeof($filetype)-1];
+                       switch($getExtensionGet){
+                          case 'ppt':
+                          $imageLogo='power-point.png';
+                          break;
+                          case 'pptx':
+                          $imageLogo='power-point.png';
+                          break;
+                          case 'doc':
+                          $imageLogo='word.png';
+                          break;
+                          case 'docx':
+                          $imageLogo='word.png';
+                          break;
+                          case 'xls':
+                          $imageLogo='excel.png';
+                          break;
+                          case 'xlsm':
+                          $imageLogo='excel.png';
+                          break;
+                          case 'xlsx':
+                          $imageLogo='excel.png';
+                          break;
+                          case 'rtf':
+                          $imageLogo='rich-text-format.png';
+                          break;
+                          case 'odt':
+                          $imageLogo='open-office.png';
+                          break;
+                          case 'txt':
+                          $imageLogo='plain-text.png';
+                          break;
+                          case 'pdf':
+                          $imageLogo='acrobat.png';
+                          break;
+                          default:
+                          $imageLogo='acrobat.png';
+                          break;
+                        }
+                        if(!in_array($imageLogo, $fileTypes)){
+                            $fileTypes[]=$imageLogo;
+                        }
+                    }
+                    $allProjects[$key]['totalWords']=$totalWords;
+                    $allProjects[$key]['fileTypes']=$fileTypes;
+                    $filenames=implode(',', $filenames);
+                    $allProjects[$key]['files']=$filenames;
 
-              }            
+                }else{
+                    $allProjects[$key]['fileTypes']=array();
+                    $allProjects[$key]['files']=array();
+                }            
+            }
           }
           return view('customer/dashboard/allProjects',compact('sections','allProjects'));
         }

@@ -29,6 +29,7 @@
             </thead>
             <tbody>
             <?php $s=1; ?>
+            <?php if(count($allProjects)): ?>
             <?php foreach($allProjects as $allProject): ?>
             <?php
             $dateFormat=strtotime($allProject['orderDate']);
@@ -38,21 +39,25 @@
                 <td><?php echo e($s); ?></td>
                 <td><?php echo e($allProject['order_id']); ?></td>
                 <td><?php echo e($FormatedDate); ?></td>
-                <td><?php foreach($allProject['fileTypes'] as $fileType): ?>
-                      <img src="<?php echo e($url[0].'/customer/img/'.$fileType); ?>" title="<?php echo e($fileType); ?>" alt="<?php echo e($fileType); ?>" />
-                      <br/>
+                <td>
+                  <?php if(count($allProject['fileTypes'] )): ?>
+                    <?php foreach($allProject['fileTypes'] as $fileType): ?>
+                        <img src="<?php echo e($url[0].'/customer/img/'.$fileType); ?>" title="<?php echo e($fileType); ?>" alt="<?php echo e($fileType); ?>" />
+                        <br/>
                     <?php endforeach; ?>
+                  <?php endif; ?>
                 </td>
-                <td><?php echo e($allProject['files']); ?></td>
+                <td><?php echo e(($allProject['files'])?$allProject['files']:''); ?></td>
                 <td><?php echo e($allProject['totalWords']); ?></td>
-                <td><?php echo e($allProject['sourceLang']); ?></td>
-                <td><?php echo e($allProject['destinationLanguage']); ?></td>
+                <td><?php echo e((isset($allProject['sourceLang']))?$allProject['sourceLang']:''); ?></td>
+                <td><?php echo e((isset($allProject['destinationLanguage'] ))?$allProject['destinationLanguage']:''); ?></td>
                 <td>Translating (1/4)</td>
-                <td>$<?php echo e($allProject['finalPrice']); ?></td>
+                <td>$<?php echo e((isset($allProject['finalPrice'] ))?$allProject['finalPrice']:''); ?></td>
                 <td><a href="<?php echo e(url('customer/view-order/view/'.encrypt($allProject['order_id']))); ?>" title="view"><i class="fa fa-eye" aria-hidden="true"></i> View </a><a href="<?php echo e(url('customer/view-order/review/'.encrypt($allProject['order_id']))); ?>" title="view"><i class="fa fa-eye" aria-hidden="true"></i> Review </a></td>
               </tr>
             <?php $s++; ?>
             <?php endforeach; ?>
+            <?php endif; ?>
             </tbody>
           </table>
         </div>

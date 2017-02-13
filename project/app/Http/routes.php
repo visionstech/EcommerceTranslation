@@ -22,6 +22,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::controller('language-package','LanguagePackageController');
    	Route::controller('translation-application','TranslationApplicationController');
     Route::controller('customer','CustomerController');
+    Route::controller('management','ManagementController');
    	Route::controllers([
    		'auth' => 'Auth\AuthController',
    		'password' => 'Auth\PasswordController',

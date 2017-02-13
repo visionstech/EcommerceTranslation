@@ -48,7 +48,19 @@
                   <a href="{{ url('/language-package') }}">
                     <i class="fa fa-product-hunt" aria-hidden="true"></i> <span>Manage Language Package</span>
                   </a>
-                </li>                
+                </li>
+                <li class="{{ ((strpos($_SERVER['REQUEST_URI'],'management/all-projects') != false) || (strpos($_SERVER['REQUEST_URI'],'management/view-order/view') != false) || (strpos($_SERVER['REQUEST_URI'],'management/feedbacks') != false))?'active':'' }} treeview">
+                  <a href="#">
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Orders</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li class="{{ ((strpos($_SERVER['REQUEST_URI'],'/management/all-projects') != false) || (strpos($_SERVER['REQUEST_URI'],'management/view-order/view') != false))?'active':'' }}"><a href="{{ url('/management/all-projects') }}"><i class="fa fa-circle-o"></i> View Orders</a></li>
+                    <li class="{{ (strpos($_SERVER['REQUEST_URI'],'/management/feedbacks') != false)?'active':'' }}"><a href="{{ url('/management/feedbacks') }}"><i class="fa fa-circle-o"></i> View Request Changes</a></li>                    
+                  </ul>
+                </li>          
                 <li class="{{ (strpos($_SERVER['REQUEST_URI'],'homepage-section') != false)?'active':'' }} treeview">
                   <a href="#">
                     <i class="fa fa-home" aria-hidden="true"></i> <span>Homepage Sections</span>
@@ -68,7 +80,6 @@
                     <li class="{{ (strpos($_SERVER['REQUEST_URI'],'banner-bottom-logos') != false)?'active':'' }}"><a href="{{ url('/homepage-section/view-sections/banner-bottom-logos') }}"><i class="fa fa-circle-o"></i> Manage Banner Bottom logos</a></li>
                     <li class="{{ (strpos($_SERVER['REQUEST_URI'],'banner-info') != false)?'active':'' }}"><a href="{{ url('/homepage-section/view-sections/banner-info') }}"><i class="fa fa-circle-o"></i> Manage Banner Content</a></li>
                     <li class="{{ (strpos($_SERVER['REQUEST_URI'],'what-we-translate') != false)?'active':'' }}"><a href="{{ url('/homepage-section/view-sections/what-we-translate') }}"><i class="fa fa-circle-o"></i> Manage What We Translate</a></li>
-                    
                   </ul>
                 </li>
         <?php }} ?>

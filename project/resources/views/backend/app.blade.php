@@ -110,6 +110,54 @@ if(!($current_url == $login_url || $current_url == $login_url2 || $current_url =
     <!-- AdminLTE App -->
     <script src="{{ asset('/js/app.min.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
+    <?php if($current_url==url('/dashboard')){ ?>
+      <script src="{{ asset('/js/pages/dashboard.js') }}"></script>
+      <script>
+        $(function () {
+          var line = new Morris.Line({
+            element: 'line-chart',
+            resize: true,
+            data: [
+              {y: '2016', users: <?php echo $userGraphCount[0]; ?>},             
+              {y: '2017', users: <?php echo $userGraphCount[1]; ?>},             
+              {y: '2018', users: <?php echo $userGraphCount[2]; ?>},
+              {y: '2019', users: <?php echo $userGraphCount[3]; ?>},
+              {y: '2020', users: <?php echo $userGraphCount[4]; ?>}
+            ],
+            xkey: 'y',
+            ykeys: ['users'],
+            labels: ['users'],
+            lineColors: ['#efefef'],
+            lineWidth: 2,
+            hideHover: 'auto',
+            gridTextColor: "#fff",
+            gridStrokeWidth: 0.4,
+            pointSize: 4,
+            pointStrokeColors: ["#efefef"],
+            gridLineColor: "#efefef",
+            gridTextFamily: "Open Sans",
+            gridTextSize: 10
+          });
+
+          var area = new Morris.Area({
+            element: 'revenue-chart',
+            resize: true,
+            data: [
+              {y: '2016', orders: <?php echo $orderGraphCount[0]; ?>},
+              {y: '2017', orders: <?php echo $orderGraphCount[1]; ?>},
+              {y: '2018', orders: <?php echo $orderGraphCount[2]; ?>},
+              {y: '2019', orders: <?php echo $orderGraphCount[3]; ?>},
+              {y: '2020', orders: <?php echo $orderGraphCount[4]; ?>},
+            ],
+            xkey: 'y',
+            ykeys: ['orders'],
+            labels: ['orders'],
+            lineColors: ['#a0d0e0', '#3c8dbc'],
+            hideHover: 'auto'
+          });
+        });
+      </script>
+    <?php } ?>
     <script src="{{ asset('/js/demo.js') }}"></script>
 <?php } else { ?>
 

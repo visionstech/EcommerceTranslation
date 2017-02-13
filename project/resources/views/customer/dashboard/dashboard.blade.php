@@ -37,33 +37,37 @@
             </thead>
             <tbody>
             <?php $s=1; ?>
-            @foreach($pendingProjects as $pendingProject)
-            <?php
-            $dateFormat=strtotime($pendingProject['orderDate']);
-            $FormatedDate=date('M d Y',$dateFormat);
-            ?>
-              <tr>
-                <td>{{ $s }}</td>
-                <td>{{ $pendingProject['order_id'] }}</td>
-                <td>{{ $FormatedDate }}</td>
-                <td>{{ $pendingProject['languagePackage'] }}</td>
-                <td>
-                    @foreach($pendingProject['fileTypes'] as $fileType)
-                      <img src="{{ $url[0].'/customer/img/'.$fileType }}" title="{{ $fileType }}" alt="{{ $fileType }}" />
-                      <br/>
-                    @endforeach
-                </td>
-                <td>{{ $pendingProject['files'] }}</td>
-                <td>{{ $pendingProject['totalWords'] }}</td>
-                <td>{{ $pendingProject['sourceLang'] }}</td>
-                <td>{{ $pendingProject['destinationLanguage'] }}</td>
-                <td><img src="{{ asset('/customer/img/pending-icon.png') }}" alt="pending-icon" title="pending-icon"> 
-                {{ $pendingProject['languageStatus'] }}</td>
-                <td>${{ $pendingProject['finalPrice'] }}</td>
-                <td><a href="{{ url('customer/view-order/view/'.encrypt($pendingProject['order_id'])) }}" title="view"><i class="fa fa-eye" aria-hidden="true"></i> View </a><a href="{{ url('customer/view-order/review/'.encrypt($pendingProject['order_id'])) }}" title="view"><i class="fa fa-eye" aria-hidden="true"></i> Review </a></td>
-              </tr>
-              <?php $s++; ?>
-            @endforeach
+            @if(count($pendingProjects))
+              @foreach($pendingProjects as $pendingProject)
+              <?php
+              $dateFormat=strtotime($pendingProject['orderDate']);
+              $FormatedDate=date('M d Y',$dateFormat);
+              ?>
+                <tr>
+                  <td>{{ $s }}</td>
+                  <td>{{ $pendingProject['order_id'] }}</td>
+                  <td>{{ $FormatedDate }}</td>
+                  <td>{{ $pendingProject['languagePackage'] }}</td>
+                  <td>
+                     @if(count($pendingProject['fileTypes'] ))
+                        @foreach($pendingProject['fileTypes'] as $fileType)
+                          <img src="{{ $url[0].'/customer/img/'.$fileType }}" title="{{ $fileType }}" alt="{{ $fileType }}" />
+                          <br/>
+                        @endforeach
+                      @endif
+                  </td>
+                  <td>{{ ($pendingProject['files'])?$pendingProject['files']:''  }}</td>
+                  <td>{{ $pendingProject['totalWords'] }}</td>
+                  <td>{{ (isset($pendingProject['sourceLang']))?$pendingProject['sourceLang']:''  }}</td>
+                  <td>{{ (isset($pendingProject['destinationLanguage'] ))?$pendingProject['destinationLanguage']:''}}</td>
+                  <td><img src="{{ asset('/customer/img/pending-icon.png') }}" alt="pending-icon" title="pending-icon"> 
+                  {{ $pendingProject['languageStatus'] }}</td>
+                  <td>${{ (isset($allProject['finalPrice'] ))?$allProject['finalPrice']:'' }}</td>
+                  <td><a href="{{ url('customer/view-order/view/'.encrypt($pendingProject['order_id'])) }}" title="view"><i class="fa fa-eye" aria-hidden="true"></i> View </a><a href="{{ url('customer/view-order/review/'.encrypt($pendingProject['order_id'])) }}" title="view"><i class="fa fa-eye" aria-hidden="true"></i> Review </a></td>
+                </tr>
+                <?php $s++; ?>
+              @endforeach
+            @endif
             </tbody>
           </table>
         </div>

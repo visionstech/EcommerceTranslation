@@ -30,6 +30,7 @@
             </thead>
             <tbody>
             <?php $s=1; ?>
+            @if(count($allProjects))
             @foreach($allProjects as $allProject)
             <?php
             $dateFormat=strtotime($allProject['orderDate']);
@@ -39,21 +40,25 @@
                 <td>{{ $s }}</td>
                 <td>{{ $allProject['order_id'] }}</td>
                 <td>{{ $FormatedDate }}</td>
-                <td>@foreach($allProject['fileTypes'] as $fileType)
-                      <img src="{{ $url[0].'/customer/img/'.$fileType }}" title="{{ $fileType }}" alt="{{ $fileType }}" />
-                      <br/>
+                <td>
+                  @if(count($allProject['fileTypes'] ))
+                    @foreach($allProject['fileTypes'] as $fileType)
+                        <img src="{{ $url[0].'/customer/img/'.$fileType }}" title="{{ $fileType }}" alt="{{ $fileType }}" />
+                        <br/>
                     @endforeach
+                  @endif
                 </td>
-                <td>{{ $allProject['files'] }}</td>
+                <td>{{ ($allProject['files'])?$allProject['files']:''  }}</td>
                 <td>{{ $allProject['totalWords'] }}</td>
-                <td>{{ $allProject['sourceLang'] }}</td>
-                <td>{{ $allProject['destinationLanguage'] }}</td>
+                <td>{{ (isset($allProject['sourceLang']))?$allProject['sourceLang']:''  }}</td>
+                <td>{{ (isset($allProject['destinationLanguage'] ))?$allProject['destinationLanguage']:''}}</td>
                 <td>Translating (1/4)</td>
-                <td>${{ $allProject['finalPrice'] }}</td>
+                <td>${{ (isset($allProject['finalPrice'] ))?$allProject['finalPrice']:'' }}</td>
                 <td><a href="{{ url('customer/view-order/view/'.encrypt($allProject['order_id'])) }}" title="view"><i class="fa fa-eye" aria-hidden="true"></i> View </a><a href="{{ url('customer/view-order/review/'.encrypt($allProject['order_id'])) }}" title="view"><i class="fa fa-eye" aria-hidden="true"></i> Review </a></td>
               </tr>
             <?php $s++; ?>
             @endforeach
+            @endif
             </tbody>
           </table>
         </div>
