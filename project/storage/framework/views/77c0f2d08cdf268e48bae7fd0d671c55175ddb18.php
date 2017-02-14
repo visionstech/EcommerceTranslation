@@ -69,6 +69,8 @@
               <th>Language From</th>
               <th>Language To</th>
               <th>Price</th>
+              <th>Status</th>
+              <th>Translators</th>
             </tr>
             </thead>
             <tbody>
@@ -95,10 +97,13 @@
 
                     </span>
                   </td>
+                  <td><a data-target="<?php echo e('.bs-example-modal-dm_'.$languages['id']); ?>" data-toggle="modal"  href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Assign Translator</a>
+                  </td>
                 </tr>
                 <?php $c++; ?>
               <?php endforeach; ?>
             <?php endif; ?>
+
             
             </tbody>
           </table>
@@ -106,6 +111,37 @@
         <!-- /.col -->
       </div>
       <!-- /.row -->
+      <!-- Popup Model For Delete action -->
+       <?php if($singleProject['languages']): ?> 
+          <?php foreach($singleProject['languages'] as $languages): ?>
+            <div class="modal fade <?php echo e('bs-example-modal-dm_'.$languages['id']); ?>" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">   
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel2">Assign Translator to this project!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Select Translator</h4>
+                        <select class="form-control" name="translator">
+                            <option value="1">Rahul</option>
+                            <option value="2"></option>
+                            <option value="3"></option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="projectId" value="<?php echo e(encrypt($languages['id'])); ?>"  class="projectId" />
+                        <input type="hidden" name="status" value="" class="status" />
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary delete_confirm">Assign</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+       <?php endforeach; ?>
+    <?php endif; ?>
+
 
       <div class="row">
         <!-- accepted payments column -->

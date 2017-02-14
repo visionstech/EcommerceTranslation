@@ -10,5 +10,5 @@ class Project extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['id','user_id','order_id','from_lang_id','to_lang_id','language_price','total_price','package_price','final_price','language_package','translation_purpose','status'];
+    protected $fillable = ['id','user_id','order_id','from_lang_id','to_lang_id','language_price','total_price','package_price','final_price','language_package','translation_purpose','status','assigned_translator'];
 }

@@ -11,6 +11,11 @@
       <div class="eqho-container">
         <div class="eqho-clear-fix translator-wrap">
           <div class="like-to-translate">
+            <div class="loading_overlay">           
+              <div class="loader_img">
+                <img src="{{ asset('/customer/img/loading.gif') }}" alt="system" title="system" />
+              </div> 
+            </div> 
             <form action="" id="step2" name="step2" method="post">
                <input type="hidden" name="_token" id='token' value="{{ csrf_token() }}">
               <div class="select-lang">

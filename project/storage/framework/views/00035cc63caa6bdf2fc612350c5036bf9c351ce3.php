@@ -3,14 +3,18 @@
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
 <?php $dataUrl=url('/');                
-      $url=explode('index.php',$dataUrl); 
+      $url=explode('index.php',$dataUrl); //echo "<pre>";print_r($translateTo);exit;
 ?>
 
     <section class="odering-process-1">
       <div class="eqho-container">
         <div class="eqho-clear-fix translator-wrap">
           <div class="like-to-translate">
-
+          <div class="loading_overlay">           
+            <div class="loader_img">
+              <img src="<?php echo e(asset('/customer/img/loading.gif')); ?>" alt="system" title="system" />
+            </div> 
+          </div>      
               <form>
               <?php echo $__env->make('errors.frontend_errors', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
               <div class="purpose">
@@ -95,87 +99,73 @@
 
               <div class="existing-customer">
                 <h4>Are you an existing customer?</h4>
-                <p>If so, you can select:</p>
+                <p class="hide_after_login">If so, you can select:</p>
                  <?php $projectTranslator =  ($projectTranslator!=null)?($projectTranslator->translator_id):'';
-                 if($projectTranslator){
+                 /*if($projectTranslator){
                     $checked='checked';
                  }else{
                     $checked='';
-                 }
+                 }*/
                  ?>
-                <div class="custom-radio">
-                  <ul class="existing-option">
-                    <li>
-                      <input type="radio" id="ex-radio-1" <?php echo e($checked); ?> name="existing-customer">
-                      <label for="ex-radio-1">A translator you worked with previously</label>
-                      <div class="check"></div>
-                    </li>
-                    <div id='previous_translators'> 
-                   
-                      <div class="form-group previous_data">
-                        <label>Translators</label>
-                        <select name="previous_translator" class="option-select previous_translator" > 
-                          <option value=''>-- Select your Translator --</option>
-                          <?php if(count($previousTranslators)): ?>
-                            <?php foreach($previousTranslators as $previousTranslator): ?>
-                              <option value='<?php echo e($previousTranslator->translator_id); ?>' <?php if($projectTranslator==$previousTranslator->translator_id){echo "selected";} ?>><?php echo e($previousTranslator->translatorEmail); ?></option>
-                            <?php endforeach; ?>
-                          <?php endif; ?>
-                        </select>
-                      </div>
-                    </div>
-                    <?php $gloosary =  ($projectGloosaries!=null)?($projectGloosaries->file_name):'';
-                          $brief =  ($projectBriefs!=null)?($projectBriefs->file_name):'';
-                          $style =  ($projectStyles!=null)?($projectStyles->file_name):'';
-                          if($gloosary || $brief || $style){
-                            $checkedAsset='checked';
-                          }else{
-                            $checkedAsset='';
-                          }
-                    ?>
-                    <li>
-                      <input type="radio" id="ex-radio-2" <?php echo e($checkedAsset); ?> name="existing-assets">
-                      <label for="ex-radio-2">An existing translation asset (e.g. Glossary) stored in your account</label>
-                      <div class="check"><div class="inside"></div></div>
-                    </li>
-                    <div id='assets'>
+                <?php if(!empty($translateTo)): ?>
+                  <?php foreach($translateTo as $translateT): ?>
+                  <div class="">
+                  Translate To: <?php echo e($translateT['destination']); ?>
 
-                      <div class="form-group previous_data">
-                        <label>Gloosaries</label>
-                        <select name="previous_gloosary" class="option-select previous_gloosary" > 
-                          <option value=''>-- Select your Gloosary --</option>
-                          <?php if(count($previousGloosaries)): ?>
-                            <?php foreach($previousGloosaries as $previousGloosary): ?>
-                              <option value='<?php echo e($previousGloosary->file_name); ?>' <?php if($gloosary==$previousGloosary->file_name){echo "selected";} ?> ><?php echo e($previousGloosary->file_name); ?></option>
-                            <?php endforeach; ?>
-                          <?php endif; ?>
-                        </select>
+                  <input type="hidden" name="translateto" value="<?php echo e($translateT['id']); ?>" />
+                    <ul class="existing-option">
+                      <li class="hide_after_login">                      
+                        <label for="ex-radio-1">A translator you worked with previously</label>
+                        <div class="check"></div>
+                      </li>
+                      <div id='previous_translators'> 
+                     
+                        <div class="form-group previous_data">
+                          <label>Previous Translator</label>
+                          <select name="previous_translator[]" data-id="<?php echo e($translateT['id']); ?>" class="option-select previous_translator" > 
+                            <option value=''>-- Select your Translator --</option>
+                            <?php if(count($previousTranslators)): ?>
+                              <?php foreach($previousTranslators as $previousTranslator): ?>
+                                <option value='<?php echo e($previousTranslator->translator_id); ?>' <?php if($translateT['previous_translator']==$previousTranslator->translator_id){echo "selected";} ?>><?php echo e($previousTranslator->translatorEmail); ?></option>
+                              <?php endforeach; ?>
+                            <?php endif; ?>
+                          </select>
+                        </div>
                       </div>
-                      <div class="form-group previous_data">
-                        <label>Briefs</label>
-                        <select name="previous_brief" class="option-select previous_brief" >  
-                          <option value=''>-- Select your Brief --</option>
-                           <?php if(count($previousBriefs)): ?>
-                            <?php foreach($previousBriefs as $previousBrief): ?>
-                              <option value='<?php echo e($previousBrief->file_name); ?>'<?php if($brief==$previousBrief->file_name){echo "selected";} ?> ><?php echo e($previousBrief->file_name); ?></option>
-                            <?php endforeach; ?>
-                          <?php endif; ?>
-                        </select>
+                      <?php /*$gloosary =  ($projectGloosaries!=null)?($projectGloosaries->file_name):'';
+                            $brief =  ($projectBriefs!=null)?($projectBriefs->file_name):'';
+                            $style =  ($projectStyles!=null)?($projectStyles->file_name):'';*/
+                            /*if($gloosary || $brief || $style){
+                              $checkedAsset='checked';
+                            }else{
+                              $checkedAsset='';
+                            }*/
+                      ?>
+                      <li class="hide_after_login">                      
+                        <label for="ex-radio-2">An existing translation asset (e.g. Glossary) stored in your account</label>
+                        <div class="check"><div class="inside"></div></div>
+                      </li>
+                      <div id='assets'>
+
+                        <div class="form-group previous_data">
+                          <label>Existing Translation Glossary</label>
+                          <select name="previous_gloosary" data-id="<?php echo e($translateT['id']); ?>" class="option-select previous_gloosary" > 
+                            <option value=''>-- Select your Gloosary --</option>
+                            <?php if(count($previousAssets)): ?>
+                              <?php foreach($previousAssets as $previousAsset): ?>
+                                <?php if($previousAsset->asset_type=='glossary'): ?>
+                                  <option value='<?php echo e($previousAsset->file_name); ?>' <?php if($translateT['previous_glossary']==$previousAsset->file_name){echo "selected";} ?> ><?php echo e($previousAsset->file_name); ?></option>
+                                <?php endif; ?>
+                              <?php endforeach; ?>
+                            <?php endif; ?>
+                          </select>
+                        </div>
                       </div>
-                      <div class="form-group previous_data">
-                        <label>Styles</label>
-                        <select name="previous_style" class="option-select previous_style">  
-                          <option value=''>-- Select your style --</option>
-                           <?php if(count($previousStyles)): ?>
-                            <?php foreach($previousStyles as $previousStyle): ?>
-                              <option value='<?php echo e($previousStyle->file_name); ?>' <?php if($style==$previousStyle->file_name){echo "selected";} ?> ><?php echo e($previousStyle->file_name); ?></option>
-                            <?php endforeach; ?>
-                          <?php endif; ?>
-                        </select>
-                      </div>
-                    </div>
-                  </ul>
-                </div>
+                    </ul>
+                  </div>
+                  <?php endforeach; ?>
+                <?php endif; ?>
+
                 <div class="existing-login">
                 <?php if(!Auth::user()): ?>
                   <input type="button" value="Login" name="" class="btn_ctrl login_pop" />
@@ -203,63 +193,69 @@
                   <label>Instructions for the translator</label>
                   <textarea onblur="saveOptionalData('instruction');" name="instruction" class="instruction" placeholder="Write your instructions here..."><?php echo e($instruction); ?></textarea>                  
                 </div>
-                <div class="upload-files">
-                  <span class="lable-text">Upload your brief</span>
-                    <div class="upload-files-btn">                     
-                        <span type="button" class="fileinput-button">
-                                <span>Upload Files</span>
-                                <input name="file" multiple="multiple" name="brief" class="brief" onchange="saveOptionalData('brief');" size="1" type="file">
-                        </span>
-                    </div>
-                    <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
-                    <div class="file-information">
-                      <ul>
-                        <?php if(count($allProjectBriefs)): ?>
-                            <?php foreach($allProjectBriefs as $allProjectBrief): ?>
-                             <li> <?php echo e($allProjectBrief->file_name); ?></li>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                      </ul>
-                    </div>
-                </div> <!-- upload-files -->
-                <div class="upload-files">
-                  <span class="lable-text">Upload a glossary</span>
-                    <div class="upload-files-btn">
-                        <span type="button" class="fileinput-button">
-                          <span>Upload Files</span>
-                          <input name="file" multiple="multiple" name="gloosary" class="gloosary" onchange="saveOptionalData('gloosary');" size="1" type="file">
-                        </span>
-                    </div>
-                    
-                    <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
-                    <div class="file-information">
-                      <ul><?php if(count($allProjectGloosaries)): ?>
-                            <?php foreach($allProjectGloosaries as $allProjectGloosary): ?>
-                             <li> <?php echo e($allProjectGloosary->file_name); ?></li> 
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+              <?php if(!empty($translateTo)): ?>
+                <?php foreach($translateTo as $translateT): ?>
+                   Translate To: <?php echo e($translateT['destination']); ?> <hr>
+                  <div class="upload-files">
+                    <span class="lable-text">Upload your brief</span>
+                      <div class="upload-files-btn">                     
+                          <span type="button" class="fileinput-button">
+                                  <span>Upload Files</span>
+                                  <input data-id="<?php echo e($translateT['id']); ?>" name="file" multiple="multiple" name="brief" class="brief" onchange="saveOptionalData('brief');" size="1" type="file">
+                          </span>
+                      </div>
+                      <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
+                      <div class="file-information">
+                        <ul>
+                          <?php if(count($allProjectAssets)): ?>
+                              <?php foreach($allProjectAssets as $allProjectAsset): ?>
+                               <li> <?php echo e($allProjectAsset->file_name); ?></li>
+                              <?php endforeach; ?>
+                          <?php endif; ?>
                         </ul>
-                    </div>
-                </div> <!-- upload-files -->
-                <div class="upload-files">
-                  <span class="lable-text">Upload brand/ style guide</span>
-                    <div class="upload-files-btn">
-                        <span type="button" class="fileinput-button">
-                              <span>Upload Files</span>
-                              <input name="file" multiple="multiple" name="style" class="style" onchange="saveOptionalData('style');" size="1" type="file">
-                        </span>
-                    </div>
+                      </div>
+                  </div> <!-- upload-files -->
+                  <div class="upload-files">
+                    <span class="lable-text">Upload a glossary</span>
+                      <div class="upload-files-btn">
+                          <span type="button" class="fileinput-button">
+                            <span>Upload Files</span>
+                            <input data-id="<?php echo e($translateT['id']); ?>" name="file" multiple="multiple" name="gloosary" class="gloosary" onchange="saveOptionalData('glossary');" size="1" type="file">
+                          </span>
+                      </div>
+                      
+                      <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
+                      <div class="file-information">
+                        <ul> <?php if(count($allProjectAssets)): ?>
+                                <?php foreach($allProjectAssets as $allProjectAsset): ?>
+                                 <li> <?php echo e($allProjectAsset->file_name); ?></li>
+                                <?php endforeach; ?>
+                              <?php endif; ?>
+                          </ul>
+                      </div>
+                  </div> <!-- upload-files -->
+                  <div class="upload-files">
+                    <span class="lable-text">Upload brand/ style guide</span>
+                      <div class="upload-files-btn">
+                          <span type="button" class="fileinput-button">
+                                <span>Upload Files</span>
+                                <input data-id="<?php echo e($translateT['id']); ?>" name="file" multiple="multiple" name="style" class="style" onchange="saveOptionalData('style');" size="1" type="file">
+                          </span>
+                      </div>
 
-                    <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
-                    
-                     <div class="file-information">
-                      <ul><?php if(count($allProjectStyles)): ?>
-                            <?php foreach($allProjectStyles as $allProjectStyle): ?>
-                             <li> <?php echo e($allProjectStyle->file_name); ?></li>
-                            <?php endforeach; ?>
-                        <?php endif; ?></ul>
-                    </div>
-                </div> <!-- upload-files -->
+                      <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
+                      <div class="file-information">
+                        <ul>
+                          <?php if(count($allProjectAssets)): ?>
+                              <?php foreach($allProjectAssets as $allProjectAsset): ?>
+                               <li> <?php echo e($allProjectAsset->file_name); ?></li>
+                              <?php endforeach; ?>
+                          <?php endif; ?>
+                         </ul>
+                      </div>
+                  </div>    <!-- upload-files -->
+                <?php endforeach; ?>
+              <?php endif; ?>
               </div><!-- instructions -->
             </form>
       

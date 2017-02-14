@@ -12,7 +12,7 @@ $(document).ready(function(){
       $(".menu-navigation").toggle(400);
     $("#menu-toggle").toggleClass("menu-active");
   });
-
+  $(".loading_overlay").hide();
   
 // ....... Add class-function to header.........
   var url      = window.location.href; 
@@ -92,6 +92,7 @@ $(document).ready(function(){
     var data = new FormData();
     data.append('_token',$('#token').val());
     data.append('content',$('#content').val());
+    $(".loading_overlay").show();
     $.ajax({
         
         url: baseUrl+'/translation-application/cart-item',
@@ -100,6 +101,7 @@ $(document).ready(function(){
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.item-to-translate').html(data[1]);
           var TotalWords= $('.switch_total').html();
@@ -125,6 +127,7 @@ $(document).ready(function(){
       var percent = $('#percent1');
       var data = new FormData();
       var file = $(".file");
+
       InvalidFiles=[];
       $.each($(file), function (i, obj) {
           $.each(obj.files, function (j, file) {
@@ -197,13 +200,14 @@ $(document).ready(function(){
 
 function trashElement(value){
    var baseUrl='<?php echo url('/'); ?>';
-    $.ajax({
-        
+   $(".loading_overlay").show();
+    $.ajax({        
         url: baseUrl+'/translation-application/cart-item/Trashed/'+value,
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.item-to-translate').html(data[1]);
           var TotalWords= $('.switch_total').html();
@@ -225,13 +229,14 @@ function trashElement(value){
 
 function restoreElement(value){
    var baseUrl='<?php echo url('/'); ?>';
-    $.ajax({
-        
+   $(".loading_overlay").show();
+    $.ajax({        
         url: baseUrl+'/translation-application/cart-item/Active/'+value,
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.item-to-translate').html(data[1]);
           var TotalWords= $('.switch_total').html();
@@ -256,13 +261,14 @@ function restoreElement(value){
 
 function clearAllElements(){
    var baseUrl='<?php echo url('/'); ?>';
-    $.ajax({
-        
+   $(".loading_overlay").show();
+    $.ajax({        
         url: baseUrl+'/translation-application/cart-item/clearAll',
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.item-to-translate').html('');
           var TotalWords= $('.switch_total').html();
@@ -280,13 +286,14 @@ function clearAllElements(){
 
 function delete_permanently(){
    var baseUrl='<?php echo url('/'); ?>';
-    $.ajax({
-        
+   $(".loading_overlay").show();
+    $.ajax({        
         url: baseUrl+'/translation-application/cart-item/delete_permanently',
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.del-arrow').hide();
           $('.del-permanent').hide();
@@ -300,23 +307,21 @@ function editContent(){
   $('#content').show();
 }
 // Ending of Step 1 Cart Functionality of Saving Items
-
-
 // order process select list
-
-  
-  //........... end .......
-  
-  // Start jQuery Of Step 2 Cart 
-  
-
+//........... end .......
+// Start jQuery Of Step 2 Cart 
 $(document).ready(function(){
   var baseUrl='<?php echo url('/'); ?>';
-  //$('.complete').hide();
-  //$('.over-lay').show();
   $('.purpose-type').hide();
-  $('#previous_translators').hide();
-  $('#assets').hide(); 
+  <?php if(!Auth::user()){ ?>
+    $('#previous_translators').hide();
+    $('#assets').hide(); 
+    $('.hide_after_login').show();
+  <?php }else{ ?>
+    $('#previous_translators').show();
+    $('#assets').show(); 
+    $('.hide_after_login').hide();
+  <?php } ?>
   $(".close_login").click(function(){
       $('.over-lay').hide();
   });
@@ -342,9 +347,7 @@ $(document).ready(function(){
     }
   });
   $(".pay_button").click(function(){
-      //alert('Please agree terms and conditions.');
       $('.terms_popup').show();
-
   });
   
   $(document).on('click','.package_li  p',function() {
@@ -361,7 +364,6 @@ $(document).ready(function(){
       $('#sel-radio-'+Id[1]).parent().addClass('selected-radio');
       $( ".words-price > td" ).removeClass('select-word');
       $( ".words-price>td:eq( "+(Id[1]-1)+" )" ).addClass('select-word');
-
       var data = new FormData();
       data.append('_token',$('#token').val());
       data.append('purpose',$('#purpose').val());
@@ -375,8 +377,10 @@ $(document).ready(function(){
           beforeSend: function(){
             $('.final_price').html('Calculating...');
             $('.language_count').html('Counting...');
+            $(".loading_overlay").show();
           },
           success: function(res) {
+            $(".loading_overlay").hide();
             var data = $.parseJSON(res);
             $('.purpose-type').show();
             $('.total_words').html(data[0]);
@@ -436,9 +440,11 @@ $(document).ready(function(){
               $( ".words-price > td" ).removeClass('select-word');
               $( ".words-price>td:eq( "+(Id[2]-1)+" )" ).addClass('select-word');
             }
-            $('.package_name').html(data[3]);
-            $('.package_purpose').html(data[4]);
-            $('.purpose-btn').html(data[4]);
+            if(data[4] && data[3]){
+              $('.package_name').html(data[3]);
+              $('.package_purpose').html(data[4]);
+              $('.purpose-btn').html(data[4]);
+            }
           }
     });
    
@@ -485,20 +491,13 @@ $(document).ready(function(){
     $(".purpose-type-table").find('tr:last td').removeClass('select-word');
     $(".purpose-type-table").find('tr:last td:nth-child('+idd+')').addClass('select-word');
   });
-  
-
-
-
   //--------END Step 3 ---
-
-
   $(".select-langs").click(function(){
       $(".show-1").toggle();
   });
   $(".select-langs").blur(function(){
       $(".show-1").hide();
   });
-
   $(document).on('click','.all-languages li',function() {
     if ($(this).hasClass("active-li")) {
       $(this).removeClass("active-li");
@@ -507,7 +506,6 @@ $(document).ready(function(){
       $(this).addClass("active-li");
     }
   });
-
   $(".translate-btn, .popup-close").click(function(){
       $(".lang-popup").toggle();
   });
@@ -534,8 +532,7 @@ $(document).ready(function(){
           $('.total_words').html(data[1]);
           $('.language_count').html(data[2]);
           $('.final_price').html(data[3]);
-          
-        }
+         }
   });
   $('.all-languages').html('');
   $(".source").change(function(){
@@ -704,6 +701,7 @@ function restoreTranslation(value){
 
     function saveOptionalData(type){
           var baseUrl='<?php echo url('/'); ?>';
+          $(".loading_overlay").show();
           var data = new FormData();
           data.append('_token',$('#token').val());
           data.append('tone',$('.tone').val());
@@ -716,9 +714,11 @@ function restoreTranslation(value){
           $.each($(brief), function (i, obj) {
               $.each(obj.files, function (j, file) {
                 var nameFile=file.name;
+                //alert(nameFile);
                 var fileExtension = nameFile.substr( (nameFile.lastIndexOf('.') +1) );
                 if($.inArray(fileExtension, validFiles) !== -1){
-                    data.append("briefs[" + j + "]", file);
+                    data.append("briefs[" + j + "][img]", file);
+                    data.append("briefs[" + j + "][id]", $(obj).attr('data-id'));
                 }else{
                   InvalidFiles.push(file.name);
                 }
@@ -731,7 +731,8 @@ function restoreTranslation(value){
                 var nameFile=file.name;
                 var fileExtension = nameFile.substr( (nameFile.lastIndexOf('.') +1) );
                 if($.inArray(fileExtension, validFiles) !== -1){
-                    data.append("gloosaries[" + j + "]", file);
+                    data.append("glossaries[" + j + "][img]", file);
+                    data.append("glossaries[" + j + "][id]", $(obj).attr('data-id'));
                 }else{
                   InvalidFiles.push(file.name);
                 }
@@ -741,33 +742,55 @@ function restoreTranslation(value){
           var style = $(".style");
           InvalidFiles=[];
           $.each($(style), function (i, obj) {
+            //alert($(obj).attr('data-id'));
               $.each(obj.files, function (j, file) {
+                
                 var nameFile=file.name;
                 var fileExtension = nameFile.substr( (nameFile.lastIndexOf('.') +1) );
                 if($.inArray(fileExtension, validFiles) !== -1){
-                    data.append("styles[" + j + "]", file);
+                    data.append("styles[" + j + "][img]", file);
+                    data.append("styles[" + j + "][id]", $(obj).attr('data-id'));
+                    
                 }else{
                   InvalidFiles.push(file.name);
                 }
             })
           });
-          
-          data.append('previous_translator',$('.previous_translator').val());
-          data.append('previous_gloosary',$('.previous_gloosary').val());
-          data.append('previous_brief',$('.previous_brief').val());
-          data.append('previous_style',$('.previous_style').val());
+          var previous_translator=$('.previous_translator');
+          $.each($(previous_translator), function (i, obj) {
+            if($(obj).val() !=''){
+             data.append("prvTrans[" + i + "][translator]", $(obj).val());
+             data.append("prvTrans[" + i + "][tolangId]", $(obj).attr('data-id'));
+            }
+          });
+
+          var previous_glossary=$('.previous_gloosary');
+          $.each($(previous_glossary), function (i, obj) {
+            if($(obj).val() !=''){
+             data.append("prvGlossary[" + i + "][glossary]", $(obj).val());
+             data.append("prvGlossary[" + i + "][tolangId]", $(obj).attr('data-id'));
+            }
+          });
+          /*console.log(data);
+          return false;*/
+         // data.append('previous_translator',$('.previous_translator').val());
+          //data.append('previous_gloosary',$('.previous_gloosary').val());
+         // data.append('previous_brief',$('.previous_brief').val());
+          //data.append('previous_style',$('.previous_style').val());
           
           
           $.ajax({
 
-            url: baseUrl+'/translation-application/optional-data',
+            url: baseUrl+'/translation-application/optional-data-new',
             type:'post',
             data: data,
             processData: false,
             contentType: false,          
             success: function(res) {
+              $(".loading_overlay").hide();
               //var data = $.parseJSON(res);
-              if(type=='brief'){
+              //$('.complete').show();
+              /*if(type=='brief'){
                   $('.brief').parent().parent().next().show();
               }
               if(type=='gloosary'){
@@ -775,8 +798,8 @@ function restoreTranslation(value){
               }
               if(type=='style'){
                   $('.style').parent().parent().next().show();
-              }
-              $('.complete').fadeOut(1500);
+              }*/
+              //$('.complete').fadeOut(3000);
             }
           }); 
     }

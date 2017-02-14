@@ -11,6 +11,8 @@ use App\Language;
 use App\LanguagePackage;
 use App\CartItem;
 use App\CartLanguage;
+use App\CartInstruction;
+use App\CartAsset;
 use App\LanguagePrice;
 use App\Order;
 use App\Role;
@@ -22,6 +24,7 @@ use App\ProjectBrief;
 use App\ProjectGlossary;
 use App\ProjectStyle;
 use App\ProjectTranslator;
+use App\ProjectAsset;
 use App\Company;
 use File;
 
@@ -796,6 +799,7 @@ class TranslationApplicationController extends Controller {
             $count=1;
             $totalPrice=0;
             $totalLanguages=0;
+            $translateTo=array();
             if(count($getLanguagesCartUpdated)){
 
               foreach($getLanguagesCartUpdated as $getLanguagesCartUpdate){
@@ -828,12 +832,13 @@ class TranslationApplicationController extends Controller {
                 }else{
                   $languageCartHtml .='<tr><td>'.$delStart.ucfirst($destLanguage).$delClose.'</td><td>$'.$delStart.$price.$delClose.' / word</td>'.$delWstart.$getWordsCount.$delWclose.' Words</td><td>$'.$delStart.$totalPriceCalculated.$delClose.' <span class="close">'.$actionButton.'</span></td></tr>';
                 }
+                $translateTo[]=ucfirst($destLanguage);
                $count++;
               }
               $languageCartHtml .='<tr><td colspan="4" class="add-more" onclick="addMore();">+ Add more Languages</td>
                           </tr><tr><td colspan="3">'.$totalLanguages.' Languages</td><td>$'.$totalPrice.'</td></tr>';
             }
-            $returnData=array($languageCartHtml,$getWordsCount,$totalLanguages,'$'.$totalPrice);
+            $returnData=array($languageCartHtml,$getWordsCount,$totalLanguages,'$'.$totalPrice,$translateTo);
             echo json_encode($returnData);exit;
 
       } catch (\Exception $e) {   
@@ -889,7 +894,7 @@ class TranslationApplicationController extends Controller {
       * @param null      
       * @return Response
       * Created on: 31/01/2017
-      * Updated on: 31/01/2017
+      * Updated on: 14/02/2017
     **/
     public function getStepThree()
     {
@@ -907,44 +912,68 @@ class TranslationApplicationController extends Controller {
           $sections=Section::where('status','Active')->get();
           $userId=(Auth::user())?Auth::user()->id:0;
           $sessionId =Session::getId();
-          if($userId==0){
-            $whereValue=$sessionId;
-            $whereCondition='session_id';
-            $getCartItems=CartItem::where('status','Active')->where($whereCondition,$whereValue)->count();
-          }else{
-              $columns=array();
-              $columns['userId']=$userId;
-              $columns['sessionId']=$sessionId;
-              $getCartItems=CartItem::where('status','Active')
+
+           if($userId==0){
+              $whereValue=$sessionId;
+              $whereCondition='session_id';
+              $getLanguagesCartUpdated=CartLanguage::where($whereCondition,$whereValue)->get();
+              $getCartItems=CartItem::where('status','Active')->where($whereCondition,$whereValue)->count();
+              $getLanguagesCartUpdated=CartLanguage::where('status','Active')->where($whereCondition,$whereValue)->get();
+              $projectInstructions=CartInstruction::where('status','Active')->where($whereCondition,$whereValue)->first();
+              $allProjectAssets=CartAsset::where($whereCondition,$whereValue)->get();
+            }else{
+                $columns=array();
+                $columns['userId']=$userId;
+                $columns['sessionId']=$sessionId;
+                $getLanguagesCartUpdated=CartLanguage::where(function($query) use($columns) {
+                                                        $query->where('user_id', $columns['userId'])
+                                                        ->orWhere('session_id', $columns['sessionId']);
+                                                  })->get();
+                $getCartItems=CartItem::where('status','Active')
                                     ->where(function($query) use($columns) {
                                             $query->where('user_id', $columns['userId'])
                                             ->orWhere('session_id', $columns['sessionId']);
                                       })->count();
-          }
-          
-          $previousTranslators=ProjectTranslator::join('users','users.id','=','project_translators.translator_id')->select('project_translators.*','users.email as translatorEmail')->where('user_id',$userId)->groupBy('translator_id')->get();
-          $previousGloosaries=ProjectGlossary::where('user_id',$userId)->get();
-          $previousStyles=ProjectStyle::where('user_id',$userId)->get();
-          $previousBriefs=ProjectBrief::where('user_id',$userId)->get();
 
+                $getLanguagesCartUpdated=CartLanguage::where('cart_languages.status','Active')
+                                              ->where(function($query) use($columns) {
+                                                        $query->where('cart_languages.user_id', $columns['userId'])
+                                                        ->orWhere('cart_languages.session_id', $columns['sessionId']);
+                                                  })->get();
+                $projectInstructions=CartInstruction::where('status','Active')
+                                                  ->where(function($query) use($columns) {
+                                                        $query->where('user_id', $columns['userId'])
+                                                        ->orWhere('session_id', $columns['sessionId']);
+                                                  })->first();
+                $allProjectAssets=CartAsset::where(function($query) use($columns) {
+                                                        $query->where('user_id', $columns['userId'])
+                                                        ->orWhere('session_id', $columns['sessionId']);
+                                                  })->get();
+            }
+          $translateTo=array();
+          if(count($getLanguagesCartUpdated)){
+            foreach($getLanguagesCartUpdated as $key=>$getLanguagesCartUpdate){
+              $getLanguageData=LanguagePrice::join('languages','languages.id','=','language_prices.destination')->select('languages.name as destinationLang','language_prices.*')->where('language_prices.source',$getLanguagesCartUpdate->from_language_id)->where('language_prices.destination',$getLanguagesCartUpdate->to_language_id)->get();
+              $destLanguage=(count($getLanguageData))?$getLanguageData[0]->destinationLang:'';
+              $translateTo[$key]['id']=$getLanguageData[0]->destination;
+              $translateTo[$key]['destination'] = ucfirst($destLanguage);
+              $translateTo[$key]['previous_translator'] = $getLanguagesCartUpdate->previous_translator;
+              $translateTo[$key]['previous_glossary'] = $getLanguagesCartUpdate->previous_glossary;
+            }
+          }
+          $previousTranslators=Project::join('users','users.id','=','projects.assigned_translator')->select('projects.assigned_translator','users.email as translatorEmail','users.first_name as translatorName')->where('user_id',$userId)->groupBy('assigned_translator')->get();
+          $previousAssets=ProjectAsset::where('user_id',$userId)->get();
           $latestOrderId = Session::get('orderId'); 
           if(!$latestOrderId){
             $latestOrder=Order::where('user_id',$userId)->orderBy('id','desc')->first();
             $latestOrderId=($latestOrder!=null)?$latestOrder->id:0;
           }
-          $projectInstructions=ProjectInstruction::where('order_id',$latestOrderId)->first();
-          $projectStyles=ProjectStyle::where('order_id',$latestOrderId)->first();
-          $projectGloosaries=ProjectGlossary::where('order_id',$latestOrderId)->first();
-          $projectBriefs=ProjectBrief::where('order_id',$latestOrderId)->first();
+          $projectAssets=ProjectAsset::where('order_id',$latestOrderId)->first();
           $projectTranslator=ProjectTranslator::where('order_id',$latestOrderId)->first();
-
-          $allProjectStyles=ProjectStyle::where('order_id',$latestOrderId)->get();
-          $allProjectGloosaries=ProjectGlossary::where('order_id',$latestOrderId)->get();
-          $allProjectBriefs=ProjectBrief::where('order_id',$latestOrderId)->get();
-
           $languages=Language::where('status','Active')->get();
           $languagePackages=LanguagePackage::all();
-          return view('customer.translation-application.step-three',compact('sections','languages','languagePackages','previousTranslators','previousGloosaries','previousStyles','previousBriefs','latestOrderId','projectInstructions','projectStyles','projectGloosaries','projectBriefs','projectTranslator','allProjectStyles','allProjectGloosaries','allProjectBriefs','getCartItems'));
+
+          return view('customer.translation-application.step-three',compact('sections','languages','languagePackages','previousTranslators','latestOrderId','projectInstructions','projectTranslator','getCartItems','translateTo','allProjectAssets','previousAssets','projectAssets'));
         }
         catch (\Exception $e) 
         {   
@@ -1043,26 +1072,23 @@ class TranslationApplicationController extends Controller {
             $columns=array();
             $columns['userId']=$userId;
             $columns['sessionId']=$sessionId;
-            //echo "<pre>";print_r($columns);exit;
+
             $getLanguagesCartUpdated=CartLanguage::join('language_packages','cart_languages.language_package','=','language_packages.id')
                             ->select('cart_languages.*','language_packages.name as packageName','language_packages.id as packageId','language_packages.price_per_word as packagePrice')->where('cart_languages.status','Active')
                             ->where(function($query) use($columns) {
                                           $query->where('cart_languages.user_id', $columns['userId'])
                                           ->orWhere('cart_languages.session_id',  $columns['sessionId']);
                                     })->get();
-            // dd($getLanguagesCartUpdated);exit;
             $getWordsCount=CartItem::where('status','Active')
                                   ->where(function($query) use($columns) {
                                            $query->where('user_id', $columns['userId'])
                                           ->orWhere('session_id',  $columns['sessionId']);
                                     })->sum('content_words');
-             //echo $getWordsCount;exit;
             $getCartItems=CartItem::where('status','Active')
                                   ->where(function($query) use($columns) {
                                            $query->where('user_id', $columns['userId'])
                                           ->orWhere('session_id',  $columns['sessionId']);
                                     })->get();
-           //echo count($getCartItems);exit;
             $totalPrice=0;
             $packagePrice=0;
             $packageName='';
@@ -1101,10 +1127,63 @@ class TranslationApplicationController extends Controller {
                                   'final_price'=>$totalPrice,
                                   'language_package'=>$packageName,
                                   'translation_purpose' => $purpose,
+                                  'assigned_translator'=>$getLanguagesCartUpdate->previous_translator
                           ]);
 
                 //Insert Cart Files In Project Files Table from Cart Items Table
                   $applicationId = $createApplicationOrder->id;
+
+                  $assets= ProjectAsset::Create([
+                                    'user_id' => Auth::user()->id,
+                                    'order_id' => $orderId,
+                                    'project_id'=>$applicationId,
+                                    'asset_type'=>'glossary',
+                                    'file_name'=>$getLanguagesCartUpdate->previous_glossary,
+                                    'file_path'=>'uploads/files/'
+                            ]);
+
+                  $glossary=unserialize($getLanguagesCartUpdate->glossary);
+                  $brief = unserialize($getLanguagesCartUpdate->brief);
+                  $style= unserialize($getLanguagesCartUpdate->style);
+                  if($glossary){
+                    foreach($glossary as  $glossar){
+                        $assets= ProjectAsset::Create([
+                                    'user_id' => Auth::user()->id,
+                                    'order_id' => $orderId,
+                                    'project_id'=>$applicationId,
+                                    'asset_type'=>'glossary',
+                                    'file_name'=>$glossar,
+                                    'file_path'=>'uploads/files/'
+                            ]);
+
+                    }
+                  }
+
+                  if($brief){
+                    foreach($brief as  $brie){
+                        $assets= ProjectAsset::Create([
+                                    'user_id' => Auth::user()->id,
+                                    'order_id' => $orderId,
+                                    'project_id'=>$applicationId,
+                                    'asset_type'=>'brief',
+                                    'file_name'=>$brie,
+                                    'file_path'=>'uploads/files/'
+                            ]);
+                    }
+                  }
+                  if($style){
+                    foreach($style as  $styl){
+                        $assets= ProjectAsset::Create([
+                                    'user_id' => Auth::user()->id,
+                                    'order_id' => $orderId,
+                                    'project_id'=>$applicationId,
+                                    'asset_type'=>'style',
+                                    'file_name'=>$styl,
+                                    'file_path'=>'uploads/files/'
+                            ]);
+
+                    }
+                  }
                   foreach($getCartItems as $getCartItem){
                     
                     if($getCartItem->file==null){
@@ -1145,10 +1224,22 @@ class TranslationApplicationController extends Controller {
             //Delete Languages Cart Values After insertion in final application tables
             
         
-           return redirect('/translation-application/step-three')->with('success', 'Payment  done successfully.');
+           return redirect('/translation-application/thank-you')->with('success', 'Payment  done successfully.');
         } catch ( \Exception $e ) {
             return redirect('/translation-application/step-three')->withErrors('Error! Please Try again.');
         }
+    }
+
+    public function getThankYou(){
+      try {
+        $sections=Section::where('status','Active')->get();
+        return view('customer.translation-application.thank-you',compact('sections'));
+      } catch (\Exception $e) {   
+              $result = [
+                      'exception_message' => $e->getMessage()
+               ];
+              return view('errors.error', $result);
+      }
     }
 
     /**
@@ -1189,6 +1280,7 @@ class TranslationApplicationController extends Controller {
             $totalPrice=0;
             $packagePrice=0;
             $packageName='';
+            $purpose='';
             $totalLanguages=count($getLanguagesCartUpdated);
             if(count($getLanguagesCartUpdated)){
               foreach($getLanguagesCartUpdated as $getLanguagesCartUpdate){
@@ -1199,7 +1291,7 @@ class TranslationApplicationController extends Controller {
                 $totalPrice=$totalPrice+$totalPriceCalculated;
               }
               $packageName=$getLanguagesCartUpdated[0]->packageName;
-              $purpose=$getLanguagesCartUpdated[0]->purpose;
+              $purpose=($getLanguagesCartUpdated[0]->purpose)?($getLanguagesCartUpdated[0]->purpose):'';
               $packagePriceTotal=($getWordsCount*$getLanguagesCartUpdated[0]->packagePrice);         
               $totalPrice=($totalPrice+$packagePriceTotal);
             }
@@ -1307,128 +1399,120 @@ class TranslationApplicationController extends Controller {
       * Created on: 31/01/2017
       * Updated on: 01/02/2017
     **/
-    
-    public function postOptionalData(Request $request){
+
+  public function postOptionalDataNew(Request $request){
       
       try {
-        $orderId = Session::get('orderId');
-        $userId=(Auth::user())?Auth::user()->id:0;
-        if(!$orderId){
-          $latestOrder=Order::where('user_id',$userId)->orderBy('id','desc')->first();
-          $orderId=($latestOrder!=null)?$latestOrder->id:0;
-        }
         $data=$request->all();
-        if(($orderId ==0) || ($userId ==0)){
-          //Error
+        //echo "<pre>";print_r($data);exit;
+        $sessionId =Session::getId();
+        $userId=(Auth::user())?Auth::user()->id:0;
+
+        $columns=array();
+        $columns['userId']=$userId;
+        $columns['sessionId']=$sessionId;
+        if(isset($data['prvTrans'])){
+          foreach($data['prvTrans'] as $prvTrans){
+
+            CartLanguage::where('cart_languages.status','Active')
+                          ->where('cart_languages.to_language_id',$prvTrans['tolangId'])
+                          ->where(function($query) use($columns) {
+                                $query->where('cart_languages.user_id', $columns['userId'])
+                                ->orWhere('cart_languages.session_id',  $columns['sessionId']);
+                          })->update(['previous_translator'=>$prvTrans['translator']]);
+          }
+
         }
+        if(isset($data['prvGlossary'])){
+          foreach($data['prvGlossary'] as $prvGlossary){
 
-        if($data['type']=='instruction'){
-          //Save Data in project_instruction table          
-          $checkInstruction=ProjectInstruction::where('order_id',$orderId)->first();
+            CartLanguage::where('cart_languages.status','Active')
+                          ->where('cart_languages.to_language_id',$prvGlossary['tolangId'])
+                          ->where(function($query) use($columns) {
+                                $query->where('cart_languages.user_id', $columns['userId'])
+                                ->orWhere('cart_languages.session_id',  $columns['sessionId']);
+                          })->update(['previous_glossary'=>$prvGlossary['glossary']]);
+          }
 
-          if($checkInstruction != null){
-            //Update Row
-            //echo $data['tone'].'<br/>'.$data['instruction'];exit;
-            $updateInstruction= ProjectInstruction::where('order_id',$orderId)
-                                                ->update([
-                                                          'tone'=>  $data['tone'],
-                                                          'instruction'=>$data['instruction'],
-                                                        ]);
+        }
+        if($data['tone'] || $data['instruction']){
+
+          $cartInstructions=CartInstruction::where('status','Active')
+                            ->where(function($query) use($columns) {
+                                  $query->where('user_id', $columns['userId'])
+                                  ->orWhere('session_id',  $columns['sessionId']);
+                            })->first();
+          $tone=($data['tone'])?$data['tone']:'';
+          $instruction=($data['instruction'])?$data['instruction']:'';
+          if($cartInstructions !=null){
+            //update
+            $cartInstructions=CartInstruction::where('status','Active')
+                            ->where(function($query) use($columns) {
+                                  $query->where('user_id', $columns['userId'])
+                                  ->orWhere('session_id',  $columns['sessionId']);
+                            })->update(['tone'=>$tone,'instruction'=>$instruction]);
           }else{
-            //Insert Row
-            $createInstruction= ProjectInstruction::Create([
-                                  'user_id' => Auth::user()->id,
-                                  'order_id' => $orderId,
-                                  'tone'=>  $data['tone'],
-                                  'instruction'=>$data['instruction'],
-                                ]);
+            //insert
+            $cartInstructions=CartInstruction::create([
+                                                    'status'=>'Active',
+                                                    'user_id'=>$columns['userId'],
+                                                    'session_id'=>$columns['sessionId'],
+                                                    'tone'=>$tone,
+                                                    'instruction'=>$instruction
+                                              ]);
           }
-
         }
-        if($data['type']=='brief'){
-          $file=$data['briefs'];
+        //Cart Assets
+        if(($data['type']=='glossary') || ($data['type']=='style') || ($data['type']=='brief')){
+          if($data['type']=='style'){
+            if($data['styles']){
+              $To_lang_id=$data['styles'][0]['id'];
+              $file=array();
+              foreach($data['styles'] as $styles){
+                $file[]=$styles['img'];
+              }
+            }
+          }
+          if($data['type']=='brief'){
+            if($data['briefs']){
+              
+              $To_lang_id=$data['briefs'][0]['id'];
+              $file=array();
+              foreach($data['briefs'] as $styles){
+                $file[]=$styles['img'];
+              }
+            }
+          }
+          if($data['type']=='glossary'){
+            if($data['glossaries']){
+              $To_lang_id=$data['glossaries'][0]['id'];
+              $file=array();
+              foreach($data['glossaries'] as $styles){
+                $file[]=$styles['img'];
+              }
+            }
+          }
           $filenames=array();
           if($file){
             $fileUploadedData =$this->uploadAssets($file);
             if(!empty($fileUploadedData[0])){
-              foreach($fileUploadedData[0] as $filename){
-                $createInstruction= ProjectBrief::Create([
-                                      'user_id' => Auth::user()->id,
-                                      'order_id' => $orderId,
-                                      'file_name'=>  $filename,
-                                      'file_path'=>'uploads/files/'
-                                    ]);
-              }
+              $getDataLang=CartLanguage::where('cart_languages.status','Active')
+                          ->where('cart_languages.to_language_id',$To_lang_id)
+                          ->where(function($query) use($columns) {
+                                $query->where('cart_languages.user_id', $columns['userId'])
+                                ->orWhere('cart_languages.session_id',  $columns['sessionId']);
+                          })->get();
+                $oldData=unserialize($getDataLang[0]->$data['type']);
+                $finalData=array_merge($oldData,$fileUploadedData[0]);
+               CartLanguage::where('cart_languages.status','Active')
+                          ->where('cart_languages.to_language_id',$To_lang_id)
+                          ->where(function($query) use($columns) {
+                                $query->where('cart_languages.user_id', $columns['userId'])
+                                ->orWhere('cart_languages.session_id',  $columns['sessionId']);
+                          })->update([$data['type']=>serialize($finalData)]);
             }
           }
-        }
-        //Gloosaries
-        if($data['type']=='gloosary'){
-          $file=$data['gloosaries'];
-          $filenames=array();
-          if($file){
-            $fileUploadedData =$this->uploadAssets($file);
-            if(!empty($fileUploadedData[0])){
-              foreach($fileUploadedData[0] as $filename){
-                $createInstruction= ProjectGlossary::Create([
-                                      'user_id' => Auth::user()->id,
-                                      'order_id' => $orderId,
-                                      'file_name'=>  $filename,
-                                      'file_path'=>'uploads/files/'
-                                    ]);
-              }
-            }
-          }
-        }
-        //Styles
-        if($data['type']=='style'){
-          $file=$data['styles'];
-          $filenames=array();
-          if($file){
-            $fileUploadedData =$this->uploadAssets($file);
-            if(!empty($fileUploadedData[0])){
-              foreach($fileUploadedData[0] as $filename){
-                $createInstruction= ProjectStyle::Create([
-                                      'user_id' => Auth::user()->id,
-                                      'order_id' => $orderId,
-                                      'file_name'=>  $filename,
-                                      'file_path'=>'uploads/files/'
-                                    ]);
-              }
-            }
-          }
-        }
-
-        if($data['type']=='previous'){
-          //Insert Row
-            //$checkStyle=ProjectStyle::where('order_id',$orderId)->where('user_id',Auth::user()->id)->get();
-            
-            $createPrevious= ProjectStyle::Create([
-                                  'user_id' => Auth::user()->id,
-                                  'order_id' => $orderId,
-                                  'file_name'=>  $data['previous_style'],
-                                  'file_path'=>'uploads/files/'
-                                ]);
-            $createPrevious= ProjectGlossary::Create([
-                                      'user_id' => Auth::user()->id,
-                                      'order_id' => $orderId,
-                                      'file_name'=>  $data['previous_gloosary'],
-                                      'file_path'=>'uploads/files/'
-                                    ]);
-            $createPrevious= ProjectBrief::Create([
-                                      'user_id' => Auth::user()->id,
-                                      'order_id' => $orderId,
-                                      'file_name'=>  $data['previous_brief'],
-                                      'file_path'=>'uploads/files/'
-                                    ]);
-            $createPrevious= ProjectTranslator::Create([
-                                      'user_id' => Auth::user()->id,
-                                      'order_id' => $orderId,
-                                      'translator_id'=>  $data['previous_translator'],
-                                    ]);
-   
-
-        }
+        }         
         $response=array('success');
         echo json_encode($response);exit;
       } catch (\Exception $e) {   
@@ -1439,6 +1523,7 @@ class TranslationApplicationController extends Controller {
       }
 
   }
+
   public function uploadAssets($file){
     
     $filenames=array();
@@ -1505,8 +1590,6 @@ class TranslationApplicationController extends Controller {
                                     $query->where('cart_languages.user_id', $columns['userId'])
                                     ->orWhere('cart_languages.session_id', $columns['sessionId']);
                                   })->get();
-//echo "<pre>";print_r($getLanguagesCartUpdated);exit;
-          //echo count($getLanguagesCartUpdated);exit;
           $languagesData=array();
           $count=1;
           if(count($getLanguagesCartUpdated)){

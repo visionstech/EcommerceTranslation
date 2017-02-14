@@ -36,33 +36,37 @@
             </thead>
             <tbody>
             <?php $s=1; ?>
-            <?php foreach($pendingProjects as $pendingProject): ?>
-            <?php
-            $dateFormat=strtotime($pendingProject['orderDate']);
-            $FormatedDate=date('M d Y',$dateFormat);
-            ?>
-              <tr>
-                <td><?php echo e($s); ?></td>
-                <td><?php echo e($pendingProject['order_id']); ?></td>
-                <td><?php echo e($FormatedDate); ?></td>
-                <td><?php echo e($pendingProject['languagePackage']); ?></td>
-                <td>
-                    <?php foreach($pendingProject['fileTypes'] as $fileType): ?>
-                      <img src="<?php echo e($url[0].'/customer/img/'.$fileType); ?>" title="<?php echo e($fileType); ?>" alt="<?php echo e($fileType); ?>" />
-                      <br/>
-                    <?php endforeach; ?>
-                </td>
-                <td><?php echo e($pendingProject['files']); ?></td>
-                <td><?php echo e($pendingProject['totalWords']); ?></td>
-                <td><?php echo e($pendingProject['sourceLang']); ?></td>
-                <td><?php echo e($pendingProject['destinationLanguage']); ?></td>
-                <td><img src="<?php echo e(asset('/customer/img/pending-icon.png')); ?>" alt="pending-icon" title="pending-icon"> 
-                <?php echo e($pendingProject['languageStatus']); ?></td>
-                <td>$<?php echo e($pendingProject['finalPrice']); ?></td>
-                <td><a href="<?php echo e(url('customer/view-order/view/'.encrypt($pendingProject['order_id']))); ?>" title="view"><i class="fa fa-eye" aria-hidden="true"></i> View </a><a href="<?php echo e(url('customer/view-order/review/'.encrypt($pendingProject['order_id']))); ?>" title="view"><i class="fa fa-eye" aria-hidden="true"></i> Review </a></td>
-              </tr>
-              <?php $s++; ?>
-            <?php endforeach; ?>
+            <?php if(count($pendingProjects)): ?>
+              <?php foreach($pendingProjects as $pendingProject): ?>
+              <?php
+              $dateFormat=strtotime($pendingProject['orderDate']);
+              $FormatedDate=date('M d Y',$dateFormat);
+              ?>
+                <tr>
+                  <td><?php echo e($s); ?></td>
+                  <td><?php echo e($pendingProject['order_id']); ?></td>
+                  <td><?php echo e($FormatedDate); ?></td>
+                  <td><?php echo e($pendingProject['languagePackage']); ?></td>
+                  <td>
+                     <?php if(count($pendingProject['fileTypes'] )): ?>
+                        <?php foreach($pendingProject['fileTypes'] as $fileType): ?>
+                          <img src="<?php echo e($url[0].'/customer/img/'.$fileType); ?>" title="<?php echo e($fileType); ?>" alt="<?php echo e($fileType); ?>" />
+                          <br/>
+                        <?php endforeach; ?>
+                      <?php endif; ?>
+                  </td>
+                  <td><?php echo e(($pendingProject['files'])?$pendingProject['files']:''); ?></td>
+                  <td><?php echo e($pendingProject['totalWords']); ?></td>
+                  <td><?php echo e((isset($pendingProject['sourceLang']))?$pendingProject['sourceLang']:''); ?></td>
+                  <td><?php echo e((isset($pendingProject['destinationLanguage'] ))?$pendingProject['destinationLanguage']:''); ?></td>
+                  <td><img src="<?php echo e(asset('/customer/img/pending-icon.png')); ?>" alt="pending-icon" title="pending-icon"> 
+                  <?php echo e($pendingProject['languageStatus']); ?></td>
+                  <td>$<?php echo e((isset($allProject['finalPrice'] ))?$allProject['finalPrice']:''); ?></td>
+                  <td><a href="<?php echo e(url('customer/view-order/view/'.encrypt($pendingProject['order_id']))); ?>" title="view"><i class="fa fa-eye" aria-hidden="true"></i> View </a><a href="<?php echo e(url('customer/view-order/review/'.encrypt($pendingProject['order_id']))); ?>" title="view"><i class="fa fa-eye" aria-hidden="true"></i> Review </a></td>
+                </tr>
+                <?php $s++; ?>
+              <?php endforeach; ?>
+            <?php endif; ?>
             </tbody>
           </table>
         </div>

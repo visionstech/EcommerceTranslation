@@ -4,14 +4,18 @@
 @endsection
 @section('content')
 <?php $dataUrl=url('/');                
-      $url=explode('index.php',$dataUrl); 
+      $url=explode('index.php',$dataUrl); //echo "<pre>";print_r($translateTo);exit;
 ?>
 
     <section class="odering-process-1">
       <div class="eqho-container">
         <div class="eqho-clear-fix translator-wrap">
           <div class="like-to-translate">
-
+            <div class="loading_overlay">           
+              <div class="loader_img">
+                <img src="{{ asset('/customer/img/loading.gif') }}" alt="system" title="system" />
+              </div> 
+            </div>      
               <form>
               @include('errors.frontend_errors')
               <div class="purpose">
@@ -96,87 +100,72 @@
 
               <div class="existing-customer">
                 <h4>Are you an existing customer?</h4>
-                <p>If so, you can select:</p>
+                <p class="hide_after_login">If so, you can select:</p>
                  <?php $projectTranslator =  ($projectTranslator!=null)?($projectTranslator->translator_id):'';
-                 if($projectTranslator){
+                 /*if($projectTranslator){
                     $checked='checked';
                  }else{
                     $checked='';
-                 }
+                 }*/
                  ?>
-                <div class="custom-radio">
-                  <ul class="existing-option">
-                    <li>
-                      <input type="radio" id="ex-radio-1" {{ $checked }} name="existing-customer">
-                      <label for="ex-radio-1">A translator you worked with previously</label>
-                      <div class="check"></div>
-                    </li>
-                    <div id='previous_translators'> 
-                   
-                      <div class="form-group previous_data">
-                        <label>Translators</label>
-                        <select name="previous_translator" class="option-select previous_translator" > 
-                          <option value=''>-- Select your Translator --</option>
-                          @if(count($previousTranslators))
-                            @foreach($previousTranslators as $previousTranslator)
-                              <option value='{{ $previousTranslator->translator_id }}' <?php if($projectTranslator==$previousTranslator->translator_id){echo "selected";} ?>>{{ $previousTranslator->translatorEmail }}</option>
-                            @endforeach
-                          @endif
-                        </select>
+                @if(!empty($translateTo))
+                  @foreach($translateTo as $translateT)
+                  <div class="">
+                  Translate To: {{ $translateT['destination'] }}
+                  <input type="hidden" name="translateto" value="{{ $translateT['id'] }}" />
+                    <ul class="existing-option">
+                      <li class="hide_after_login">                      
+                        <label for="ex-radio-1">A translator you worked with previously</label>
+                        <div class="check"></div>
+                      </li>
+                      <div id='previous_translators'> 
+                     
+                        <div class="form-group previous_data">
+                          <label>Previous Translator</label>
+                          <select name="previous_translator[]" data-id="{{ $translateT['id'] }}" class="option-select previous_translator" > 
+                            <option value=''>-- Select your Translator --</option>
+                            @if(count($previousTranslators))
+                              @foreach($previousTranslators as $previousTranslator)
+                                <option value='{{ $previousTranslator->translator_id }}' <?php if($translateT['previous_translator']==$previousTranslator->translator_id){echo "selected";} ?>>{{ $previousTranslator->translatorEmail }}</option>
+                              @endforeach
+                            @endif
+                          </select>
+                        </div>
                       </div>
-                    </div>
-                    <?php $gloosary =  ($projectGloosaries!=null)?($projectGloosaries->file_name):'';
-                          $brief =  ($projectBriefs!=null)?($projectBriefs->file_name):'';
-                          $style =  ($projectStyles!=null)?($projectStyles->file_name):'';
-                          if($gloosary || $brief || $style){
-                            $checkedAsset='checked';
-                          }else{
-                            $checkedAsset='';
-                          }
-                    ?>
-                    <li>
-                      <input type="radio" id="ex-radio-2" {{ $checkedAsset }} name="existing-assets">
-                      <label for="ex-radio-2">An existing translation asset (e.g. Glossary) stored in your account</label>
-                      <div class="check"><div class="inside"></div></div>
-                    </li>
-                    <div id='assets'>
+                      <?php /*$gloosary =  ($projectGloosaries!=null)?($projectGloosaries->file_name):'';
+                            $brief =  ($projectBriefs!=null)?($projectBriefs->file_name):'';
+                            $style =  ($projectStyles!=null)?($projectStyles->file_name):'';*/
+                            /*if($gloosary || $brief || $style){
+                              $checkedAsset='checked';
+                            }else{
+                              $checkedAsset='';
+                            }*/
+                      ?>
+                      <li class="hide_after_login">                      
+                        <label for="ex-radio-2">An existing translation asset (e.g. Glossary) stored in your account</label>
+                        <div class="check"><div class="inside"></div></div>
+                      </li>
+                      <div id='assets'>
 
-                      <div class="form-group previous_data">
-                        <label>Gloosaries</label>
-                        <select name="previous_gloosary" class="option-select previous_gloosary" > 
-                          <option value=''>-- Select your Gloosary --</option>
-                          @if(count($previousGloosaries))
-                            @foreach($previousGloosaries as $previousGloosary)
-                              <option value='{{ $previousGloosary->file_name }}' <?php if($gloosary==$previousGloosary->file_name){echo "selected";} ?> >{{ $previousGloosary->file_name }}</option>
-                            @endforeach
-                          @endif
-                        </select>
+                        <div class="form-group previous_data">
+                          <label>Existing Translation Glossary</label>
+                          <select name="previous_gloosary" data-id="{{ $translateT['id'] }}" class="option-select previous_gloosary" > 
+                            <option value=''>-- Select your Gloosary --</option>
+                            @if(count($previousAssets))
+                              @foreach($previousAssets as $previousAsset)
+                                @if($previousAsset->asset_type=='glossary')
+                                  <option value='{{ $previousAsset->file_name }}' <?php if($translateT['previous_glossary']==$previousAsset->file_name){echo "selected";} ?> >{{ $previousAsset->file_name }}</option>
+                                @endif
+                              @endforeach
+                            @endif
+                          </select>
+                        </div>
                       </div>
-                      <div class="form-group previous_data">
-                        <label>Briefs</label>
-                        <select name="previous_brief" class="option-select previous_brief" >  
-                          <option value=''>-- Select your Brief --</option>
-                           @if(count($previousBriefs))
-                            @foreach($previousBriefs as $previousBrief)
-                              <option value='{{ $previousBrief->file_name }}'<?php if($brief==$previousBrief->file_name){echo "selected";} ?> >{{ $previousBrief->file_name }}</option>
-                            @endforeach
-                          @endif
-                        </select>
-                      </div>
-                      <div class="form-group previous_data">
-                        <label>Styles</label>
-                        <select name="previous_style" class="option-select previous_style">  
-                          <option value=''>-- Select your style --</option>
-                           @if(count($previousStyles))
-                            @foreach($previousStyles as $previousStyle)
-                              <option value='{{ $previousStyle->file_name }}' <?php if($style==$previousStyle->file_name){echo "selected";} ?> >{{ $previousStyle->file_name }}</option>
-                            @endforeach
-                          @endif
-                        </select>
-                      </div>
-                    </div>
-                  </ul>
-                </div>
+                    </ul>
+                  </div>
+                  @endforeach
+                @endif
+
                 <div class="existing-login">
                 @if(!Auth::user())
                   <input type="button" value="Login" name="" class="btn_ctrl login_pop" />
@@ -204,63 +193,69 @@
                   <label>Instructions for the translator</label>
                   <textarea onblur="saveOptionalData('instruction');" name="instruction" class="instruction" placeholder="Write your instructions here...">{{$instruction}}</textarea>                  
                 </div>
-                <div class="upload-files">
-                  <span class="lable-text">Upload your brief</span>
-                    <div class="upload-files-btn">                     
-                        <span type="button" class="fileinput-button">
-                                <span>Upload Files</span>
-                                <input name="file" multiple="multiple" name="brief" class="brief" onchange="saveOptionalData('brief');" size="1" type="file">
-                        </span>
-                    </div>
-                    <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
-                    <div class="file-information">
-                      <ul>
-                        @if(count($allProjectBriefs))
-                            @foreach($allProjectBriefs as $allProjectBrief)
-                             <li> {{ $allProjectBrief->file_name }}</li>
-                            @endforeach
-                        @endif
-                      </ul>
-                    </div>
-                </div> <!-- upload-files -->
-                <div class="upload-files">
-                  <span class="lable-text">Upload a glossary</span>
-                    <div class="upload-files-btn">
-                        <span type="button" class="fileinput-button">
-                          <span>Upload Files</span>
-                          <input name="file" multiple="multiple" name="gloosary" class="gloosary" onchange="saveOptionalData('gloosary');" size="1" type="file">
-                        </span>
-                    </div>
-                    
-                    <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
-                    <div class="file-information">
-                      <ul>@if(count($allProjectGloosaries))
-                            @foreach($allProjectGloosaries as $allProjectGloosary)
-                             <li> {{ $allProjectGloosary->file_name }}</li> 
-                            @endforeach
-                        @endif
+              @if(!empty($translateTo))
+                @foreach($translateTo as $translateT)
+                   Translate To: {{ $translateT['destination'] }} <hr>
+                  <div class="upload-files">
+                    <span class="lable-text">Upload your brief</span>
+                      <div class="upload-files-btn">                     
+                          <span type="button" class="fileinput-button">
+                                  <span>Upload Files</span>
+                                  <input data-id="{{ $translateT['id'] }}" name="file" multiple="multiple" name="brief" class="brief" onchange="saveOptionalData('brief');" size="1" type="file">
+                          </span>
+                      </div>
+                      <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
+                      <div class="file-information">
+                        <ul>
+                          @if(count($allProjectAssets))
+                              @foreach($allProjectAssets as $allProjectAsset)
+                               <li> {{ $allProjectAsset->file_name }}</li>
+                              @endforeach
+                          @endif
                         </ul>
-                    </div>
-                </div> <!-- upload-files -->
-                <div class="upload-files">
-                  <span class="lable-text">Upload brand/ style guide</span>
-                    <div class="upload-files-btn">
-                        <span type="button" class="fileinput-button">
-                              <span>Upload Files</span>
-                              <input name="file" multiple="multiple" name="style" class="style" onchange="saveOptionalData('style');" size="1" type="file">
-                        </span>
-                    </div>
+                      </div>
+                  </div> <!-- upload-files -->
+                  <div class="upload-files">
+                    <span class="lable-text">Upload a glossary</span>
+                      <div class="upload-files-btn">
+                          <span type="button" class="fileinput-button">
+                            <span>Upload Files</span>
+                            <input data-id="{{ $translateT['id'] }}" name="file" multiple="multiple" name="gloosary" class="gloosary" onchange="saveOptionalData('glossary');" size="1" type="file">
+                          </span>
+                      </div>
+                      
+                      <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
+                      <div class="file-information">
+                        <ul> @if(count($allProjectAssets))
+                                @foreach($allProjectAssets as $allProjectAsset)
+                                 <li> {{ $allProjectAsset->file_name }}</li>
+                                @endforeach
+                              @endif
+                          </ul>
+                      </div>
+                  </div> <!-- upload-files -->
+                  <div class="upload-files">
+                    <span class="lable-text">Upload brand/ style guide</span>
+                      <div class="upload-files-btn">
+                          <span type="button" class="fileinput-button">
+                                <span>Upload Files</span>
+                                <input data-id="{{ $translateT['id'] }}" name="file" multiple="multiple" name="style" class="style" onchange="saveOptionalData('style');" size="1" type="file">
+                          </span>
+                      </div>
 
-                    <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
-                    
-                     <div class="file-information">
-                      <ul>@if(count($allProjectStyles))
-                            @foreach($allProjectStyles as $allProjectStyle)
-                             <li> {{ $allProjectStyle->file_name }}</li>
-                            @endforeach
-                        @endif</ul>
-                    </div>
-                </div> <!-- upload-files -->
+                      <span class="complete"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Done</span>
+                      <div class="file-information">
+                        <ul>
+                          @if(count($allProjectAssets))
+                              @foreach($allProjectAssets as $allProjectAsset)
+                               <li> {{ $allProjectAsset->file_name }}</li>
+                              @endforeach
+                          @endif
+                         </ul>
+                      </div>
+                  </div>    <!-- upload-files -->
+                @endforeach
+              @endif
               </div><!-- instructions -->
             </form>
       

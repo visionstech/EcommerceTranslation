@@ -10,6 +10,11 @@
         <form id='myForm' name="frmupload" method="post"  enctype='multipart/form-data'>
            <input type="hidden" name="_token" id='token' value="{{ csrf_token() }}">
           <div class="like-to-translate">
+          <div class="loading_overlay">           
+            <div class="loader_img">
+                <img src="{{ asset('/customer/img/loading.gif') }}" alt="system" title="system" />
+              </div> 
+            </div> 
             <div class="translate-inner">
               <h2>What would you like to translate?</h2>
               <p><a onclick="clearAllElements();" href="javascript:void(0)">Clear All Words</a></p>
