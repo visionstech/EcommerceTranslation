@@ -773,7 +773,8 @@ function restoreTranslation(value){
           }); 
     }
     function getQuote() {
-      var myWindow = window.open("http://localhost/eqho/index.php/translation-application/quote", "", "width=800,height=700");
+      var baseUrl='<?php echo url('/'); ?>';
+      var myWindow = window.open(baseUrl+"/translation-application/quote", "", "width=800,height=700");
     }
     function saveUserCompany(element){
           var baseUrl='<?php echo url('/'); ?>';
