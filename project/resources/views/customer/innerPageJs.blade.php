@@ -596,14 +596,15 @@ $(document).ready(function(){
         });
         $('.final_price').html('Calculating...');
         $('.language_count').html('Counting...');
+        $(".loading_overlay").show();
         $.ajax({        
           url: baseUrl+'/translation-application/cart-language',
           type:'post',
           data: data,
           processData: false,
-          contentType: false,
-          
+          contentType: false,          
           success: function(res) {
+            $(".loading_overlay").hide();
             var data = $.parseJSON(res);
             $('.lang-popup').hide();
             $('#added_langs').html(data[0]);
@@ -618,26 +619,24 @@ $(document).ready(function(){
         }); 
     });
 });
-
 function clearAllLanguages(){
    var baseUrl='<?php echo url('/'); ?>';
     $('.final_price').html('Calculating...');
     $('.language_count').html('Counting...');
-    $.ajax({
-        
+    $(".loading_overlay").show();
+    $.ajax({        
         url: baseUrl+'/translation-application/cart-language/Deleted',
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $(".translate_to_summary").hide();          
           $('#added_langs').html('');
           $(".translate_to_popup").show();
           $('.total_words').html(data[1]);
-          $('.language_count').html(data[2]);
-
-          
+          $('.language_count').html(data[2]);          
         }
       });
 }
@@ -645,13 +644,14 @@ function trashTranslation(value){
    var baseUrl='<?php echo url('/'); ?>';
     $('.final_price').html('Calculating...');
     $('.language_count').html('Counting...');
+    $(".loading_overlay").show();
     $.ajax({
-        
         url: baseUrl+'/translation-application/cart-language/Trashed/'+value,
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.lang-popup').hide();
           $('#added_langs').html(data[0]);
@@ -664,20 +664,20 @@ function trashTranslation(value){
           $('.final_price').html(data[3]);
         }
       });
-
 }
 
 function restoreTranslation(value){
    var baseUrl='<?php echo url('/'); ?>';
     $('.final_price').html('Calculating...');
     $('.language_count').html('Counting...');
-    $.ajax({
-        
+    $(".loading_overlay").show();
+    $.ajax({        
         url: baseUrl+'/translation-application/cart-language/Active/'+value,
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.lang-popup').hide();
           $('#added_langs').html(data[0]);
@@ -688,13 +688,9 @@ function restoreTranslation(value){
           $('.total_words').html(data[1]);
           $('.language_count').html(data[2]);
           $('.final_price').html(data[3]);
-          
         }
       });
-
 }
-
-
 // End jQuery Of Step 2 Cart 
 
 //SAVE INSTRUCTIONS STEP 3
@@ -707,14 +703,12 @@ function restoreTranslation(value){
           data.append('tone',$('.tone').val());
           data.append('instruction',$('.instruction').val());
           data.append('type',type);
-
           var validFiles=['ppt','pptx','doc','docx','xls','xlsm','xlsx','rtf','odt','txt','pdf'];  
           var brief = $(".brief");
           InvalidFiles=[];
           $.each($(brief), function (i, obj) {
               $.each(obj.files, function (j, file) {
                 var nameFile=file.name;
-                //alert(nameFile);
                 var fileExtension = nameFile.substr( (nameFile.lastIndexOf('.') +1) );
                 if($.inArray(fileExtension, validFiles) !== -1){
                     data.append("briefs[" + j + "][img]", file);
@@ -742,15 +736,12 @@ function restoreTranslation(value){
           var style = $(".style");
           InvalidFiles=[];
           $.each($(style), function (i, obj) {
-            //alert($(obj).attr('data-id'));
-              $.each(obj.files, function (j, file) {
-                
+              $.each(obj.files, function (j, file) {                
                 var nameFile=file.name;
                 var fileExtension = nameFile.substr( (nameFile.lastIndexOf('.') +1) );
                 if($.inArray(fileExtension, validFiles) !== -1){
                     data.append("styles[" + j + "][img]", file);
                     data.append("styles[" + j + "][id]", $(obj).attr('data-id'));
-                    
                 }else{
                   InvalidFiles.push(file.name);
                 }
@@ -763,7 +754,6 @@ function restoreTranslation(value){
              data.append("prvTrans[" + i + "][tolangId]", $(obj).attr('data-id'));
             }
           });
-
           var previous_glossary=$('.previous_gloosary');
           $.each($(previous_glossary), function (i, obj) {
             if($(obj).val() !=''){
@@ -771,16 +761,7 @@ function restoreTranslation(value){
              data.append("prvGlossary[" + i + "][tolangId]", $(obj).attr('data-id'));
             }
           });
-          /*console.log(data);
-          return false;*/
-         // data.append('previous_translator',$('.previous_translator').val());
-          //data.append('previous_gloosary',$('.previous_gloosary').val());
-         // data.append('previous_brief',$('.previous_brief').val());
-          //data.append('previous_style',$('.previous_style').val());
-          
-          
           $.ajax({
-
             url: baseUrl+'/translation-application/optional-data-new',
             type:'post',
             data: data,
@@ -788,36 +769,9 @@ function restoreTranslation(value){
             contentType: false,          
             success: function(res) {
               $(".loading_overlay").hide();
-              //var data = $.parseJSON(res);
-              //$('.complete').show();
-              /*if(type=='brief'){
-                  $('.brief').parent().parent().next().show();
-              }
-              if(type=='gloosary'){
-                  $('.gloosary').parent().parent().next().show();
-              }
-              if(type=='style'){
-                  $('.style').parent().parent().next().show();
-              }*/
-              //$('.complete').fadeOut(3000);
             }
           }); 
     }
-
-    /*function getOptionalData(){
-
-        $.ajax({
-
-          url: baseUrl+'/translation-application/optional-data',
-          type:'get',
-          processData: false,
-          contentType: false,          
-          success: function(res) {
-            var data = $.parseJSON(res);
-          }
-        }); 
-
-    }*/
     function getQuote() {
       var myWindow = window.open("http://localhost/eqho/index.php/translation-application/quote", "", "width=800,height=700");
     }

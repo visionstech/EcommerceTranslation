@@ -92,6 +92,7 @@ $(document).ready(function(){
     var data = new FormData();
     data.append('_token',$('#token').val());
     data.append('content',$('#content').val());
+    $(".loading_overlay").show();
     $.ajax({
         
         url: baseUrl+'/translation-application/cart-item',
@@ -100,6 +101,7 @@ $(document).ready(function(){
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.item-to-translate').html(data[1]);
           var TotalWords= $('.switch_total').html();
@@ -125,6 +127,7 @@ $(document).ready(function(){
       var percent = $('#percent1');
       var data = new FormData();
       var file = $(".file");
+
       InvalidFiles=[];
       $.each($(file), function (i, obj) {
           $.each(obj.files, function (j, file) {
@@ -197,13 +200,14 @@ $(document).ready(function(){
 
 function trashElement(value){
    var baseUrl='<?php echo url('/'); ?>';
-    $.ajax({
-        
+   $(".loading_overlay").show();
+    $.ajax({        
         url: baseUrl+'/translation-application/cart-item/Trashed/'+value,
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.item-to-translate').html(data[1]);
           var TotalWords= $('.switch_total').html();
@@ -225,13 +229,14 @@ function trashElement(value){
 
 function restoreElement(value){
    var baseUrl='<?php echo url('/'); ?>';
-    $.ajax({
-        
+   $(".loading_overlay").show();
+    $.ajax({        
         url: baseUrl+'/translation-application/cart-item/Active/'+value,
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.item-to-translate').html(data[1]);
           var TotalWords= $('.switch_total').html();
@@ -256,13 +261,14 @@ function restoreElement(value){
 
 function clearAllElements(){
    var baseUrl='<?php echo url('/'); ?>';
-    $.ajax({
-        
+   $(".loading_overlay").show();
+    $.ajax({        
         url: baseUrl+'/translation-application/cart-item/clearAll',
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.item-to-translate').html('');
           var TotalWords= $('.switch_total').html();
@@ -280,13 +286,14 @@ function clearAllElements(){
 
 function delete_permanently(){
    var baseUrl='<?php echo url('/'); ?>';
-    $.ajax({
-        
+   $(".loading_overlay").show();
+    $.ajax({        
         url: baseUrl+'/translation-application/cart-item/delete_permanently',
         type:'get',
         processData: false,
         contentType: false,
         success: function(res) {
+          $(".loading_overlay").hide();
           var data = $.parseJSON(res);
           $('.del-arrow').hide();
           $('.del-permanent').hide();
@@ -300,20 +307,11 @@ function editContent(){
   $('#content').show();
 }
 // Ending of Step 1 Cart Functionality of Saving Items
-
-
 // order process select list
-
-  
-  //........... end .......
-  
-  // Start jQuery Of Step 2 Cart 
-  
-
+//........... end .......
+// Start jQuery Of Step 2 Cart 
 $(document).ready(function(){
   var baseUrl='<?php echo url('/'); ?>';
-  //$('.complete').hide();
-  //$('.over-lay').show();
   $('.purpose-type').hide();
   <?php if(!Auth::user()){ ?>
     $('#previous_translators').hide();
@@ -349,9 +347,7 @@ $(document).ready(function(){
     }
   });
   $(".pay_button").click(function(){
-      //alert('Please agree terms and conditions.');
       $('.terms_popup').show();
-
   });
   
   $(document).on('click','.package_li  p',function() {
@@ -368,7 +364,6 @@ $(document).ready(function(){
       $('#sel-radio-'+Id[1]).parent().addClass('selected-radio');
       $( ".words-price > td" ).removeClass('select-word');
       $( ".words-price>td:eq( "+(Id[1]-1)+" )" ).addClass('select-word');
-
       var data = new FormData();
       data.append('_token',$('#token').val());
       data.append('purpose',$('#purpose').val());
@@ -382,8 +377,10 @@ $(document).ready(function(){
           beforeSend: function(){
             $('.final_price').html('Calculating...');
             $('.language_count').html('Counting...');
+            $(".loading_overlay").show();
           },
           success: function(res) {
+            $(".loading_overlay").hide();
             var data = $.parseJSON(res);
             $('.purpose-type').show();
             $('.total_words').html(data[0]);
@@ -494,20 +491,13 @@ $(document).ready(function(){
     $(".purpose-type-table").find('tr:last td').removeClass('select-word');
     $(".purpose-type-table").find('tr:last td:nth-child('+idd+')').addClass('select-word');
   });
-  
-
-
-
   //--------END Step 3 ---
-
-
   $(".select-langs").click(function(){
       $(".show-1").toggle();
   });
   $(".select-langs").blur(function(){
       $(".show-1").hide();
   });
-
   $(document).on('click','.all-languages li',function() {
     if ($(this).hasClass("active-li")) {
       $(this).removeClass("active-li");
@@ -516,7 +506,6 @@ $(document).ready(function(){
       $(this).addClass("active-li");
     }
   });
-
   $(".translate-btn, .popup-close").click(function(){
       $(".lang-popup").toggle();
   });
@@ -543,13 +532,7 @@ $(document).ready(function(){
           $('.total_words').html(data[1]);
           $('.language_count').html(data[2]);
           $('.final_price').html(data[3]);
-          //alert(data[4]);
-         /* $.each(data[4], function( index, value ) {
-              alert( index + ": " + value );
-          });*/
-
-          
-        }
+         }
   });
   $('.all-languages').html('');
   $(".source").change(function(){
